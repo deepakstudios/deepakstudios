@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.7
+1.1.0
 ```
 
 ### Semver rules
@@ -268,6 +268,18 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ## 1.0.7 - 2026-09-15
 
 - Added wedding-photography placeholder pages `a.html`–`e.html` (cross-linked A–E nav).
+
+## 1.0.7 - 2026-09-15
+
+- **New Wedding Photography gallery system.** Added `wedding.php` (hub listing albums
+  A–E with live photo counts) and five album pages `a.php`–`e.php` sharing the new
+  `lib_gallery.php` renderer (auto-grid + click-to-enlarge lightbox).
+- Photos are served from `photos/wedding/<letter>/` — the site owner just uploads
+  image files there (BaoTa File Manager / FTP) and they appear automatically, with no
+  code changes and no deployment. First-page instructions (in Hinglish) are shown
+  on each album.
+- `index.html`: the "Wedding Photography" service card now links to `wedding.php`.
+  Removed the temporary `a.html`–`e.html` demo pages.
 
 ## 1.0.6 - 2026-09-15
 

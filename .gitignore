@@ -4,6 +4,12 @@ config.php
 # Runtime state
 storage/
 
+# Owner-uploaded gallery photos — NEVER commit (owner drops images on the server
+# into photos/wedding/<letter>/; keep only the .gitkeep placeholders tracked)
+photos/
+!photos/wedding/*/
+!photos/wedding/*/.gitkeep
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db

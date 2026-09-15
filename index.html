@@ -546,17 +546,15 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 
 /* ---------- services ---------- */
 var SERVICES=[
- {i:'camera',t:'Wedding Photography',d:"Capturing the essence, emotion, and joy of your special day with timeless elegance.",img:'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop'},
+ {i:'camera',t:'Wedding Photography',d:"Capturing the essence, emotion, and joy of your special day with timeless elegance.",img:'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2070&auto=format&fit=crop',l:'wedding.php'},
  {i:'heart',t:'Pre-Wedding Shoots',d:'Tell your unique love story before the big day in breathtaking locations.',img:'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop'},
  {i:'film',t:'Cinematic Films',d:'High-definition, emotionally resonant films that let you relive every moment.',img:'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?q=80&w=2070&auto=format&fit=crop'},
  {i:'image',t:'Candid Photography',d:'Unposed, authentic moments captured discreetly as they naturally happen.',img:'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=2070&auto=format&fit=crop'},
  {i:'video',t:'Album & Video Editing',d:'Professional post-production, color grading, and premium album design.',img:'https://images.unsplash.com/photo-1623862660144-4f952f44cebb?q=80&w=2070&auto=format&fit=crop'}
 ];
-document.getElementById('services-grid').innerHTML=SERVICES.map(function(s){return '\
-<div class="svc reveal">\
-  <div style="position:absolute;inset:0"><div class="svc-bg" style="background-image:url('+s.img+')"></div><div class="svc-fade"></div></div>\
-  <div class="svc-in"><div class="svc-ico">'+ICON[s.i]+'</div><h3>'+s.t+'</h3><p>'+s.d+'</p>\
-  <div class="svc-rule"><i></i></div></div></div>';}).join('');
+document.getElementById('services-grid').innerHTML=SERVICES.map(function(s){var b='<div class="svc-in"><div class="svc-ico">'+ICON[s.i]+'</div><h3>'+s.t+'</h3><p>'+s.d+'</p>\
+  <div class="svc-rule"><i></i></div></div>';var link=s.l?'<a class="svc" style="position:relative;overflow:hidden;border-radius:.75rem;display:block" href="'+s.l+'">':'<div class="svc">';var close=s.l?'</a>':'</div>';return '\
+'+link+'<div style="position:absolute;inset:0"><div class="svc-bg" style="background-image:url('+s.img+')"></div><div class="svc-fade"></div></div>'+b+close;}).join('');
 
 /* ---------- gallery ---------- */
 var GALLERY=[
