@@ -55,12 +55,27 @@ fi
 
 # 3) Clone the repo
 echo "==> [2/6] Cloning/updating the repository into ${TARGET_DIR}..."
+OUR_REMOTE="https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
+
 if [ -d "${TARGET_DIR}/.git" ]; then
+  CURRENT_ORIGIN="$(git -C "${TARGET_DIR}" remote get-url origin 2>/dev/null || true)"
+  if [ "${CURRENT_ORIGIN}" != "${OUR_REMOTE}" ]; then
+    echo "    ABORT: ${TARGET_DIR} is already a git repo with origin: ${CURRENT_ORIGIN}" >&2
+    echo "    This deploy owns ONLY https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git" >&2
+    echo "    Do NOT run it in an existing project folder. Use a fresh web-root directory:" >&2
+    echo "      mkdir -p /www/wwwroot/deepakstudios.in && cd /www/wwwroot/deepakstudios.in" >&2
+    echo "      curl -fsSL https://raw.githubusercontent.com/deepakstudios/deepakstudios/main/server-setup.sh | bash" >&2
+    exit 1
+  fi
   git -C "${TARGET_DIR}" fetch origin "${BRANCH}"
   git -C "${TARGET_DIR}" reset --hard "origin/${BRANCH}"
+elif [ -n "$(ls -A "${TARGET_DIR}" 2>/dev/null || true)" ]; then
+  echo "    ABORT: ${TARGET_DIR} is not empty." >&2
+  echo "    Run this from a fresh directory, e.g. /www/wwwroot/deepakstudios.in" >&2
+  exit 1
 else
-  mkdir -p "$(dirname "${TARGET_DIR}")"
-  git clone --branch "${BRANCH}" "${GITHUB_URL}" "${TARGET_DIR}"
+  mkdir -p "${TARGET_DIR}"
+  git clone --branch "${BRANCH}" "${OUR_REMOTE}" "${TARGET_DIR}"
 fi
 
 # 4) Create config.php from the example if it does not exist

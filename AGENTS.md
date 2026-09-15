@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.2
+1.0.3
 ```
 
 ### Semver rules
@@ -264,6 +264,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.3 - 2026-09-15
+
+- `server-setup.sh` now REFUSES to run in a directory that is already a git repo with a different
+  origin (prevents accidentally fetching/pushing the wrong project, e.g. a panel's existing repo).
+- Also refuses non-empty directories (unless they are OUR repo). Use a fresh web-root dir instead.
 
 ## 1.0.2 - 2026-09-15
 
