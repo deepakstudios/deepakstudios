@@ -20,9 +20,10 @@ GITHUB_REPO="deepakstudios"
 BRANCH="main"
 GITHUB_URL="https://github.com/${GITHUB_USER}/${GITHUB_REPO}.git"
 
-TARGET_DIR="${1:-/var/www/html}"
+# Target web root: arg 1 > $TARGET_DIR env > current directory.
+TARGET_DIR="${1:-${TARGET_DIR:-$(pwd)}}"
 if [ "${TARGET_DIR}" = "/" ] || [ "${TARGET_DIR}" = "." ]; then
-  echo "Refusing to deploy into ${TARGET_DIR}. Pick a real web root, e.g. /var/www/html" >&2
+  echo "Refusing to deploy into ${TARGET_DIR}. cd into your web root (e.g. /www/wwwroot/deepakstudios.in) first." >&2
   exit 1
 fi
 
@@ -42,12 +43,13 @@ for bin in php git unzip; do
 done
 echo "    Dependencies OK."
 
-# 2) Webhook secret (prompt if not given via env)
+# 2) Webhook secret: use $WEBHOOK_SECRET if provided, otherwise auto-generate one.
+#    (Auto-generation is required so the `curl | bash` one-liner works.)
 if [ -z "${WEBHOOK_SECRET:-}" ]; then
-  read -r -p "=== Webhook secret (a long random string — save this, you'll paste it into GitHub): " WEBHOOK_SECRET
+  WEBHOOK_SECRET="$( (openssl rand -hex 32 2>/dev/null || tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 32) || true )"
 fi
 if [ -z "${WEBHOOK_SECRET// }" ]; then
-  echo "Secret cannot be empty." >&2
+  echo "Could not generate a webhook secret. Install openssl or set WEBHOOK_SECRET=your-secret." >&2
   exit 1
 fi
 
@@ -76,18 +78,40 @@ else
   echo "    config.php created. Edit ${TARGET_DIR}/config.php to set real DB credentials."
 fi
 
-# 5) Run migrations
+# 5) Run database migrations (non-fatal: they auto-run on the first push anyway)
 echo "==> [4/6] Running database migrations..."
-(cd "${TARGET_DIR}" && php Install.php)
+if (cd "${TARGET_DIR}" && php Install.php); then
+  echo "    Migrations OK."
+else
+  echo "    WARNING: migrations could not complete (database not ready yet?)."
+  echo "    They will run automatically on the first GitHub push if a database is configured."
+fi
+
+# 6) Make the web root writable by the web server so the webhook can auto-update
+echo "==> [5/6] Setting web-server ownership/permissions..."
+WEB_USER="$(ps -o user= -C php-fpm 2>/dev/null | tr -d ' ' | sort -u | grep -v '^$' | head -1)"
+if [ -z "${WEB_USER}" ]; then
+  for u in www www-data; do
+    if id "${u}" >/dev/null 2>&1; then WEB_USER="${u}"; break; fi
+  done
+fi
+if [ -z "${WEB_USER}" ]; then
+  echo "    Could not detect web-server user; set ownership manually."
+  echo "    Then set config 'method' => 'archive' OR run commands as that web user."
+else
+  if [ "$(id -u)" = "0" ]; then
+    chown -R "${WEB_USER}:${WEB_USER}" "${TARGET_DIR}"
+    chmod -R u+rwX,g+rwX,o-w "${TARGET_DIR}"
+    echo "    Ownership set to ${WEB_USER} (web server)."
+  else
+    sudo chown -R "${WEB_USER}:${WEB_USER}" "${TARGET_DIR}" 2>/dev/null \
+      && sudo chmod -R u+rwX,g+rwX,o-w "${TARGET_DIR}" 2>/dev/null \
+      && echo "    Ownership set to ${WEB_USER} (web server)." \
+      || echo "    Run as root to auto-set ownership, or chown to ${WEB_USER} yourself."
+  fi
+fi
 
 # 6) Done
-echo
-echo "==> [5/6] Deployment method"
-if command -v sudo >/dev/null 2>&1; then
-  echo "    You have shell access, so this script keeps method=git (see config.php)."
-else
-  echo "    No shell/sudo detected — set 'method' => 'archive' in config.php for pure-PHP deploys."
-fi
 echo
 echo "==> [6/6] ALL DONE. One last manual step — the GitHub webhook:"
 echo

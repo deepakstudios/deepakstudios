@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.1
+1.0.2
 ```
 
 ### Semver rules
@@ -264,6 +264,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.2 - 2026-09-15
+
+- Fixed `server-setup.sh` for the `curl | bash` one-liner: webhook secret is now auto-generated
+  (openssl/urandom) instead of an interactive `read` prompt (stdin is consumed by `bash`, so prompts broke).
+- The setup script now defaults to the current directory as web root (`PWD`) instead of `/var/www/html`.
+- Added web-server ownership/permissions step so the webhook can write the web root (BaoTa/cPanel compatible).
+- Migrations are non-fatal during setup (they auto-run on the first verified push).
 
 ## 1.0.1 - 2026-09-15
 
