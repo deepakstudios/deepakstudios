@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * config.php.example
+ *
+ * COPY THIS FILE to config.php and fill in real values.
+ *
+ * !!! WARNING !!!
+ * config.php contains production credentials.
+ * It is git-ignored and must NEVER be committed to the repository.
+ * Deployment must NEVER overwrite this file.
+ */
+
+return [
+    'database' => [
+        'host'     => '127.0.0.1',
+        'port'     => '3306',
+        'database' => 'deepakstudios',
+        'username' => 'db_user',
+        'password' => 'CHANGE_ME',
+        'charset'  => 'utf8mb4',
+    ],
+
+    'app' => [
+        'name'        => 'deepakstudios',
+        'url'         => 'https://your-domain.example',
+        'environment' => 'production',
+    ],
+
+    // Shared secret used to verify GitHub webhook signatures.
+    // Must match the secret configured in GitHub → repo → Settings → Webhooks.
+    'webhook_secret' => 'CHANGE_ME_TO_A_LONG_RANDOM_STRING',
+
+    // Local path to the deployed application (the git working tree).
+    'deploy' => [
+        'repo_path'    => __DIR__,
+        'branch'       => 'main',
+        'lock_file'    => __DIR__ . '/storage/deploy.lock',
+        'lock_ttl'     => 600,          // seconds; auto-expire stale locks
+        'log_file'     => __DIR__ . '/storage/logs/deployment.log',
+        'webhook_user' => null,         // system user to run git as (or null to run as web user)
+    ],
+
+    'health' => [
+        'require_database' => true,
+    ],
+];
