@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.6
+1.0.7
 ```
 
 ### Semver rules
@@ -264,6 +264,10 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.7 - 2026-09-15
+
+- Added wedding-photography placeholder pages `a.html`–`e.html` (cross-linked A–E nav).
 
 ## 1.0.6 - 2026-09-15
 
