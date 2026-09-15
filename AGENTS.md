@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.3
+1.0.4
 ```
 
 ### Semver rules
@@ -264,6 +264,10 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.4 - 2026-09-15
+
+- Demo change to test the auto-deploy pipeline: hero heading in `index.html` changed to "Satya Studios".
 
 ## 1.0.3 - 2026-09-15
 
