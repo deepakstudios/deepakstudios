@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.4
+1.0.5
 ```
 
 ### Semver rules
@@ -264,6 +264,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.5 - 2026-09-15
+
+- Re-verification push to confirm end-to-end auto-deploy: server was still on 1.0.3
+  after `pdo_mysql` + `zip` extensions were installed. This commit exercises the full
+  webhook pipeline (health.php now reports DB connected + all endpoints responsive).
 
 ## 1.0.4 - 2026-09-15
 
