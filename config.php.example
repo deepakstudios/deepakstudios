@@ -31,10 +31,23 @@ return [
     // Must match the secret configured in GitHub → repo → Settings → Webhooks.
     'webhook_secret' => 'CHANGE_ME_TO_A_LONG_RANDOM_STRING',
 
-    // Local path to the deployed application (the git working tree).
     'deploy' => [
-        'repo_path'    => __DIR__,
-        'branch'       => 'main',
+        'repo_path' => __DIR__,
+        'branch'    => 'main',
+
+        // Deployment method:
+        //   'archive' -> pure PHP, downloads the GitHub zip and swaps files.
+        //                Works on shared hosting (cPanel) with NO shell/git.
+        //   'git'     -> uses the git binary via shell_exec (VPS/dedicated).
+        'method' => 'archive',
+
+        // GitHub owner and repository name used for archive downloads.
+        'owner'       => 'deepakstudios',
+        'repo'        => 'deepakstudios',
+
+        // Verify SSL when downloading the archive (keep true in production).
+        'verify_ssl' => true,
+
         'lock_file'    => __DIR__ . '/storage/deploy.lock',
         'lock_ttl'     => 600,          // seconds; auto-expire stale locks
         'log_file'     => __DIR__ . '/storage/logs/deployment.log',

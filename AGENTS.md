@@ -23,9 +23,12 @@ This file is the permanent documentation and memory for AI agents working on thi
 ├── Version.txt        # Current semantic version
 ├── config.php         # Immutable environment configuration (NOT committed)
 ├── config.php.example # Template for config.php
-├── Install.php        # Database installer + migration runner (idempotent)
-├── deploy.php         # GitHub webhook deployment endpoint
+├── Install.php        # CLI installer — runs migrations via lib_migrations.php
+├── lib_migrations.php # Shared migrations registry + runner (Install.php + deploy.php)
+├── deploy.php         # GitHub webhook deployment endpoint (git OR archive mode)
 ├── health.php         # Health check endpoint
+├── server-setup.sh    # One-time server bootstrap (VPS/shell hosts)
+├── index.html         # Live site (Deepak Studios homepage)
 ├── README.md          # GitHub profile README
 ├── .gitignore         # Protects secrets & runtime state
 ├── storage/
@@ -37,10 +40,15 @@ This file is the permanent documentation and memory for AI agents working on thi
 ### How the application works
 
 1. The GitHub profile README (`README.md`) is displayed on the user's public GitHub profile.
-2. PHP scripts (`Install.php`, `deploy.php`, `health.php`) provide the application framework:
-   - **Install.php** initializes the database schema via idempotent migrations.
-   - **deploy.php** receives GitHub webhooks, verifies signatures, and deploys `origin/main` to production.
+2. `index.html` is the live production website (Deepak Studios — cinematic wedding photography).
+3. PHP scripts (`Install.php`, `lib_migrations.php`, `deploy.php`, `health.php`) provide the deployment framework:
+   - **lib_migrations.php** holds the migrations registry and the idempotent runner (`runMigrations()`, `connectDb()`, `ensureStorageDirectories()`).
+   - **Install.php** CLI entry point — runs all pending migrations.
+   - **deploy.php** receives GitHub webhooks, verifies signatures, and deploys `main` to production using either method:
+     - `archive` (default) — pure PHP, no shell/git needed, works on shared hosting; downloads the GitHub zip and swaps files while preserving `config.php` + `storage/`.
+     - `git` — uses the git binary via shell_exec (VPS/dedicated hosts).
    - **health.php** verifies the application and database are operational.
+4. `server-setup.sh` is the one-time bootstrap: clones the repo, creates `config.php`, runs migrations, and prints the GitHub webhook setup steps.
 
 ---
 
@@ -154,11 +162,23 @@ Application updated
   2. Rejects non-`push` events.
   3. Rejects pushes to any branch except `main`.
   4. Acquires a deployment lock (single deployment at a time).
-  5. Fetches `origin/main`, resets the working tree.
-  6. Runs `Install.php` for database migrations.
-  7. Runs health validation.
-  8. Logs the deployment in the database (`deployment_logs`).
+  5. Deploys `main` via the configured method (`archive` or `git`).
+  6. Runs pending migrations (in-process — no shell needed).
+  7. Validates the database connection (health).
+  8. Logs the deployment in the database (`deployment_logs`) and to `storage/logs/deployment.log`.
   9. Returns JSON response.
+
+### Deployment methods
+
+- **`archive` (default, shared-hosting friendly):** `deploy.php` downloads
+  `https://codeload.github.com/{owner}/{repo}/zip/refs/heads/main`, extracts it, and syncs
+  every file EXCEPT `config.php` and `storage/`. Pure PHP (cURL or streams + ZipArchive) —
+  works on cPanel/etc. where shell and git are disabled. Database migrations run in-process.
+- **`git` (VPS/dedicated):** `deploy.php` runs `git fetch origin main` + `git reset --hard origin/main`
+  via shell_exec. Migrations run in-process too.
+
+Both modes are triggered *only* by verified push webhooks — no cron, and arbitrary commits/branches
+from the payload are never trusted or executed.
 
 ### Production setup for GitHub webhook
 
@@ -225,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.0.0
+1.0.1
 ```
 
 ### Semver rules
@@ -244,6 +264,18 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.0.1 - 2026-09-15
+
+- Added `lib_migrations.php` — shared migration registry + idempotent runner, used by both `Install.php` and `deploy.php`.
+- Upgraded `deploy.php` with dual deployment methods:
+  - `archive` (default) — pure PHP deploy via GitHub zip download + file swap. Works on shared hosting (cPanel) with NO shell/git. Preserves `config.php` and `storage/`.
+  - `git` — original shell-based fetch/reset for VPS/dedicated hosts.
+- Migrations and health validation now run in-process (no shell dependency).
+- Added `server-setup.sh` — one-time server bootstrap command.
+- Added `index.html` — live Deepak Studios website.
+- Updated `config.php.example` with `deploy.method`, `deploy.owner`, `deploy.repo`, `deploy.verify_ssl`.
+- Deployment remains fully event-driven via GitHub webhooks — **no cron**.
 
 ## 1.0.0 - 2026-09-15
 
@@ -264,10 +296,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 
 ## Known Issues / Technical Debt
 
-1. **Working-tree reset:** The safest in-place strategy used (`git reset --hard origin/main`) is reliable but not zero-downtime for long-running requests. Acceptable for the current architecture.
-2. **Git user for webhook:** The PHP/web server user must have rights to run `git` commands and write to the repository directory. On shared hosting this may require configuring `sudo` for the specific user.
-3. **Web server configuration:** Local env has no web server; server config (Apache/nginx + PHP 8 + HTTPS) must be configured by the owner on the production host.
-4. **Database:** No database is configured locally; migrations require a live MySQL/MariaDB accessible from the server.
+1. **Archive mode does not delete removed files:** `deploy.php` in `archive` mode copies/overwrites files from the GitHub zip but does not delete files that were removed from the repo (avoids accidentally deleting unrelated web-root files on shared hosting). If a file is removed from the repo, delete leftover copies from production manually once.
+2. **Working-tree reset (git mode):** The `git` method uses `git reset --hard origin/main` — reliable but not zero-downtime for long-running requests.
+3. **Git user for webhook (git mode):** The PHP/web server user must have rights to run `git` commands and write to the repository directory.
+4. **Web server configuration:** The live site needs HTTPS and PHP 8+ with `pdo_mysql` enabled. Must be configured by the owner on the hosting provider.
+5. **Database:** Migrations require a live MySQL/MariaDB accessible from the server; no DB runs locally.
+6. **SSL on Windows test setups:** HTTPS downloads need a CA bundle; production Linux/shared hosts already ship one.
 
 ---
 
