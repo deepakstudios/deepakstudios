@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.1.0
+1.2.0
 ```
 
 ### Semver rules
@@ -264,6 +264,15 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.2.0 - 2026-09-15
+
+- **Hero upgrade.** The Google Ratings badge in the hero is now an internal `maps.app.goo.gl`
+  badge (still 4.9-stars, still `target="_blank" rel="noopener"`), headline/subheading +
+  supporting tagline refreshed, and the hero CTA row now has a gold primary
+  "Book a Free Consultation" button plus a ghost-style secondary "View Our Work" button
+  linking to the live `wedding.php` gallery.
+- No functional or layout breaking changes; purely the headline/messaging + CTA layer.
 
 ## 1.0.7 - 2026-09-15
 

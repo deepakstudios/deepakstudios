@@ -98,6 +98,15 @@ html.dark .sun{display:none} html:not(.dark) .moon{display:none}
   background-image:url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop')}
 .hero-ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:10}
 .hero-ov2{position:absolute;inset:0;z-index:10;background:linear-gradient(to top,var(--bg),color-mix(in srgb,var(--bg) 20%,transparent) 45%,transparent)}
+.hero-bg{animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.06)}}
+.hero-in>*{animation:rise .8s both}
+.hero-in>*:nth-child(1){animation-delay:.05s}
+.hero-in>*:nth-child(2){animation-delay:.15s}
+.hero-in>*:nth-child(3){animation-delay:.25s}
+.hero-in>*:nth-child(4){animation-delay:.35s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.hero-bg,.hero-in>*{animation:none}}
 .hero-in{position:relative;z-index:20;text-align:center;margin-top:5rem;display:flex;flex-direction:column;align-items:center}
 .badge{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;background:rgba(24,24,27,.5);
   backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:.5rem 1rem;border-radius:999px}
@@ -111,6 +120,12 @@ html.dark .sun{display:none} html:not(.dark) .moon{display:none}
 .btn-hero{background:var(--primary);color:#09090b;font-weight:700;font-size:1.125rem;padding:1.125rem 2rem;border-radius:999px;
   box-shadow:0 0 20px rgba(212,175,55,.3)}
 .btn-hero:hover{transform:translateY(-4px);box-shadow:0 0 35px rgba(212,175,55,.6)}
+.btn-hero-ghost{background:rgba(24,24,27,.35);border:1px solid rgba(212,175,55,.55);color:#fff;font-weight:600;
+  font-size:1.125rem;padding:1.125rem 2rem;border-radius:999px;backdrop-filter:blur(8px)}
+.btn-hero-ghost:hover{transform:translateY(-4px);border-color:var(--primary);box-shadow:0 0 25px rgba(212,175,55,.3)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:center}
+.hero-cta .btn{width:100%;justify-content:center}
+@media(min-width:768px){.hero-cta .btn{width:auto;min-width:15.5rem}}
 .scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:20;display:flex;flex-direction:column;
   align-items:center;gap:.5rem;color:rgba(255,255,255,.5)}
 .scroll-ind span{font-size:.7rem;text-transform:uppercase;letter-spacing:.2em}
@@ -336,13 +351,17 @@ footer p{margin:.15rem 0;font-size:.875rem}
 <section class="hero">
   <div class="hero-bg"></div><div class="hero-ov"></div><div class="hero-ov2"></div>
   <div class="container hero-in">
-    <div class="badge">
+    <a class="badge" href="https://maps.app.goo.gl/88kPqgpkTmQh6HG7" target="_blank" rel="noopener" aria-label="View our Google reviews (opens in a new tab)">
       <div class="stars" id="heroStars"></div>
       <span>4.9 (245+ Google Reviews)</span>
-    </div>
+    </a>
     <h1 class="pf">Deepak Studios</h1>
-    <p>Capturing Life's Precious Moments with cinematic brilliance and timeless elegance.</p>
-    <button class="btn btn-hero" onclick="openBooking()">Book a Free Consultation</button>
+    <p class="hero-sub">Wedding Photography <span class="amp">&amp;</span> Cinematography in Bokaro</p>
+    <p class="hero-tag">Capturing genuine emotions, beautiful celebrations and timeless stories with cinematic elegance.</p>
+    <div class="hero-cta">
+      <button class="btn btn-hero" onclick="openBooking()">Book a Free Consultation</button>
+      <a class="btn btn-hero-ghost" href="wedding.php">View Our Work</a>
+    </div>
   </div>
   <div class="scroll-ind"><span>Scroll</span><div class="scroll-line"><i></i></div></div>
 </section>
