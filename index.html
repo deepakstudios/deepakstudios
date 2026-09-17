@@ -213,6 +213,12 @@ html.dark .svc:hover .svc-bg{opacity:.3}
 .avatar{width:2.5rem;height:2.5rem;border-radius:999px;display:flex;align-items:center;justify-content:center;
   font-family:"Playfair Display",serif;font-weight:700;font-size:1.125rem;color:var(--primary-fg);
   background:linear-gradient(135deg,var(--primary),rgba(212,175,55,.5))}
+.tq{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;position:relative}
+.tq:has(+ .tmore[aria-expanded="true"]){-webkit-line-clamp:unset}
+.tmore{display:none;margin-top:.15rem;padding:.25rem .35rem;font-size:.75rem;letter-spacing:.04em;color:var(--primary);
+  background:transparent;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em;align-self:flex-start;transition:opacity .2s}
+.tq:has(+ .tmore[aria-expanded="true"])+.tmore::after{content:" Read less"}
+.tq:has(+ .tmore[aria-expanded="true"])+.tmore{color:color-mix(in srgb,var(--primary) 80%,#000)}
 
 /* contact */
 .cgrid{display:grid;grid-template-columns:1fr;gap:3rem}
@@ -638,17 +644,29 @@ function setFilter(c){
 renderGallery();
 
 /* ---------- testimonials ---------- */
-var REVIEWS=[
- {n:'Priya & Rahul',q:'The cinematic wedding film they created left us in tears. The HD clarity and professional framing were beyond our expectations. Highly supportive crew!'},
- {n:'Sneha & Amit',q:'Deepak Studios captured every raw emotion flawlessly. Their pre-wedding shoot was so creative, and the album quality is premium.'},
- {n:'Anjali & Vikram',q:'From start to finish, the team was incredibly professional. They made us feel so comfortable, and the candid shots are absolutely stunning.'},
- {n:'Neha & Rohan',q:'We are mesmerized by the album editing. The color grading on our cinematic video feels like a Bollywood movie. Thank you Deepak Studios!'},
- {n:'Kriti & Sameer',q:'Best decision for our wedding! The team was punctual, creative, and delivered the photos way before the deadline. 10/10 recommend.'}
-];
+ var REVIEWS=[
+  {n:'Pinky Dutta',t:'8 months ago',q:"We know you more than 10 years,and your behaviour is still same as it was...so polite, gentle and cooperative..😊😊.You truly capture our real moments with so perfection 😍😍.Your work is truly outstanding. Hope we get more chance to get clicked through your magical lenses..All the best for your future..😊😊"},
+  {n:'Sobha Sahoo',t:'Edited 3 months ago',q:"We had an amazing experience with Deepak studio and his team for our haldi, wedding, and engagement. From day one, they were super friendly, professional, and genuinely listened to everything we wanted. They made us feel comfortable during all the functions, which really shows in the photos. Every moment was captured beautifully, and the team’s energy made the whole experience even more special. Highly recommend them to anyone looking for someone talented, patient, and easy to work with!"},
+  {n:'Abhilasha Kumari',t:'2 months ago',q:"We chose Deepak Studio's for my sister's wedding, and the experience was excellent from start to finish. The photography and videography were of outstanding quality, capturing every moment beautifully. The wedding album was designed with great attention to detail and looked absolutely stunning. The team was professional, friendly, and cooperative throughout the event. We are truly grateful for the wonderful memories they have created for our family. Highly recommended for anyone looking for quality wedding photography and videography services."},
+  {n:'Riya Kumari',t:'3 months ago',q:"I received my son’s Annaprashan video today and I'm truly overwhelmed. The way every moment has been captured is just magical. While watching it, I could literally feel all the emotions of that day again. Every frame looks so lively and special that I couldn’t stop replaying it. Thank you \u201CDeepak Studios\u201D for giving us such precious memories that we'll always hold close to our hearts."},
+  {n:'Parth Roy',t:'8 months ago',q:"If you're looking for a photography team that truly cares about your special day, look no further than Deepak Studio. Their team is incredibly humble and down-to-earth, making everyone feel comfortable in front of the camera. What sets them apart is their unique and creative ideas—they don't just take photos; they capture memories in a way that feels fresh and artistic. They went above and beyond to make our event memorable. Highly recommended."}
+ ];
 function tcard(r){return '<div class="tcard">'+ICON.quote+'<div class="stars">'+star.repeat(5)+'</div>\
- <blockquote>&ldquo;'+r.q+'&rdquo;</blockquote>\
- <div class="tfoot"><div><h4>'+r.n+'</h4><p>Verified Client</p></div><div class="avatar">'+r.n.charAt(0)+'</div></div></div>';}
-document.getElementById('marquee').innerHTML=REVIEWS.concat(REVIEWS).map(tcard).join('');
+  <blockquote class="tq">&ldquo;'+r.q+'&rdquo;</blockquote><button class="tmore" aria-expanded="false">Read more</button>\
+  <div class="tfoot"><div><h4>'+r.n+'</h4><p>Google Review</p><p class="twhen">'+r.t+'</p></div><div class="avatar">'+r.n.charAt(0)+'</div></div></div>';}
+  document.getElementById('marquee').innerHTML=REVIEWS.concat(REVIEWS).map(tcard).join('');
+document.querySelectorAll('.tmore').forEach(function(b){
+  b.addEventListener('click',function(){
+    var open=b.getAttribute('aria-expanded')==='true';
+    b.setAttribute('aria-expanded',open?'false':'true');
+    b.textContent=open?'Read more':'Read less';
+  });
+});
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.tmore');if(!b)return;var open=b.getAttribute('aria-expanded')==='true';
+  b.setAttribute('aria-expanded',open?'false':'true');b.textContent=open?'Read more':'Read less';
+});
 
 /* ---------- interactions ---------- */
 function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
