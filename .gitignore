@@ -9,6 +9,8 @@ storage/
 photos/
 !photos/wedding/*/
 !photos/wedding/*/.gitkeep
+!photos/prewedding/
+!photos/prewedding/.gitkeep
 
 # OS / editor cruft
 .DS_Store
@@ -16,3 +18,5 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+# Local PowerShell scratch scripts (grev_*.ps1 etc.) � never committed
+*.ps1
