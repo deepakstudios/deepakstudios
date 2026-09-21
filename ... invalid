@@ -1,0 +1,113 @@
+# -*- coding: ascii -*-
+import io, re, subprocess, sys, posixpath
+G = r"C:\Users\deepak studio\Documents\Default Project\deepakstudios"
+IDX = posixpath.join(G, "index.html")
+
+def git_bin(*args):
+    return subprocess.run(["git", "-C", G, *args], capture_output=True, check=True).stdout.decode("utf-8", "replace")
+
+def readlines(path):
+    with io.open(path, "r", encoding="utf-8", newline="") as f:
+        return f.read().split("\n")
+
+def writelines(path, lines):
+    with io.open(path, "w", encoding="utf-8", newline="") as f:
+        f.write("\n".join(lines))
+
+def find_seam(lines, open_re, close_re, what):
+    for i, ln in enumerate(lines):
+        if re.search(open_re, ln):
+            s = i
+            break
+    else:
+        raise RuntimeError("open seam missing: " + open_re + " (" + what + ")")
+    depth = 0
+    for i in range(s, len(lines)):
+        depth += len(re.findall(r"<nav\b", lines[i]))
+        depth -= len(re.findall(r"</nav>", lines[i]))
+        if depth == 0 and i > s:
+            return s, i
+    raise RuntimeError("close seam missing: " + close_re + " (" + what + ")")
+
+def find_div_seam(lines, open_re, what):
+    for i, ln in enumerate(lines):
+        if re.search(open_re, ln):
+            s = i
+            break
+    else:
+        raise RuntimeError("open seam missing: " + open_re + " (" + what + ")")
+    depth = 0
+    for i in range(s, len(lines)):
+        depth += len(re.findall(r"<div\b", lines[i]))
+        depth -= len(re.findall(r"</div>", lines[i]))
+        if depth == 0 and i > s:
+            return s, i
+    raise RuntimeError("close seam missing (" + what + ")")
+
+cur = readlines(IDX)
+old_text = git_bin("show", "e9240fb:index.html")
+old = old_text.split("\n")
+
+print("=== (1) OLD e9240fb 5-item DESK nav block (exact seams, swap-target): ===")
+old_desk = find_seam(old, r'^<nav class="desk">', "</nav>", "old-desk")
+for ln in old[old_desk[0]:old_desk[1]+1]:
+    print("   d| %s" % ln.strip())
+
+print("=== (2) OLD e9240fb 5-item MOB nav block (swap-target): ===")
+old_mob = find_div_seam(old, r'<div id="mobmenu">', "old-mob")
+for ln in old[old_mob[0]:old_mob[1]+1]:
+    print("   m| %s" % ln.strip())
+
+print("=== (3) CURRENT 7-item DESK nav seam (verify): ===")
+desk = find_seam(cur, r'^<nav class="desk">', "</nav>", "cur-desk")
+for ln in cur[desk[0]:desk[1]+1]:
+    print("   d| %s" % ln.strip())
+
+print("=== (4) CURRENT 7-item MOB nav seam (verify): ===")
+mob = find_div_seam(cur, r'<div id="mobmenu">', "cur-mob")
+for ln in cur[mob[0]:mob[1]+1]:
+    print("   m| %s" % ln.strip())
+
+# sanity
+cur_desk_text = "\n".join(cur[desk[0]:desk[1]+1])
+cur_mob_text = "\n".join(cur[mob[0]:mob[1]+1])
+if "Cinematography" not in cur_desk_text:
+    raise RuntimeError("current desk seam me 'Cinematography' nahi - abort (7-item confirm impossible)")
+if "Cinematography" not in cur_mob_text:
+    raise RuntimeError("current mob seam me 'Cinematography' nahi - abort")
+
+# --- swap desk ---
+new_desk = old[old_desk[0]:old_desk[1]+1]
+lines = cur[:]
+lines[desk[0]:desk[1]+1] = new_desk
+
+# --- swap mob (re-find after desk shift) ---
+mob2 = find_div_seam(lines, r'<div id="mobmenu">', "cur-mob2")
+new_mob = old[old_mob[0]:old_mob[1]+1]
+lines[mob2[0]:mob2[1]+1] = new_mob
+
+# --- remove cinematography.php + about.php (navbar unhe ab refer nahi karta) ---
+writelines(IDX, lines)
+
+for f in ("cinematography.php", "about.php"):
+    p = posixpath.join(G, f)
+    if os.path.exists(p):
+        os.remove(p)
+        print("   removed file: %s" % f)
+
+# --- verify ---
+chk = readlines(IDX)[:]
+all_text = "\n".join(chk)
+ct = all_text.count("Cinematography")
+print("=== (5) POST-SWAP verify: ===")
+print("   Cinematography-in-index={0} (0 = 7-item swap hua, 5-item restored)".format(ct))
+desk2 = find_seam(chk, r'^<nav class="desk">', "</nav>", "post-desk")
+for ln in chk[desk2[0]:desk2[1]+1]:
+    print("   d| %s" % ln.strip())
+
+print("=== (6) git add/commit/push: ===")
+subprocess.run(["git", "-C", G, "add", "-A"], check=True)
+subprocess.run(["git", "-C", G, "commit", "-m", "revert nav: restore 5-item navbar (desk+mob) from e9240fb; remove cinematography.php & about.php (added with 7-item nav; ab koine links); hero/services/gallery/reviews/contact/footer untouched in this revert"], check=True)
+r = subprocess.run(["git", "-C", G, "push", "origin", "main"], capture_output=True)
+print("   push-rc={0}".format(r.returncode))
+subprocess.run(["git", "-C", G, "log", "--oneline", "-2"], check=True)
