@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.2.0
+1.4.0
 ```
 
 ### Semver rules
@@ -264,6 +264,21 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.4.0 - 2026-09-22
+
+- **Cinematography page premium redesign.** `cinematography.php` rebuilt in the luxury
+  dark + gold studio aesthetic: Home-matching fixed header/nav (desktop + mobile menu,
+  Cinematography active), cinematic camera hero with overlays/vignette/gold grade
+  (keeps "Cinematography" + "Cinematic Films & Short Films"), removed the
+  "Choose Your Occasion" section, six cinematic image cards (2 LIVE links:
+  `wedding.php`, `prewedding.php`; 4 Coming Soon tiles, no 404s) with gold SVG line
+  icons, LIVE/COMING SOON glass badges, hover zoom/lift/glow, staggered scroll reveal,
+  3/2/1-column responsive grid, lazy-loaded `w=1200` thumbnails. No PHP logic changes.
+
+## 1.3.0 - 2026-09-15
+
+- Added Google Reviews trust strip + "Read Our Google Reviews" CTA (see `Version.txt`).
 
 ## 1.2.0 - 2026-09-15
 
