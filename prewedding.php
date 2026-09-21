@@ -117,31 +117,11 @@ header('Content-Type: text/html; charset=UTF-8');
 </header>
 
 <main>
-  <!-- ================= PHOTOS SECTION ================= -->
-  <section class="sect" id="photos">
-    <h2 class="sec-title">Photos <span class="gold">(<?= $photoTotal ?>)</span></h2>
-
-    <?php if ($photoTotal === 0): ?>
-      <div class="empty">
-        No photos yet.<br>
-        Upload images into <code>photos/prewedding/</code> and refresh — they appear instantly.
-      </div>
-    <?php else: ?>
-      <div class="gallery">
-        <?php foreach ($photos as $file): ?>
-          <a class="ph" href="javascript:void(0)"
-             onclick="openLB('photos/prewedding/<?= $esc($file) ?>')">
-            <img loading="lazy" src="photos/prewedding/<?= $esc($file) ?>"
-                 alt="Pre-Wedding photo <?= $esc($file) ?>">
-          </a>
-        <?php endforeach; ?>
-      </div>
-    <?php endif; ?>
-
-    <div class="note"><b>Site owner:</b> add photos by uploading image files
-      (jpg, jpeg, png, webp, gif, avif) into the <code>photos/prewedding/</code> folder
-      (BaoTa File Manager / FTP). They appear here automatically — no code changes, no deploy.</div>
-  </section>
+    <!-- ================= PHOTOS SECTION (REMOVED — VIDEOS ONLY) =================
+       Photos showcase was removed per owner request 2026-09-21. This page is now
+       videos-only. The videos section below remains the single showcase. The
+       photos/prewedding/ folder + its files are left on disk untouched (owner's
+       deliverables) — they are simply no longer served from this page. -->
 
   <!-- ================= VIDEOS SECTION ================= -->
   <section class="sect" id="videos">
