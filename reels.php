@@ -186,6 +186,35 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
   .vnav button:hover{color:var(--gold);border-color:var(--gold)}
   .vpos{color:var(--mut,#8a867c);font-size:.72rem;letter-spacing:.12em}
   body.vlock,html.vlock{overflow:hidden}
+.vmodal{position:fixed;z-index:1500;inset:0;display:none;align-items:center;justify-content:center;padding:1rem;
+      background:rgba(5,6,8,.9);backdrop-filter:blur(12px)}
+  .vmodal.open{display:flex}
+  .vshell{width:min(94vw,352px);max-height:96vh;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;
+      background:var(--card,#151517);border:1px solid var(--gold2,#26262a);box-shadow:0 48px 110px -20px rgba(0,0,0,.95)}
+  .vhead{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.85rem 1rem;
+      border-bottom:1px solid var(--line,#26262a)}
+  .vhead h3{margin:0;font-size:.98rem;font-weight:400;color:var(--ink,#efe9dc);line-height:1.3}
+  .vhead h3 small{display:block;color:var(--gold,#c9a86a);font-size:.62rem;letter-spacing:.18em;
+      text-transform:uppercase;margin-bottom:.25rem}
+  .vclose{all:unset;cursor:pointer;display:grid;place-items:center;width:2.15rem;height:2.15rem;border-radius:50%;
+      color:var(--mut,#8a867c);font-size:1.15rem;line-height:1;border:1px solid var(--line,#26262a);transition:.2s ease}
+  .vclose:hover{color:var(--ink);border-color:var(--gold);background:rgba(201,168,106,.1)}
+  .vwrap{position:relative;width:100%;aspect-ratio:9/16;background:#000}
+  .vshow{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;
+      background-image:radial-gradient(ellipse at center,rgba(201,168,106,.22),transparent 60%)}
+  .pbtn2{width:3.7rem;height:3.7rem;border-radius:50%;display:grid;place-items:center;
+      background:var(--gold2,#c9a86a);color:#0b0b0c;box-shadow:0 14px 36px rgba(0,0,0,.55)}
+  .pbtn2 svg{margin-left:3px}
+  .vframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .vfoot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem 1rem;
+      border-top:1px solid var(--line,#26262a)}
+  .vnav{display:flex;gap:.5rem}
+  .vnav button{cursor:pointer;font-family:var(--serif,Georgia,serif);font-size:.78rem;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--mut,#8a867c);background:transparent;border:1px solid var(--line,#26262a);
+      padding:.5rem .95rem;border-radius:999px;transition:.2s ease}
+  .vnav button:hover{color:var(--gold);border-color:var(--gold)}
+  .vpos{color:var(--mut,#8a867c);font-size:.72rem;letter-spacing:.12em}
+  body.vlock,html.vlock{overflow:hidden}
 </style>
 </head>
 <body>
@@ -318,6 +347,88 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
   });
 
   render();
+})();
+</script>
+<div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vttl">
+  <div class="vshell">
+    <div class="vhead">
+      <h3 id="vttl"><small id="vcat">Reel</small><span id="vtit">Now Playing</span></h3>
+      <button type="button" class="vclose" id="vclose" aria-label="Close player">&#10005;</button>
+    </div>
+    <div class="vwrap">
+      <div class="vshow" id="vshow"><span class="pbtn2" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l11.06-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></svg>
+      </span></div>
+      <iframe id="vframe" class="vframe" title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="vfoot">
+      <div class="vnav">
+        <button type="button" id="vprev">&#8249; Prev</button>
+        <button type="button" id="vnext">Next &#8250;</button>
+      </div>
+      <span class="vpos" id="vpos"></span>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var modal = document.getElementById('vmodal');
+  if (!modal) return;
+  var frame = document.getElementById('vframe');
+  var vttl = document.getElementById('vttl');
+  var vttl2 = document.getElementById('vtit');
+  var vcat = document.getElementById('vcat');
+  var vpos = document.getElementById('vpos');
+  var vclose = document.getElementById('vclose');
+  var vprev = document.getElementById('vprev');
+  var vnext = document.getElementById('vnext');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-v]'));
+  var ids = cards.map(function (c) { return c.getAttribute('data-v'); });
+  var i = 0, open = false, lastScroll = 0;
+
+  function openAt(n) {
+    if (!cards.length) return;
+    i = (n % cards.length + cards.length) % cards.length;
+    var v = ids[i];
+    frame.src = 'https://www.youtube.com/embed/' + v + '?autoplay=1&rel=0&playsinline=1';
+    vttl2.textContent = cards[i].getAttribute('data-t') || 'Reel';
+    vpos.textContent = (i + 1) + ' / ' + cards.length;
+    lastScroll = (window.pageYOffset || document.documentElement.scrollTop) || 0;
+    modal.classList.add('open');
+    document.body.classList.add('vlock');
+    document.documentElement.classList.add('vlock');
+    window.scrollTo(0, 0);
+    vclose.focus();
+  }
+  function closeAt() {
+    if (!open) return;
+    modal.classList.remove('open');
+    frame.src = 'about:blank';
+    document.body.classList.remove('vlock');
+    document.documentElement.classList.remove('vlock');
+    window.scrollTo(0, lastScroll);
+  }
+
+  function fx(e) { e.preventDefault(); e.stopPropagation(); }
+
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest ? e.target.closest('[data-v]') : null;
+    if (c) { fx(e); open = true; openAt(cards.indexOf(c)); return; }
+    if (e.target.closest && e.target.closest('#vclose')) { fx(e); closeAt(); open = false; return; }
+    if (e.target.closest && e.target.closest('#vprev')) { fx(e); openAt(i - 1); return; }
+    if (e.target.closest && e.target.closest('#vnext')) { fx(e); openAt(i + 1); return; }
+    if (e.target === modal) { e.preventDefault(); closeAt(); open = false; }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeAt(); open = false; }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); openAt(i - 1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); openAt(i + 1); }
+  });
 })();
 </script>
 <div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vttl">
