@@ -36,6 +36,8 @@ $REELS = [
     ['id' => 'oJyx7SCV3Rc', 't' => 'Rooftop Rendezvous',   'cat' => 'prewedding', 'sub' => '',    'bg' => '#141210'],
     ['id' => 'AMqMUmnb0K4', 't' => 'Monsoon Frames',       'cat' => 'prewedding', 'sub' => '',    'bg' => '#0f1412'],
     ['id' => 'kmblV9ddjJo', 't' => 'Falling Leaves',       'cat' => 'prewedding', 'sub' => '',    'bg' => '#1a1210'],
+    ['id' => 'NO3eWfyXMKE', 't' => 'Haldi Bloom',         'cat' => 'wedding', 'sub' => 'haldi', 'bg' => '#141210'],
+    ['id' => 'eP1Fmmfzfk8', 't' => 'Haldi Rhythms',       'cat' => 'wedding', 'sub' => 'haldi', 'bg' => '#1a1410'],
     // Add wedding / celebration Shorts here, e.g.:
     // ['id' => 'XXXX', 't' => 'Haldi Joy', 'cat' => 'wedding', 'sub' => 'haldi'],
     // ['id' => 'YYYY', 't' => 'Birthday Bash', 'cat' => 'celebration', 'sub' => 'birthday'],
