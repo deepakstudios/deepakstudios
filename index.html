@@ -564,21 +564,25 @@ footer p{margin:.15rem 0;font-size:.875rem}
     <button class="modal-close" onclick="closeModal('booking')" aria-label="Close">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
-    <h3>Book a Free Consultation</h3>
+    <h3>Check Availability</h3>
     <form onsubmit="return submitBooking(event)">
       <div class="field"><label for="b-name">Full Name</label><input id="b-name" required placeholder="John Doe"></div>
-      <div class="field"><label for="b-phone">Phone Number</label><input id="b-phone" type="tel" required placeholder="+91 98765 43210"></div>
+      <div class="field"><label for="b-phone">WhatsApp / Phone Number</label><input id="b-phone" type="tel" required placeholder="+91 98765 43210"></div>
       <div class="frow">
         <div class="field"><label for="b-date">Event Date</label><input id="b-date" type="date" required></div>
-        <div class="field"><label for="b-type">Shoot Type</label>
+        <div class="field"><label for="b-type">Type of Event</label>
           <select id="b-type" required>
             <option value="" disabled selected>Select an option</option>
-            <option>Wedding Photography</option><option>Pre-Wedding Shoot</option>
-            <option>Cinematic Film</option><option>Other Events</option>
+            <option>Wedding</option><option>Pre-Wedding</option><option>Destination Wedding</option>
+            <option>Engagement</option><option>Anniversary</option><option>Birthday</option>
+            <option>Pre-Birthday</option><option>Housewarming</option><option>Other Event</option>
           </select>
         </div>
       </div>
-      <button type="submit" class="btn btn-submit">Request Callback via WhatsApp</button>
+      <div class="field"><label for="b-venue">Venue / Location (Optional)</label><input id="b-venue" placeholder="Hotel Grande, Ranchi"></div>
+      <div class="field"><label for="b-msg">Message (Optional)</label>
+        <textarea id="b-msg" rows="4" placeholder="Tell us more about your event, specific requirements, or any questions..."></textarea></div>
+      <button type="submit" class="btn btn-submit">Check Availability on WhatsApp</button>
     </form>
   </div>
 </div>
@@ -754,18 +758,21 @@ function submitEnquiry(e){
 }
 function submitBooking(e){
   /* Serves the desktop "CHECK AVAILABILITY" hero CTA and the mobile "Book Now" bar,
-     because both open this same modal. Only the fields this form actually has. */
+     because both open this same modal. Only the fields this form actually has, and the
+     optional Venue / Message lines are left out entirely when they are blank. */
   e.preventDefault();
   var msg = ['Hello Deepak Studios,',
-             'I would like to book a photography service.',
              '',
-             'Name: '      + fval('b-name'),
-             'Phone: '     + fval('b-phone'),
-             'Event Date: ' + fdate('b-date'),
-             'Shoot Type: ' + fopt('b-type'),
+             'I would like to check availability for my event.',
              '',
-             'Please let me know about availability and package details.'].join('\n');
-  openWhatsApp(msg);
+             'Name: '        + fval('b-name'),
+             'WhatsApp: '    + fval('b-phone'),
+             'Event Type: '  + fopt('b-type'),
+             'Event Date: '  + fdate('b-date')];
+  if(fval('b-venue')) msg.push('Venue/Location: ' + fval('b-venue'));
+  if(fval('b-msg'))   msg.push('', 'Message:', fval('b-msg'));
+  msg.push('', 'Please share your availability and package details.');
+  openWhatsApp(msg.join('\n'));
   e.target.reset();
   closeModal('booking');
   toast('Opening WhatsApp with your booking details…');

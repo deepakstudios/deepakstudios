@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.10.0
+1.11.0
 ```
 
 ### Semver rules
@@ -265,6 +265,55 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.11.0 - 2026-09-29
+
+- **The booking modal is now a "Check Availability" enquiry.** The SAME form, opened by
+  both the desktop "CHECK AVAILABILITY" hero button and the mobile "Book Now" bar, has:
+  heading "Check Availability"; the "Shoot Type" dropdown replaced by **Type of Event**
+  with exactly the studio's event options -- Wedding, Pre-Wedding, Destination Wedding,
+  Engagement, Anniversary, Birthday, Pre-Birthday, Housewarming, Other Event (no
+  cinematic-film or other service types); the phone field relabelled
+  "WhatsApp / Phone Number"; two new OPTIONAL fields -- **Venue / Location** (input) and
+  **Message** (textarea); and the button now reads **"Check Availability on WhatsApp"**.
+  Full Name, WhatsApp / Phone Number and Event Date are unchanged and still required.
+- **Desktop and mobile literally share the one updated form.** Both CTAs call the same
+  `openBooking()` -> `openModal("booking")` and the same form, so both submit through the
+  same `submitBooking()`. No second/mobile form was created; the mobile bar itself
+  (position, styling, label) is unchanged; the whole page still has exactly two
+  `<form>` elements (this modal + the "Send an Enquiry" contact form).
+- **The WhatsApp message now asks for availability.** Format (an optional line is left
+  out entirely when its field is blank):
+  `Hello Deepak Studios,` / blank / `I would like to check availability for my event.` /
+  blank / `Name: ...` / `WhatsApp: ...` / `Event Type: ...` / `Event Date: ...` /
+  `Venue/Location: ...` (only if filled) / blank / `Message:` + text (only if filled) /
+  blank / `Please share your availability and package details.`
+- **Same number, encoding and opening behaviour as before.** Still opens
+  `https://wa.me/<number>?text=...` with the number read from the existing floating
+  button (`waNumber()`, fallback `WA_FALLBACK = "919031700464"`), one
+  `encodeURIComponent()` call (spaces, `&`, `#`, `?`, Devanagari, `%0A` newlines),
+  `window.open(link,"_blank")` + `w.opener = null`, and the same-tab fallback when a
+  popup is blocked. Native `required` validation, `onsubmit="return submitBooking(event)"`
+  wiring, the reset and the toast are all unchanged.
+- **Nothing else changed.** The diff is confined to 2 hunks in `index.html`: the booking
+  modal markup (heading, label, dropdown, two optional fields, button label) and
+  `submitBooking()`. Hero, navbar, photography/cinematography/reels links, portfolio,
+  services, reviews, gallery/filters, footer, mobile bar and floating WhatsApp button are
+  untouched. `reels.php`, `cinematography.php`, `photography.php`, `wedding.php`,
+  `prewedding.php`, `lib_contact.php`, `a.php` - `e.php` and all deploy files are
+  byte-identical to 1.10.0.
+- **Verified in real Chrome.** The verbatim modal, floating button and shipped WhatsApp
+  script were driven with `requestSubmit()` and real clicks: 105 checks, 0 failures
+  (new heading; kept fields; exact 9-option list with no service types; optional
+  venue/message; button label; ONE shared form whose `openBooking()` really opens the
+  `#booking` modal holding the updated fields; submission goes to the SAME number
+  919031700464 as the floating button; message byte-equal to the template with and
+  without optional fields; Devanagari/`&`/`<`/`>`/newline encoding; validation blocks
+  empty or incomplete submits; exactly one `window.open` per valid submit; same-tab
+  fallback + `opener=null` source checks; button label fits `white-space:nowrap` at
+  320/360/390/414/768/1024px). Plus 10 static same-modal wiring checks (one `#booking`,
+  exactly two forms, hero + mobile bar both bound to `openBooking()`, `openBooking()`
+  === `openModal("booking")`) and the git diff confined to the 2 intended hunks.
 
 ## 1.10.0 - 2026-09-29
 
