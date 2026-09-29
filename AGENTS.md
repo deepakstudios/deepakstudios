@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.7.1
+1.8.0
 ```
 
 ### Semver rules
@@ -264,6 +264,54 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.8.0 - 2026-09-29
+
+- **New `photography.php` -- premium Photography portfolio.** A new page in the same luxury dark
+  + gold studio language as `reels.php` and `cinematography.php`: the identical fixed premium
+  navbar with **Photography** marked active (`.on` + `aria-current="page"`, gold hairline
+  underline, scrolled `backdrop-filter` state, mobile burger + slide-down menu), plus a
+  full-bleed hero with eyebrow "DEEPAK STUDIOS - PHOTOGRAPHY", heading "THE ART OF CAPTURING
+  MOMENTS", subheading "Timeless photographs. Authentic emotions. Beautifully preserved.",
+  supporting line, an "EXPLORE PHOTOGRAPHY" CTA that smooth-scrolls to the gallery, and a
+  "SCROLL TO EXPLORE" indicator. Dark cinematic overlay and very subtle film grain; gold is used
+  only as an accent (hairline rule, CTA, hover border, uppercase labels).
+- **Replaceable hero image (single config point).** `$photoHeroImage` (plus `$photoHeroPos` and
+  `$photoHeroPosMb`) live in one commented block at the top of `photography.php`; the path
+  appears **exactly once** in the file, so swapping the picture is a one-line edit with no
+  HTML/CSS/JS change. It currently points at the existing real studio photograph
+  `photos/hero/deepakstudiosbokaro.webp` (1920x1080) -- no new binary was added. Desktop and the
+  <=640px breakpoint reposition the hero via `object-position` so the subject survives the mobile
+  crop. Served with `object-fit:cover`, `fetchpriority="high"`, explicit `width`/`height` (no
+  layout shift) and no lazy-load.
+- **Existing photography content is preserved, not rewritten.** The page only *reads* the
+  existing folders and stores no copies: `photos/prewedding/` supplies the 6 Pre-Wedding
+  photographs and `photos/wedding/a .. e/` supply the 5 Wedding albums. `wedding.php`,
+  `prewedding_photos.php`, `prewedding_videos.php`, `prewedding.php`, `lib_gallery.php`,
+  `lib_prewedding.php` and the album pages `a.php` - `e.php` are all untouched, and every album
+  link still resolves. The folder-scan convention is unchanged, so the site owner still just
+  uploads files (BaoTa / FTP) and they appear with no code edit and no deploy; the Hinglish
+  upload instructions are retained on the page.
+- **Category filter built from real content only.** `$CATS` is derived by scanning the data, and
+  `$MAIN` only lists categories that actually hold items -- currently **ALL | PRE-WEDDING |
+  WEDDING**. Empty categories (Engagement / Birthday / Anniversary) are deliberately not rendered,
+  and a premium "COMING SOON" empty state remains as the fallback. Filters are `<button>`s with
+  `preventDefault()` + `stopPropagation()`, so choosing a category never reloads the page.
+  Counts: ALL 11 (6 photos + 5 albums), PRE-WEDDING 6, WEDDING 5.
+- **Gallery + lightbox.** 4:3 cards with a large image, a soft shadow, a discreet gold zoom
+  affordance on hover and a gentle `scale(1.04)` lift (no excessive animation). Photo cards open
+  the same-page lightbox; album cards stay real links to their album pages. The lightbox keeps
+  the existing gallery contract exactly -- `openLightbox()` / `closeLightbox()` globals, `#lightbox`
+  and `#lb-img` ids, Esc / backdrop / X close -- now restyled premium, with scroll lock, scroll
+  restore and a caption. Photo clicks are handled by delegation on `#grid`, so the viewer keeps
+  working after a filter re-render.
+- **Readable titles without hard-coding content.** The existing pre-wedding files are named after
+  their YouTube IDs, so they are mapped to the same names used on `cinematography.php`; any newly
+  uploaded file automatically falls back to "Pre-Wedding Photograph". Album cards show their live
+  photo count read from disk.
+- **No other files changed.** `reels.php`, `cinematography.php`, `prewedding.php`, `index.html`,
+  `wedding.php`, `lib_gallery.php`, `lib_prewedding.php`, `a.php` - `e.php` and
+  `prewedding_videos.php` were not modified.
 
 ## 1.7.1 - 2026-09-29
 
