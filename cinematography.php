@@ -297,7 +297,7 @@ body.vlock,html.vlock{overflow:hidden}
     </a>
     <nav class="rnav-desk" aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="index.html#portfolio">Photography</a>
+      <a href="photography.php">Photography</a>
       <a href="cinematography.php" class="on" aria-current="page">Cinematography</a>
       <a href="reels.php">Reels</a>
       <a href="index.html#contact">Contact Us</a>
@@ -309,7 +309,7 @@ body.vlock,html.vlock{overflow:hidden}
   </div>
   <div class="rmobmenu" id="rmobmenu">
     <a href="index.html">Home</a>
-    <a href="index.html#portfolio">Photography</a>
+    <a href="photography.php">Photography</a>
     <a href="cinematography.php" class="on" aria-current="page">Cinematography</a>
     <a href="reels.php">Reels</a>
     <a href="index.html#contact">Contact Us</a>

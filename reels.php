@@ -406,7 +406,7 @@ main{padding-top:3.1rem}
     </a>
     <nav class="rnav-desk" aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="index.html#portfolio">Photography</a>
+      <a href="photography.php">Photography</a>
       <a href="cinematography.php">Cinematography</a>
       <a href="reels.php" class="on" aria-current="page">Reels</a>
       <a href="index.html#contact">Contact Us</a>
@@ -418,7 +418,7 @@ main{padding-top:3.1rem}
   </div>
   <div class="rmobmenu" id="rmobmenu">
     <a href="index.html">Home</a>
-    <a href="index.html#portfolio">Photography</a>
+    <a href="photography.php">Photography</a>
     <a href="cinematography.php">Cinematography</a>
     <a href="reels.php" class="on" aria-current="page">Reels</a>
     <a href="index.html#contact">Contact Us</a>

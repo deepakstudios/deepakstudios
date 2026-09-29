@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.8.0
+1.8.1
 ```
 
 ### Semver rules
@@ -264,6 +264,30 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.8.1 - 2026-09-29
+
+- **Navbar "Photography" link now opens `photography.php` instead of the homepage portfolio
+  section.** After 1.8.0 introduced the dedicated Photography page, the premium navbar on
+  `reels.php` and `cinematography.php` was still pointing Photography at `index.html#portfolio`,
+  so visitors landed on the homepage rather than the new portfolio. The `href` was changed to
+  `photography.php` in all four places (desktop + mobile menu on both pages):
+  - `reels.php` line 409 and 421
+  - `cinematography.php` line 300 and 312
+- **Link summary after this change:** `reels.php`, `cinematography.php` and `photography.php` all
+  send Photography to `photography.php`; `index.html` keeps its own in-page `href="#portfolio"`
+  nav (unchanged, as required).
+- **Active/current state is correct on every page.** `photography.php` marks Photography active
+  (`.on` + `aria-current="page"`, exactly 2 -- desktop + mobile); `reels.php` still marks Reels
+  active and `cinematography.php` still marks Cinematography active. No page gained or lost an
+  `aria-current` marker.
+- **Nothing else changed.** The diff is exactly 4 lines (4 removed / 4 added), all of them the
+  single `href` attribute -- no markup, CSS, JS, PHP data, hero, filter, modal or video changed.
+  The homepage `Our Portfolio` section (`<section id="portfolio">`, heading
+  `Our <span class="gold">Portfolio</span>`, `#gallery`) and its own `#portfolio` nav links are
+  untouched. `photography.php`, `prewedding.php`, `wedding.php`, `lib_gallery.php`,
+  `lib_prewedding.php`, `a.php` - `e.php`, `prewedding_photos.php` and `prewedding_videos.php`
+  were not modified.
 
 ## 1.8.0 - 2026-09-29
 
