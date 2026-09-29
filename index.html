@@ -508,7 +508,7 @@ footer p{margin:.15rem 0;font-size:.875rem}
               <textarea id="c-msg" rows="4" placeholder="Tell us more about your event location, specific requirements, or any questions..."></textarea></div>
             <button type="submit" class="btn btn-submit">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
-              Send Enquiry
+              Send Enquiry via WhatsApp
             </button>
           </form>
         </div>
@@ -578,7 +578,7 @@ footer p{margin:.15rem 0;font-size:.875rem}
           </select>
         </div>
       </div>
-      <button type="submit" class="btn btn-submit">Request Callback</button>
+      <button type="submit" class="btn btn-submit">Request Callback via WhatsApp</button>
     </form>
   </div>
 </div>
@@ -695,8 +695,82 @@ function toast(msg){
   var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},3500);
 }
-function submitEnquiry(e){e.preventDefault();e.target.reset();toast('Enquiry sent! We will call you shortly.');return false;}
-function submitBooking(e){e.preventDefault();e.target.reset();closeModal('booking');toast('Consultation requested! We will be in touch.');return false;}
+/* ---------- WhatsApp enquiry (reuses the number of the floating WhatsApp button) ---------- */
+var WA_FALLBACK = '919031700464';   // same number as the <a class="wa"> button, used only if that button is missing
+function waNumber(){
+  /* Read the number straight off the existing floating button so the enquiry forms can
+     never drift away from it. No new number is introduced anywhere. */
+  var a = document.querySelector('a.wa[href*="wa.me"]');
+  if(a){ var m = a.href.match(/wa\.me\/(\d+)/); if(m) return m[1]; }
+  return WA_FALLBACK;
+}
+function waLink(text){
+  /* wa.me opens the WhatsApp app on mobile when installed, and WhatsApp Web in the
+     browser on desktop. encodeURIComponent keeps spaces, &, #, and Devanagari text intact. */
+  return 'https://wa.me/' + waNumber() + '?text=' + encodeURIComponent(text);
+}
+function fval(id){
+  var el = document.getElementById(id);
+  return el && el.value ? el.value.trim() : '';
+}
+function fdate(id){
+  /* <input type="date"> always yields YYYY-MM-DD, so this is safe and locale-independent. */
+  var v = fval(id), m = v.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return v;
+  var mon = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1];
+  return mon ? m[3] + ' ' + mon + ' ' + m[1] : v;
+}
+function fopt(id){
+  /* Use the visible option label ("Wedding Photography"), never the raw value ("wedding"). */
+  var el = document.getElementById(id);
+  return el && el.selectedIndex >= 0 ? el.options[el.selectedIndex].text.trim() : '';
+}
+function openWhatsApp(text){
+  var link = waLink(text);
+  var w = window.open(link,'_blank');
+  /* Drop the opener reference (same protection as rel="noopener" on the floating button)
+     so the new tab can never navigate this one. */
+  if(w){ try{ w.opener = null; }catch(err){} }
+  else { window.location.href = link; }   /* popup blocked -> fall back to the same tab */
+}
+function submitEnquiry(e){
+  /* Native HTML5 validation already ran (every required field keeps its `required`
+     attribute), so an empty form never reaches here and never opens WhatsApp. */
+  e.preventDefault();
+  var msg = ['Hello Deepak Studios,',
+             'I would like to check availability for a photography service.',
+             '',
+             'Name: '      + fval('c-name'),
+             'Phone: '     + fval('c-phone')];
+  if(fval('c-email')) msg.push('Email: ' + fval('c-email'));
+  msg.push('Event Date: ' + fdate('c-date'),
+           'Shoot Type: ' + fopt('c-type'));
+  if(fval('c-msg')) msg.push('Message: ' + fval('c-msg'));
+  msg.push('', 'Please let me know about availability and package details.');
+  openWhatsApp(msg.join('\n'));
+  e.target.reset();
+  toast('Opening WhatsApp with your enquiry details…');
+  return false;
+}
+function submitBooking(e){
+  /* Serves the desktop "CHECK AVAILABILITY" hero CTA and the mobile "Book Now" bar,
+     because both open this same modal. Only the fields this form actually has. */
+  e.preventDefault();
+  var msg = ['Hello Deepak Studios,',
+             'I would like to book a photography service.',
+             '',
+             'Name: '      + fval('b-name'),
+             'Phone: '     + fval('b-phone'),
+             'Event Date: ' + fdate('b-date'),
+             'Shoot Type: ' + fopt('b-type'),
+             '',
+             'Please let me know about availability and package details.'].join('\n');
+  openWhatsApp(msg);
+  e.target.reset();
+  closeModal('booking');
+  toast('Opening WhatsApp with your booking details…');
+  return false;
+}
 
 /* header scroll */
 window.addEventListener('scroll',function(){

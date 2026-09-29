@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.9.0
+1.10.0
 ```
 
 ### Semver rules
@@ -265,6 +265,75 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.10.0 - 2026-09-29
+
+- **Both enquiry forms on the home page now submit straight into the studio's WhatsApp chat.**
+  Previously `submitEnquiry()` and `submitBooking()` only reset the form and showed a toast
+  ("Enquiry sent! We will call you shortly." / "Consultation requested! We will be in touch."),
+  so a visitor's details went nowhere. Submitting now builds a formatted, URL-encoded message and
+  opens WhatsApp with it pre-filled. No backend, no paid API, no CRM, no third-party service.
+- **The existing forms were reused -- no new or duplicate form, no field added or removed.**
+  There are still exactly two `<form>` elements and every field id, `type` and `required`
+  attribute is unchanged. Only two submit handlers and two button labels changed.
+- **Which form feeds which CTA.** The hero **"CHECK AVAILABILITY"** button and the mobile
+  **"Book Now"** bar both already call `openBooking()` and share the same `#booking` modal, so
+  wiring `submitBooking()` covers both. The `#contact` section form ("Send an Enquiry") is wired
+  through `submitEnquiry()`. All three CTAs now reach WhatsApp.
+- **The WhatsApp number is reused, never invented.** `waNumber()` reads the number straight off
+  the existing floating button (`document.querySelector('a.wa[href*="wa.me"]')`), so the forms
+  physically cannot drift away from the button's number. The only literal is
+  `WA_FALLBACK = '919031700464'`, used solely if that button is ever removed from the page, and it
+  is the same number. Repo-wide there is still exactly one WhatsApp number: **919031700464**
+  (`+919031700464` for `tel:`), appearing in `index.html` and `lib_contact.php` only.
+- **Message contains only the fields the form actually has.** The booking form has no email and
+  no message field, so its message has no `Email:` or `Message:` line; the contact form does, and
+  those lines are omitted entirely when left blank so the message stays clean. No `Venue` /
+  `Location` line was invented, because neither form has such a field. Example (contact form):
+  `Hello Deepak Studios,` / `I would like to check availability for a photography service.` /
+  `Name:` / `Phone:` / `Email:` / `Event Date: 05 Dec 2026` / `Shoot Type: Wedding Photography` /
+  `Message:` / `Please let me know about availability and package details.`
+- **Two details that make the message read professionally.** The `<select>` is reported using the
+  visible option label ("Wedding Photography"), never the raw `value` ("wedding"). The
+  `<input type="date">` value `2026-12-05` is formatted to `05 Dec 2026`; an unparseable value
+  falls back to the raw string rather than crashing.
+- **Encoding is correct for spaces, symbols and Hindi.** The whole message goes through a single
+  `encodeURIComponent()` call, so spaces, `&`, `#`, `?`, `,`, `:` and Devanagari text are all
+  percent-encoded. Line breaks become `%0A`, which WhatsApp renders as real newlines. `&` and `#`
+  can no longer split the query string or start a fragment.
+- **Opening behaviour is safe and platform-correct.** The link is `https://wa.me/<number>?text=...`,
+  the same universal form the floating button already uses, so mobile opens the WhatsApp app when
+  it is installed and desktop falls through to WhatsApp Web. It is opened with
+  `window.open(url,'_blank')` followed by `w.opener = null` -- the same protection as
+  `rel="noopener"` on the floating button, so the new tab cannot navigate this one. If a popup
+  blocker stops the new tab, the code falls back to a same-tab navigation instead of silently
+  doing nothing.
+- **Native validation is untouched and still blocks the submit.** Every `required` attribute is
+  still present and no `novalidate` was added, so an empty required field means the browser shows
+  its normal validation message and the `submit` event never fires -- WhatsApp cannot open with an
+  incomplete enquiry, and no misleading toast is shown. The `onsubmit="return submitXxx(event)"`
+  wiring and the `return false` are unchanged, so there is no page reload.
+- **UX.** The submit buttons now read **"Send Enquiry via WhatsApp"** and **"Request Callback via
+  WhatsApp"**, and the toast says "Opening WhatsApp with your enquiry/booking details…". Only the
+  button text changed -- the `class="btn btn-submit"` markup, position, size, colour and hover
+  styling are byte-identical, and both labels still fit on one line inside the existing
+  `width:100%` button.
+- **Nothing else on the page changed.** The diff is confined to 3 hunks in `index.html`: 2 button
+  labels and the 2 submit handlers. Removing the new block and restoring the 2 labels reproduces
+  the previous `index.html` **byte-for-byte**. The hero, navbar, photography/cinematography/reels
+  links, services, portfolio, reviews, footer, map, theme toggle, gallery/lightbox, booking modal
+  markup, mobile bar and the floating WhatsApp button are all untouched. No other file was
+  modified: `reels.php`, `cinematography.php`, `photography.php`, `wedding.php`, `prewedding.php`,
+  `prewedding_photos.php`, `prewedding_videos.php`, `lib_gallery.php`, `a.php` - `e.php`,
+  `lib_contact.php` and all deploy files are identical to 1.9.0.
+- **Verified three independent ways.** (1) Real Chrome, driving the verbatim form markup with
+  `requestSubmit()` and a real submit-button click: 37 checks, 0 failures -- empty required fields
+  and a malformed email produce no `window.open` at all, a valid submit produces exactly one
+  correctly-formed link, and Devanagari survives encoding and decoding byte-identically.
+  (2) The generated links were compared byte-for-byte against URLs rebuilt independently in PHP
+  using `encodeURIComponent()` semantics -- identical (342 and 699 bytes).
+  (3) Structural diff check: 56 checks, 0 failures, confirming the field/validation/option counts
+  and that the rest of the page is unchanged.
 
 ## 1.9.0 - 2026-09-29
 
