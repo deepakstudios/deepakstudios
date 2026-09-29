@@ -434,14 +434,20 @@ aria-label="Play <?= $esc($r['t']) ?>">
   var vclose = document.getElementById('vclose');
   var vprev = document.getElementById('vprev');
   var vnext = document.getElementById('vnext');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-v]'));
-  var ids = cards.map(function (c) { return c.getAttribute('data-v'); });
+  function liveCards() { return Array.prototype.slice.call(document.querySelectorAll('#grid [data-v]')); }
   var i = 0, open = false, lastScroll = 0;
 
-  function openAt(n) {
+  function openAt(n, el) {
+    var cards = liveCards();
     if (!cards.length) return;
-    i = (n % cards.length + cards.length) % cards.length;
-    var v = ids[i];
+    if (el) {
+      var at = cards.indexOf(el);
+      if (at < 0) return;
+      i = at;
+    } else {
+      i = (n % cards.length + cards.length) % cards.length;
+    }
+    var v = cards[i].getAttribute('data-v');
     frame.src = 'https://www.youtube-nocookie.com/embed/' + v + '?autoplay=1&rel=0';
     vttl2.textContent = cards[i].getAttribute('data-t') || 'Reel';
     vpos.textContent = (i + 1) + ' / ' + cards.length;
@@ -465,7 +471,7 @@ aria-label="Play <?= $esc($r['t']) ?>">
 
   document.addEventListener('click', function (e) {
     var c = e.target.closest ? e.target.closest('[data-v]') : null;
-    if (c) { fx(e); open = true; openAt(cards.indexOf(c)); return; }
+    if (c) { fx(e); open = true; openAt(0, c); return; }
     if (e.target.closest && e.target.closest('#vclose')) { fx(e); closeAt(); open = false; return; }
     if (e.target.closest && e.target.closest('#vprev')) { fx(e); openAt(i - 1); return; }
     if (e.target.closest && e.target.closest('#vnext')) { fx(e); openAt(i + 1); return; }
