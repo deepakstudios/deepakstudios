@@ -53,6 +53,12 @@ $FILMS = [
     ['id' => 'lOxZme5S_e4', 't' => 'The Aarti',           'cat' => 'wedding',    'bg' => '#1a120e'],
     ['id' => 'BDBufwZhnK0', 't' => 'Forever Begins',      'cat' => 'wedding',    'bg' => '#0f1412'],
     ['id' => 'oWrlcf2tb_4', 't' => 'The Proposal',        'cat' => 'engagement', 'bg' => '#16121a'],
+    ['id' => 'yvW6COhgwV0', 't' => 'The First Glimpse',   'cat' => 'prewedding', 'bg' => '#141210'],
+    ['id' => 'Tcm2kFq0-sA', 't' => 'Before We Say Yes',   'cat' => 'prewedding', 'bg' => '#10141a'],
+    ['id' => 'YfccOo4h4Kk', 't' => 'Rooftop Confessions', 'cat' => 'prewedding', 'bg' => '#161210'],
+    ['id' => 'LhjChNCyl9E', 't' => 'Golden Hour Walk',    'cat' => 'prewedding', 'bg' => '#1a1410'],
+    ['id' => 'NEJ4yZ-cs6g', 't' => 'Frames of Forever',   'cat' => 'prewedding', 'bg' => '#131018'],
+    ['id' => 'r0EflaC0a_U', 't' => 'Before the Bells',    'cat' => 'prewedding', 'bg' => '#121016'],
     // Add more films below, e.g.:
     // ['id' => 'XXXX', 't' => 'Engagement Sunset', 'cat' => 'engagement', 'bg' => '#141210'],
     // ['id' => 'YYYY', 't' => 'Pre-Wedding Dream', 'cat' => 'prewedding', 'bg' => '#141210'],
@@ -69,7 +75,6 @@ $CATLABEL = [
 ];
 /* Copy shown in the premium empty state for categories with no films yet. */
 $EMPTYTEXT = [
-    'prewedding'  => 'Our Pre-Wedding films are being curated for this season. Meanwhile, explore the Wedding and Engagement collections.',
     'birthday'    => 'Birthday films are in the edit. Explore the Wedding and Engagement collections in the meantime.',
     'anniversary' => 'Anniversary films are in the edit. Explore the Wedding and Engagement collections in the meantime.',
 ];

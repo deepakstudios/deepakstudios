@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.6.0
+1.7.0
 ```
 
 ### Semver rules
@@ -264,6 +264,27 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.7.0 - 2026-09-29
+
+- **Six Pre-Wedding films added to the Cinematography hub.** Six rows were appended to the
+  `$FILMS` array in `cinematography.php` with `'cat' => 'prewedding'`: `yvW6COhgwV0`
+  ("The First Glimpse"), `Tcm2kFq0-sA` ("Before We Say Yes"), `YfccOo4h4Kk` ("Rooftop
+  Confessions"), `LhjChNCyl9E` ("Golden Hour Walk"), `NEJ4yZ-cs6g` ("Frames of Forever") and
+  `r0EflaC0a_U` ("Before the Bells").
+- **Filter counts are now ALL 19 / PRE-WEDDING 6 / WEDDING 12 / ENGAGEMENT 1**, with BIRTHDAY and
+  ANNIVERSARY still empty. The Pre-Wedding collection therefore no longer shows the
+  "COMING SOON" placeholder; its now-unreachable `$EMPTYTEXT['prewedding']` copy was removed
+  (BIRTHDAY and ANNIVERSARY copy untouched). Filter order and the ALL behaviour are unchanged.
+- **Data-only change, no page rewrite.** Six lines added, one line removed, and no change to
+  the CSS, the player or the filter logic. Each new row flows through the existing single source
+  of truth, so its `data-v`, its `i.ytimg.com/vi/<id>/hqdefault.jpg` thumbnail and the
+  `youtube-nocookie.com/embed/<id>?autoplay=1&rel=0` embed are all generated from the ID.
+- **No duplicates, no regressions.** All 19 IDs are unique; every rendered card's thumbnail
+  matches its own `data-v`; every card still opens the existing in-page 16:9 modal. Still no
+  `youtube.com/watch`, no `youtu.be`, no Shorts links and no `target="_blank"`.
+- **`prewedding.php` was not modified** (blob verified identical to `HEAD`); its own videos,
+  data and functionality are untouched. `reels.php` and `index.html` were not modified either.
 
 ## 1.6.0 - 2026-09-29
 
