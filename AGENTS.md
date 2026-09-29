@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.11.0
+1.12.0
 ```
 
 ### Semver rules
@@ -265,6 +265,33 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.12.0 - 2026-09-29
+
+- **Home page mobile hero cleaned up -- subject visible, text compact, no overlap.** On
+  phones (max-width:640px) the hero no longer inherits the desktop `100vh` full-bleed
+  layout: it now has `height:auto; min-height:min(74svh,600px)`, so on a 390px phone the
+  visible image window grows from ~27% to ~37% of the photo's width (much less zoom/crop).
+  The couple (located bottom-centre of `photos/hero/deepakstudiosbokaro.webp`, found by a
+  Chrome pixel-luminance probe of the 1920x1080 frame) reads clearly, and the text block
+  sits at the top via `align-items:flex-start` + `padding-top:clamp(4.5rem,11svh,5rem)`
+  instead of the desktop centred overlay.
+- **Compact typography so text no longer dominates the frame.** On mobile the badge,
+  headline and paragraphs are resized (`h1 clamp(2.35rem,11vw,2.85rem)`, `line-height:1.05`,
+  sub/tag ~1rem/.85rem at `line-height:1.45`, tighter margins, `max-width` caps) and both
+  CTA buttons are shortened (`height:3rem`) so the whole block stays above the subject band
+  and the buttons still fit at 360-430px. A second max-width:380px pass trims further
+  (smaller h1/tag, 2.8rem buttons, tighter gaps) for small phones.
+- **No text was rewritten or deleted and no image added.** The headline, subline, tagline
+  and both CTAs are byte-identical; the existing hero photo and its `cover`/`center`
+  background are unchanged.
+- **Desktop/tablet and the rest of the page are untouched.** All new rules live inside the
+  two mobile media-query blocks; the diff is +22 / -0 in `index.html` and nothing else
+  changed. Measured in real Chrome at 360/375/390/430px: hero `min-height` becomes 600px
+  (was 820 = 100vh), `h1` 37.8-45.6px (was 44), text block bottom 423-429px which is clear
+  of the subject band marker (432px; the bright face core is ~470px+), CTA buttons
+  45-48px tall and fitting full-width. At 1280px every measured value (hero 820px, `h1`
+  112px, margins, badge, CTA layout, scroll indicator) is identical to before.
 
 ## 1.11.0 - 2026-09-29
 
