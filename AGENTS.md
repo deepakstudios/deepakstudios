@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.8.1
+1.8.2
 ```
 
 ### Semver rules
@@ -264,6 +264,29 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.8.2 - 2026-09-29
+
+- **Home page navbar "Photography" now opens the Photography page.** 1.8.1 fixed the link on
+  `reels.php` and `cinematography.php`, but `index.html` still sent Photography to the in-page
+  `href="#portfolio"` anchor, so Home behaved differently from every other page. The `href` was
+  changed to `photography.php` so all pages now behave identically:
+  - `index.html` line 351 (desktop nav `nav.desk`) and line 377 (mobile menu `#mobmenu`)
+  - `<li><a class="nl" href="#portfolio">Photography</a></li>` -> `<li><a class="nl" href="photography.php">Photography</a></li>`
+  - `<a href="#portfolio">Photography</a>` -> `<a href="photography.php">Photography</a>`
+- **Only the navbar link target changed.** The diff is exactly 2 lines in 1 file
+  (2 removed / 2 added), both the single `href` attribute. No markup structure, `class="nl"`,
+  CSS, JS, hero, services, reviews, contact, footer or any other content was touched.
+- **The Portfolio section itself is untouched and still works.** `<section id="portfolio">`
+  (line 416), the `Our <span class="gold">Portfolio</span>` heading, the `#filters` bar and the
+  `#gallery` masonry container are all intact, so the anchor target still resolves for a direct
+  `index.html#portfolio` visit. The remaining in-page anchors on the homepage are `#services`
+  (Home) and `#contact` (Contact Us), both unchanged.
+- **Photography page not modified.** `photography.php` still self-links with
+  `.on` + `aria-current="page"`. `Cinematography` and `Reels` links on the homepage are unchanged.
+- **No new page was created** - the existing `photography.php` is reused. `prewedding.php`,
+  `wedding.php`, `lib_gallery.php`, `lib_prewedding.php`, `a.php` - `e.php`,
+  `prewedding_photos.php` and `prewedding_videos.php` were not modified.
 
 ## 1.8.1 - 2026-09-29
 
