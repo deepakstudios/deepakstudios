@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.5.0
+1.6.0
 ```
 
 ### Semver rules
@@ -264,6 +264,50 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.6.0 - 2026-09-29
+
+- **Cinematography page rebuilt as a real films hub.** `cinematography.php` now matches the
+  premium "Luxury + Royal" language introduced on `reels.php` in 1.5.0: the same fixed premium
+  navbar (Cinematography marked active via `.on` + `aria-current="page"`, gold hairline underline,
+  scrolled `backdrop-filter` state, mobile burger + slide-down menu) and a full-bleed cinematic
+  hero (eyebrow "DEEPAK STUDIOS - CINEMATOGRAPHY", heading "THE ART OF CINEMATIC STORYTELLING",
+  subheading "Every emotion. Every celebration. Every unforgettable frame.", supporting line, an
+  "EXPLORE FILMS" CTA that smooth-scrolls to the films section, and a "SCROLL TO EXPLORE"
+  indicator). Gold stays an accent only; the page remains deep charcoal with a vignette and fine
+  grain. Desktop and the <=640px / <=380px breakpoints reposition the hero via `object-position`.
+- **Replaceable hero image (single config point).** New `$cineHeroImage` (plus `$cineHeroPos` and
+  `$cineHeroPosMb`) variables live in one commented block near the top of `cinematography.php`.
+  Swapping the hero picture means editing only that one path -- no HTML, CSS or JS edits, and the
+  path appears exactly once in the file. The image is `assets/images/cinematography-hero.jpg`
+  (1920x1080, ~41 KB, `object-fit:cover`, `fetchpriority="high"`, not lazy-loaded; film card
+  thumbnails stay `loading="lazy"`).
+- **Old "Choose Your Occasion" folder UI removed.** The six folder tiles (Wedding, Pre-Wedding,
+  Engagement, Anniversary, Birthday, Housewarming), the LIVE / COMING SOON badges and the
+  "Browse Reels" ribbon are gone, replaced by six single-level category filters:
+  `ALL | PRE-WEDDING | WEDDING | ENGAGEMENT | BIRTHDAY | ANNIVERSARY` (no sub-filters).
+  Filters are `<button>` elements with `preventDefault()` + `stopPropagation()`, so selecting a
+  category never triggers a navigation or reload.
+- **13 films, single source of truth.** One `$FILMS` array holds 12 Wedding videos
+  (`Cztd9udNlSo`, `JRoyOgR0Ckk`, `IyRO4IKhl8g`, `7ZubbaOMFxY`, `vTg374RrzU0`, `WmZLZMhtlOk`,
+  `iAsgIhoLAQg`, `qZ3feBEq_d8`, `uVRB2XNLA1w`, `9I9NnX8wAkE`, `lOxZme5S_e4`, `BDBufwZhnK0`) and
+  1 Engagement video (`oWrlcf2tb_4`). Counts: ALL 13, WEDDING 12, ENGAGEMENT 1, and
+  PRE-WEDDING / BIRTHDAY / ANNIVERSARY 0. Every film is emitted exactly once with a
+  `data-v` ID, its own `i.ytimg.com` thumbnail and a category tag; adding a film means adding
+  one array row.
+- **Premium empty states instead of dead filters.** PRE-WEDDING, BIRTHDAY and ANNIVERSARY render
+  a centred "COMING SOON" placeholder with tailored copy from an `$EMPTYCOPY` map, so every
+  filter stays clickable and honest.
+- **16:9 in-page player.** Exactly one `#cmodal` plays `youtube-nocookie.com/embed/VIDEO_ID`
+  with `autoplay=1&rel=0` (no `youtube.com/watch`, no `youtu.be`, no Shorts links, no
+  `target="_blank"`), with X and Esc close, backdrop close, Prev/Next, arrow-key navigation, a
+  film counter, scroll lock, and `frame.src = 'about:blank'` on close.
+- **Player resolves cards from the live DOM.** `liveCards()` re-queries `#grid .fc[data-v]` and
+  `openAt(0, el)` takes the clicked element, so indices stay correct after a filter re-render
+  (the earlier snapshot approach could map every card to the first film). The page scroll
+  position is captured only when the player first opens, so Prev/Next no longer overwrite the
+  saved offset and break scroll restore.
+- **No other files changed.** `reels.php`, `prewedding.php` and `index.html` were not modified.
 
 ## 1.5.0 - 2026-09-29
 
