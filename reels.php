@@ -271,10 +271,10 @@ body.reel-lock{overflow:hidden}
   <h1>REELS</h1>
   <p>Cinematic Moments, Beautifully Preserved.</p>
   <nav class="top">
-    <a href="index.html">Home</button>
-    <a href="cinematography.php">Cinematography</button>
-    <a href="reels.php" style="color:var(--gold2)">Reels</button>
-    <a href="index.html#contact">Contact Us</button>
+    <a href="index.html">Home</a>
+    <a href="cinematography.php">Cinematography</a>
+    <a href="reels.php" style="color:var(--gold2)">Reels</a>
+    <a href="index.html#contact">Contact Us</a>
   </nav>
 </header>
 
