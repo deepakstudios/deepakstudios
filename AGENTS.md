@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.12.0
+1.13.0
 ```
 
 ### Semver rules
@@ -265,6 +265,50 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.13.0 - 2026-09-29
+
+- **Mobile-only premium cinematic redesign of the home page; desktop visually untouched.**
+  Phones (max-width:640px) now get a luxury layout distinct from desktop. Hero becomes
+  `height:100svh` (min-height 100svh) with `align-items:flex-start`, a darker `.hero-ov`
+  (`rgba(0,0,0,.32)`), a glass trust badge, and a short serif headline -- "Timeless." /
+  "Moments." at `clamp(2.7rem,11vw,3.4rem)` weight 600 -- so the text block ends
+  ~394-443px on 360-430px phones, well clear of the couple band (~579px+).
+- **Cinematic copy swapped in for mobile only, via paired desktop/mobile spans.** Same
+  elements now hold a desktop span and a mobile span; desktop spans are hidden below
+  768px, mobile spans hidden at 768px+, so desktop/tablet keep the byte-identical
+  original copy while mobile shows: h1 "Timeless. Moments." (desktop span keeps
+  "Deepak Studios" for SEO), sub "Wedding Photography & Cinematography", a new
+  `.hero-loc` chip "Bokaro Â· Jharkhand", and tagline "Real emotions. Beautiful
+  celebrations. Timeless memories." The badge keeps the dynamic 5-star markup and
+  reads "4.9 Â· 249+ Google Reviews".
+- **CTAs + scroll cue.** Primary "CHECK AVAILABILITY" is a full-width 58px champagne-gold
+  pill with a soft gold shadow; ghost CTA is a 44px outline pill with a trailing arrow
+  (CSS `::after`); the scroll indicator now reads "Explore" with an animated gold line
+  (all CSS-only swaps; desktop DOM unchanged).
+- **New intro/stats strip between hero and services (mobile only).** A charcoal `#intro`
+  section shows ONLY fully verified figures -- "4.9 Google Rating" and "249+ Google
+  Reviews" -- beneath "More Than A Photograph" / "Stories worth remembering.", reusing
+  the hero photo as a faint background (opacity .13). Unverified figures (10+ years,
+  1000+ weddings) are deliberately not shown.
+- **Services and portfolio re-styled for mobile.** Services are image-forward cards
+  (photo opacity .55, bottom fade, bottom-aligned ivory serif title + gold rule; icons
+  hidden); portfolio tiles are single-column editorial cards with a small category
+  `.tag` pill added via JS.
+- **Fixed elements tuned.** WhatsApp button 52px with a neutral dark shadow and no ping
+  dot, raised above the bar; bottom bar 64px, dark "CALL NOW" / champagne-gold
+  "BOOK YOUR DATE" halves (button text changed to "Book Your Date"); footer clearance
+  now includes `env(safe-area-inset-bottom)`; header gets a subtle top scrim so the
+  logo stays legible over the photo.
+- **Typography per brief.** Serif headings via the already-loaded Playfair Display,
+  body sizes 15-17px, letterspaced 11px labels, champagne-gold accent on charcoal/ivory.
+  No new fonts, no new libraries; below-fold images stay lazy-loaded.
+- **Verified in real headless Chrome at 360/375/390/412/430 and 1280px.** Mobile: no
+  horizontal overflow; headline 2 line-boxes; CTA bottom 419-443; `#intro` + stats
+  visible; tiles/cards/mobbar/wa report correctly; `Book Your Date` shown; 5 dynamic
+  stars render; no console errors. At 1280px every measured value (hero 900, h1 112px,
+  hero-in 273.7-706.3, badge 37, buttons 248x60 + 248x62, scroll-line block, header
+  transparent) matches the 1.12.0 baseline; all visible desktop text is byte-unchanged.
 
 ## 1.12.0 - 2026-09-29
 

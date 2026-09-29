@@ -132,28 +132,6 @@ html.dark .sun{display:none} html:not(.dark) .moon{display:none}
 .scroll-line{width:1px;height:3rem;background:rgba(255,255,255,.2);position:relative;overflow:hidden}
 .scroll-line i{position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--primary);animation:scrollDot 2s infinite}
 @keyframes scrollDot{0%{top:-50%}100%{top:100%}}
-@media(max-width:640px){
-.hero{height:auto;min-height:min(74svh,600px);align-items:flex-start}
-.hero-in{margin-top:0;padding-top:clamp(4.5rem,11svh,5rem);padding-bottom:2.5rem}
-.badge{margin-bottom:.9rem;padding:.4rem .8rem}
-.badge span{font-size:.78rem}
-.hero h1{font-size:clamp(2.35rem,11vw,2.85rem);line-height:1.05;margin:0 0 .55rem}
-.hero p{font-size:1rem;line-height:1.45;margin-bottom:1rem}
-.hero .hero-sub{max-width:24rem}
-.hero .hero-tag{font-size:.85rem;max-width:22rem}
-.btn-hero,.btn-hero-ghost{height:3rem;padding:.7rem 1.6rem;font-size:1rem}
-.hero-cta{gap:.7rem;margin-top:.35rem}
-.scroll-ind{bottom:1rem}
-}
-@media(max-width:380px){
-.hero{min-height:min(82svh,600px)}
-.hero-in{padding-top:4.5rem}
-.hero h1{font-size:clamp(2.1rem,10.5vw,2.5rem)}
-.hero .hero-tag{font-size:.78rem;max-width:20rem}
-.btn-hero,.btn-hero-ghost{height:2.8rem;padding:.65rem 1.4rem}
-.hero-cta{gap:.55rem}
-.badge{padding:.36rem .75rem}
-}
 
 /* ---------- sections ---------- */
 section.pad{padding:6rem 0;position:relative;overflow:hidden}
@@ -342,6 +320,94 @@ footer p{margin:.15rem 0;font-size:.875rem}
 .reveal{animation:revealUp .8s ease both}
 @keyframes revealUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.reveal{animation:none}}
+
+/* ============ MOBILE PREMIUM LAYER (1.13.0) — desktop untouched ============ */
+@media(max-width:767px){
+.hh-desktop,.sub-desktop,.tag-desktop,.badge-txt-desktop{display:none}
+}
+@media(min-width:768px){
+.hh-mobile,.sub-mobile,.tag-mobile,.badge-txt-mobile,.hero-loc,.ds-intro,.tile .tag{display:none}
+}
+@media(max-width:640px){
+/* header */
+header{padding:.9rem 0;background:linear-gradient(to bottom,rgba(9,9,11,.5),transparent)}
+.logo-name{font-size:1.28rem}
+.logo-sub{font-size:8px;letter-spacing:.18em}
+/* hero */
+.hero{height:100svh;min-height:100svh;align-items:flex-start}
+.hero-ov{background:rgba(0,0,0,.32)}
+.hero-in{margin-top:0;padding-top:clamp(5rem,13svh,6.5rem);padding-bottom:0}
+.badge{margin-bottom:1.05rem;padding:.45rem .95rem;background:rgba(10,10,12,.42);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
+.badge .stars svg{width:.8rem;height:.8rem}
+.badge span{font-size:.76rem;letter-spacing:.02em;color:#e8e8ea}
+.hero h1{font-size:clamp(2.7rem,11vw,3.4rem);font-weight:600;line-height:1.03;letter-spacing:-.02em;margin:0 0 .95rem}
+.hero .hero-sub{font-size:1.02rem;line-height:1.5;letter-spacing:.04em;color:#e4e4e7;margin:0 0 .35rem}
+.hero .hero-loc{font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--primary);margin:0 0 1.05rem;opacity:.92}
+.hero .hero-tag{font-size:.9rem;line-height:1.55;max-width:20rem;color:#c9c9ce;margin:0 auto 1.35rem}
+.hero-cta{gap:.9rem}
+.btn-hero{width:100%;height:58px;border-radius:999px;font-size:1rem;letter-spacing:.05em;box-shadow:0 10px 34px -10px rgba(212,175,55,.5)}
+.btn-hero-ghost{height:44px;width:auto;padding:.6rem 1.5rem;font-size:.92rem;letter-spacing:.05em;color:#e9e9ec;background:rgba(10,10,12,.35);border:1px solid rgba(255,255,255,.25);border-radius:999px;backdrop-filter:blur(8px)}
+.btn-hero-ghost::after{content:" \2192";font-size:1rem;color:var(--primary)}
+/* scroll indicator */
+.scroll-ind{bottom:1.15rem;gap:.5rem}
+.scroll-ind span{font-size:0}
+.scroll-ind span::before{content:"Explore";font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.scroll-ind .scroll-line{display:none}
+.scroll-ind::after{content:"";width:1px;height:1.25rem;background:var(--primary);animation:dsBop 1.8s ease-in-out infinite}
+@keyframes dsBop{0%,100%{transform:scaleY(.45);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+/* intro + verified stat strip */
+.ds-intro{position:relative;padding:2.5rem 0 3rem;overflow:hidden;background:#0c0c0e;border-top:1px solid rgba(212,175,55,.16)}
+.ds-intro-bg{position:absolute;inset:0;background-image:url('photos/hero/deepakstudiosbokaro.webp');background-size:cover;background-position:center 42%;opacity:.13}
+.ds-intro-ov{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,12,14,.78) 0%,rgba(12,12,14,.6) 55%,rgba(12,12,14,.9) 100%)}
+.ds-intro-in{position:relative;z-index:2;max-width:34rem;text-align:center}
+.ds-stats{display:flex;align-items:stretch;justify-content:center;margin:0 0 2rem;padding:1rem 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.ds-stat{flex:1;display:flex;flex-direction:column;align-items:center;gap:.32rem}
+.ds-stat+.ds-stat{border-left:1px solid rgba(255,255,255,.1)}
+.ds-stat .n{font-family:"Playfair Display",serif;font-size:1.8rem;font-weight:700;color:#f3f0e8;line-height:1}
+.ds-stat .n em{font-style:normal;color:var(--primary);font-size:1.05rem}
+.ds-stat .l{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:#9b9ba4;font-weight:600}
+.eyebrow{font-size:.66rem;letter-spacing:.34em;text-transform:uppercase;color:var(--primary);margin:0 0 1rem;font-weight:600}
+.ds-intro h2{font-family:"Playfair Display",serif;font-size:clamp(1.75rem,7.5vw,2.35rem);font-weight:600;line-height:1.12;color:#f5f2ea;margin:0 0 1.05rem}
+.ds-intro-p{font-size:.97rem;line-height:1.65;color:#b7b7bd;margin:0 auto;max-width:26rem}
+/* sections spacing + type */
+section.pad{padding:3.4rem 0}
+.container{padding:0 1.5rem}
+.sec-head{margin-bottom:2.1rem}
+.sec-head h2{font-size:clamp(1.8rem,7.5vw,2.45rem);line-height:1.12}
+.sec-head p{font-size:.94rem;line-height:1.6}
+/* services image cards */
+.grid3{gap:1.35rem}
+.svc-bg{opacity:.55}
+html.dark .svc-bg{opacity:.55}
+.svc:hover .svc-bg{transform:none;opacity:.55}
+html.dark .svc:hover .svc-bg{opacity:.55}
+.svc-fade{background:linear-gradient(to top,rgba(9,9,11,.93) 4%,rgba(9,9,11,.3) 46%,rgba(9,9,11,.06) 72%)}
+.svc-in{padding:1.5rem;justify-content:flex-end;min-height:15.5rem}
+.svc-ico{display:none}
+.svc h3{font-size:1.5rem;line-height:1.2;color:#f5f2ea;margin:0 0 .5rem}
+.svc p{font-size:.87rem;line-height:1.55;color:rgba(233,233,236,.85);max-width:19rem}
+.svc-rule{margin-top:.85rem;padding-top:0}
+.svc-rule i{width:2.6rem;height:2px;background:var(--primary)}
+.svc:hover .svc-rule i{width:2.6rem}
+/* portfolio editorial */
+.tile{border-radius:.5rem;margin-bottom:1.2rem}
+.tile .tag{position:absolute;left:.85rem;bottom:.85rem;z-index:5;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(9,9,11,.45);border:1px solid rgba(255,255,255,.14);padding:.32rem .7rem;border-radius:999px;backdrop-filter:blur(4px)}
+@media(max-width:380px){
+.hero h1{font-size:clamp(2.55rem,10.5vw,3rem)}
+.hero .hero-tag{max-width:18.5rem}
+}
+/* whatsapp */
+.wa{width:3.25rem;height:3.25rem;right:1.1rem;bottom:calc(4.6rem + env(safe-area-inset-bottom));background:#25a855;box-shadow:0 10px 24px -8px rgba(0,0,0,.55)}
+.wa .ping{display:none}
+.wa svg{width:24px;height:24px}
+/* mobile bar */
+.mobbar{height:64px;background:#0c0c0e;border-top:1px solid rgba(255,255,255,.06);box-shadow:0 -12px 30px -14px rgba(0,0,0,.6)}
+.mobbar>*{height:64px;padding:0;font-size:.76rem;letter-spacing:.16em;font-weight:700;text-transform:uppercase;gap:.55rem}
+.mobbar .call{background:#141416;color:#ececf0;border-right:1px solid rgba(255,255,255,.08)}
+.mobbar .book{background:var(--primary);color:var(--primary-fg);font-weight:800}
+/* footer clearance */
+footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
+}
 </style>
 </head>
 <body>
@@ -409,17 +475,33 @@ footer p{margin:.15rem 0;font-size:.875rem}
   <div class="container hero-in">
     <a class="badge" href="https://www.google.com/search?q=deepak+studios&amp;sca_esv=31fa6de42034ce83&amp;authuser=0&amp;sxsrf=APpeQnsbF5FQcvic2jXKmy42kZtdi0N0Pg%3A1789560771513&amp;source=hp&amp;ei=w4eqavONHcuq1sQPpKn0-Qo&amp;iflsig=ABILxe8AAAAAaqqV047CWriRhR3uPu7AqRulOxkBS5kj&amp;oq=dee&amp;gs_lp=Egdnd3Mtd2l6IgNkZWUqBAgAGCcyBBAjGCcyBBAjGCcyBBAjGCcyDhAuGJECGLEDGIAEGIoFMgsQABiABBiKBRiRAjILEAAYgAQYigUYQ0jyDlAAWKMDcAB4AJABAJgBtQGgAd0DqgEDMC4zuAEDyAEA-AEBmAIDoALvA8ICCxAuGJECGIAEGIoFmAMAkgcDMC4zoAfoI7IHAwMy-LPIBwyACAE&amp;sclient=gws-wiz#lrd=0x39f4238ea7c17f2f:0x5f77ac701f56ad7b,1,,,," target="_blank" rel="noopener" aria-label="View our Google reviews (opens in a new tab)">
       <div class="stars" id="heroStars"></div>
-      <span>4.9 (249+ Google Reviews)</span>
+      <span class="badge-txt-desktop">4.9 (249+ Google Reviews)</span>
+      <span class="badge-txt-mobile">4.9 · 249+ Google Reviews</span>
     </a>
-    <h1 class="pf">Deepak Studios</h1>
-    <p class="hero-sub">Wedding Photography <span class="amp">&amp;</span> Cinematography in Bokaro</p>
-    <p class="hero-tag">Capturing genuine emotions, beautiful celebrations and timeless stories with cinematic elegance.</p>
+    <h1 class="pf"><span class="hh-desktop">Deepak Studios</span><span class="hh-mobile">Timeless.<br>Moments.</span></h1>
+    <p class="hero-sub"><span class="sub-desktop">Wedding Photography <span class="amp">&amp;</span> Cinematography in Bokaro</span><span class="sub-mobile">Wedding Photography <span class="amp">&amp;</span> Cinematography</span></p>
+    <p class="hero-loc">Bokaro · Jharkhand</p>
+    <p class="hero-tag"><span class="tag-desktop">Capturing genuine emotions, beautiful celebrations and timeless stories with cinematic elegance.</span><span class="tag-mobile">Real emotions. Beautiful celebrations. Timeless memories.</span></p>
     <div class="hero-cta">
       <button class="btn btn-hero" onclick="openBooking()">CHECK AVAILABILITY</button>
       <a class="btn btn-hero-ghost" href="wedding.php">View Our Work</a>
     </div>
   </div>
   <div class="scroll-ind"><span>Scroll</span><div class="scroll-line"><i></i></div></div>
+</section>
+
+<!-- INTRO (mobile only) -->
+<section id="intro" class="ds-intro" aria-label="About Deepak Studios">
+  <div class="ds-intro-bg"></div><div class="ds-intro-ov"></div>
+  <div class="container ds-intro-in">
+    <div class="ds-stats">
+      <div class="ds-stat"><span class="n">4.9<em>★</em></span><span class="l">Google Rating</span></div>
+      <div class="ds-stat"><span class="n">249<em>+</em></span><span class="l">Google Reviews</span></div>
+    </div>
+    <p class="eyebrow">More Than A Photograph</p>
+    <h2 class="pf">Stories worth remembering.</h2>
+    <p class="ds-intro-p">We capture genuine emotions, beautiful details and unforgettable celebrations with a cinematic approach.</p>
+  </div>
 </section>
 
 <!-- SERVICES -->
@@ -555,7 +637,7 @@ footer p{margin:.15rem 0;font-size:.875rem}
   </a>
   <button class="book" onclick="openBooking()">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v3M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
-    Book Now
+    Book Your Date
   </button>
 </div>
 
@@ -674,7 +756,7 @@ function renderGallery(){
   document.getElementById('gallery').innerHTML=GALLERY.filter(function(g){return active==='All'||g.c===active;})
   .map(function(g){return '<div class="tile reveal" onclick="openLightbox(\''+url(g.s)+'\')">\
     <div style="aspect-ratio:'+g.r+'"><img loading="lazy" src="'+url(g.s)+'" alt="'+g.c+' photography by Deepak Studios">\
-    <div class="ov">'+ICON.expand+'</div></div></div>';}).join('');
+    <div class="ov">'+ICON.expand+'</div></div><span class="tag">'+g.c+'</span></div>';}).join('');
   observeReveals();
 }
 function setFilter(c){
