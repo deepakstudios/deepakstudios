@@ -1,11 +1,11 @@
 <?php
 /**
- * reels.php — Deepak Studios Reels (vertical Shorts).
+ * reels.php ΓÇö Deepak Studios Reels (vertical Shorts).
  *
  * Premium 9:16 Shorts grid with a dynamic two-level filter:
  *   Main : ALL | WEDDING | PRE-WEDDING | CELEBRATION
- *   All : secondary = Main, WEDDING -> ALL·HALDI·MEHENDI·WEDDING·RECEPTION,
- *         CELEBRATION -> ALL·BIRTHDAY·ANNAPRASHAN
+ *   All : secondary = Main, WEDDING -> ALL┬╖HALDI┬╖MEHENDI┬╖WEDDING┬╖RECEPTION,
+ *         CELEBRATION -> ALL┬╖BIRTHDAY┬╖ANNAPRASHAN
  *
  * Every Short is stored once in the $REELS array below so more Shorts can be
  * added later without touching any layout code. The same array also drives the
@@ -25,7 +25,7 @@ $esc = static function (string $v): string {
 };
 
 /* =====================================================================
- * REELS DATA — add a new Short here and the page updates itself.
+ * REELS DATA ΓÇö add a new Short here and the page updates itself.
  *   id   : YouTube video ID          cat  : prewedding | wedding | celebration
  *   sub  : optional secondary label  (wedding: haldi|mehendi|wedding|reception
  *          celebration: birthday|annaprashan)
@@ -215,6 +215,52 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
   .vnav button:hover{color:var(--gold);border-color:var(--gold)}
   .vpos{color:var(--mut,#8a867c);font-size:.72rem;letter-spacing:.12em}
   body.vlock,html.vlock{overflow:hidden}
+/* ======== PREMIUM REEL MODAL PLAYER (Deepak Studios) ======== */
+.vmodal{position:fixed;z-index:1600;inset:0;display:none;align-items:center;justify-content:center;padding:1.1rem;
+      background:rgba(5,6,8,.96);backdrop-filter:blur(14px)}
+.vmodal.open{display:flex}
+.vshell{width:min(94vw,352px);max-height:96vh;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;
+      background:var(--card,#151517);border:1px solid var(--gold2,#26262a);box-shadow:0 64px 150px -24px rgba(0,0,0,.98)}
+.vhead{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.9rem 1rem;
+      border-bottom:1px solid var(--line,#26262a)}
+.vhead h3{margin:0;font-size:.98rem;font-weight:400;color:var(--ink,#efe9dc);line-height:1.35}
+.vhead h3 small{display:block;color:var(--gold,#c9a86a);font-size:.6rem;letter-spacing:.18em;
+      text-transform:uppercase;margin-bottom:.28rem}
+.vclose{all:unset;cursor:pointer;display:grid;place-items:center;width:2.3rem;height:2.3rem;border-radius:50%;
+      color:var(--mut,#8a867c);font-size:1.02rem;line-height:1;border:1px solid var(--line,#26262a);transition:.2s ease}
+.vclose:hover{color:var(--ink);border-color:var(--gold);background:rgba(201,168,106,.1)}
+.vwrap{position:relative;width:100%;aspect-ratio:9/16;background:#000}
+.vshow{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;
+      background-image:radial-gradient(ellipse at center,rgba(201,168,106,.22),transparent 60%)}
+.pbtn2{width:3.7rem;height:3.7rem;border-radius:50%;display:grid;place-items:center;background:var(--gold,#c9a86a);
+      color:#0b0b0c;box-shadow:0 14px 36px rgba(0,0,0,.55)}
+.pbtn2 svg{margin-left:3px}
+.vframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vfoot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem 1rem;
+      border-top:1px solid var(--line,#26262a)}
+.vnav{display:flex;gap:.5rem}
+.vnav button{cursor:pointer;font-family:var(--serif,Georgia,serif);font-size:.74rem;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--mut,#8a867c);background:transparent;border:1px solid var(--line,#26262a);
+      padding:.5rem .95rem;border-radius:999px;transition:.2s ease}
+.vnav button:hover{color:var(--gold);border-color:var(--gold)}
+.vpos{color:var(--mut,#8a867c);font-size:.72rem;letter-spacing:.12em}
+body.vlock,html.vlock{overflow:hidden}
+</style>
+<style id="reelpremiumcss">
+#reelmodal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:3vmin;background:rgba(4,4,5,.97)}
+#reelmodal.open{display:flex}
+body.reel-lock{overflow:hidden}
+#reelbox{width:min(94vw,430px);aspect-ratio:9/16;max-height:94vh;display:flex;flex-direction:column;background:#0d0c0a;border:1px solid rgba(212,180,120,.45);border-radius:18px;overflow:hidden;box-shadow:0 60px 220px rgba(0,0,0,.98)}
+#reelhead{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.1rem;background:#151310;border-bottom:1px solid rgba(212,180,120,.4)}
+#reelhead h3{margin:0;font-size:1rem;font-weight:800;color:#e9d19a;letter-spacing:.04em}
+#reelclose{background:none;border:0;color:#e9d19a;font-size:1.8rem;line-height:1;cursor:pointer}
+#reelposter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,rgba(212,180,120,.08),transparent 55%)}
+#reelplay{display:flex;align-items:center;justify-content:center;width:4.6rem;height:4.6rem;border-radius:50%;border:2px solid rgba(232,208,150,.8);color:#e9d19a;background:rgba(232,208,150,.14);font-size:1.5rem;padding-left:.3rem;cursor:pointer}
+#reelframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+#reelslot{position:relative;flex:1;background:#000}
+#reelfoot{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1rem;background:#151310;border-top:1px solid rgba(212,180,120,.4)}
+#reelfoot button{background:none;border:1px solid rgba(232,208,150,.55);color:#e9d19a;padding:.5rem 1rem;border-radius:999px;cursor:pointer;font-weight:800;font-size:.82rem;font-family:inherit;letter-spacing:.05em}
+#reelcount{color:#cbb061;font-size:.85rem;font-weight:800;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -223,10 +269,10 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
   <h1>REELS</h1>
   <p>Cinematic Moments, Beautifully Preserved.</p>
   <nav class="top">
-    <a href="index.html">Home</a>
-    <a href="cinematography.php">Cinematography</a>
-    <a href="reels.php" style="color:var(--gold2)">Reels</a>
-    <a href="index.html#contact">Contact Us</a>
+    <a href="index.html">Home</button>
+    <a href="cinematography.php">Cinematography</button>
+    <a href="reels.php" style="color:var(--gold2)">Reels</button>
+    <a href="index.html#contact">Contact Us</button>
   </nav>
 </header>
 
@@ -245,11 +291,12 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
 
   <div class="grid" id="grid">
     <?php foreach ($REELS as $r): ?>
-      <a class="rc" href="https://youtube.com/shorts/<?= $esc($r['id']) ?>"
-         target="_blank" rel="noopener"
-         data-cat="<?= $esc($r['cat']) ?>"
-         data-sub="<?= $esc($r['sub']) ?>"
-         aria-label="Play <?= $esc($r['t']) ?>">
+      <button type="button" class="rc"
+data-v="<?= $esc($r['id']) ?>"
+data-t="<?= $esc($r['t']) ?>"
+data-cat="<?= $esc($r['cat']) ?>"
+data-sub="<?= $esc($r['sub']) ?>"
+aria-label="Play <?= $esc($r['t']) ?>">
         <img class="th" loading="lazy"
              src="https://i.ytimg.com/vi/<?= $esc($r['id']) ?>/hqdefault.jpg"
              alt="<?= $esc($r['t']) ?>" style="background:<?= $esc($r['bg']) ?>">
@@ -258,7 +305,7 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
               aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l11.06-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></svg></span>
         <span class="cat"><?= $esc($CATLABEL[$r['cat']]) ?></span>
         <span class="ttl"><small>Short</small><?= $esc($r['t']) ?></span>
-      </a>
+      </button>
     <?php endforeach; ?>
   </div>
 </main>
@@ -316,13 +363,13 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
       count.textContent = '';
     } else {
       grid.innerHTML = list.map(function (r) {
-        return '<a class="rc" href="https://youtube.com/shorts/' + r.id + '" target="_blank" rel="noopener" aria-label="Play ' + r.t + '">' +
+        return '<button type="button" class="rc" data-v="' + r.id + '" data-t="' + r.t + '" aria-label="Play ' + r.t + '">' +
           '<img class="th" loading="lazy" src="https://i.ytimg.com/vi/' + r.id + '/hqdefault.jpg" alt="' + r.t + '" style="background:' + r.bg + '">' +
           '<span class="shade"></span>' +
           '<span class="pbtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l11.06-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></svg></span>' +
           '<span class="cat">' + r.cat + '</span>' +
           '<span class="ttl"><small>Short</small>' + r.t + '</span>' +
-          '</a>';
+          '</button>';
       }).join('');
       count.textContent = list.length + ' ' + (list.length === 1 ? 'reel' : 'reels');
     }
@@ -393,7 +440,7 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
     if (!cards.length) return;
     i = (n % cards.length + cards.length) % cards.length;
     var v = ids[i];
-    frame.src = 'https://www.youtube.com/embed/' + v + '?autoplay=1&rel=0&playsinline=1';
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + v + '?autoplay=1&rel=0';
     vttl2.textContent = cards[i].getAttribute('data-t') || 'Reel';
     vpos.textContent = (i + 1) + ' / ' + cards.length;
     lastScroll = (window.pageYOffset || document.documentElement.scrollTop) || 0;
@@ -431,169 +478,3 @@ $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Weddin
   });
 })();
 </script>
-<div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vttl">
-  <div class="vshell">
-    <div class="vhead">
-      <h3 id="vttl"><small id="vcat">Reel</small><span id="vtit">Now Playing</span></h3>
-      <button type="button" class="vclose" id="vclose" aria-label="Close player">&#10005;</button>
-    </div>
-    <div class="vwrap">
-      <div class="vshow" id="vshow"><span class="pbtn2" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l11.06-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></svg>
-      </span></div>
-      <iframe id="vframe" class="vframe" title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-    <div class="vfoot">
-      <div class="vnav">
-        <button type="button" id="vprev">&#8249; Prev</button>
-        <button type="button" id="vnext">Next &#8250;</button>
-      </div>
-      <span class="vpos" id="vpos"></span>
-    </div>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict';
-  var modal = document.getElementById('vmodal');
-  if (!modal) return;
-  var frame = document.getElementById('vframe');
-  var vttl = document.getElementById('vttl');
-  var vttl2 = document.getElementById('vtit');
-  var vcat = document.getElementById('vcat');
-  var vpos = document.getElementById('vpos');
-  var vclose = document.getElementById('vclose');
-  var vprev = document.getElementById('vprev');
-  var vnext = document.getElementById('vnext');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-v]'));
-  var ids = cards.map(function (c) { return c.getAttribute('data-v'); });
-  var i = 0, open = false, lastScroll = 0;
-
-  function openAt(n) {
-    if (!cards.length) return;
-    i = (n % cards.length + cards.length) % cards.length;
-    var v = ids[i];
-    frame.src = 'https://www.youtube.com/embed/' + v + '?autoplay=1&rel=0&playsinline=1';
-    vttl2.textContent = cards[i].getAttribute('data-t') || 'Reel';
-    vpos.textContent = (i + 1) + ' / ' + cards.length;
-    lastScroll = (window.pageYOffset || document.documentElement.scrollTop) || 0;
-    modal.classList.add('open');
-    document.body.classList.add('vlock');
-    document.documentElement.classList.add('vlock');
-    window.scrollTo(0, 0);
-    vclose.focus();
-  }
-  function closeAt() {
-    if (!open) return;
-    modal.classList.remove('open');
-    frame.src = 'about:blank';
-    document.body.classList.remove('vlock');
-    document.documentElement.classList.remove('vlock');
-    window.scrollTo(0, lastScroll);
-  }
-
-  function fx(e) { e.preventDefault(); e.stopPropagation(); }
-
-  document.addEventListener('click', function (e) {
-    var c = e.target.closest ? e.target.closest('[data-v]') : null;
-    if (c) { fx(e); open = true; openAt(cards.indexOf(c)); return; }
-    if (e.target.closest && e.target.closest('#vclose')) { fx(e); closeAt(); open = false; return; }
-    if (e.target.closest && e.target.closest('#vprev')) { fx(e); openAt(i - 1); return; }
-    if (e.target.closest && e.target.closest('#vnext')) { fx(e); openAt(i + 1); return; }
-    if (e.target === modal) { e.preventDefault(); closeAt(); open = false; }
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (!modal.classList.contains('open')) return;
-    if (e.key === 'Escape') { e.preventDefault(); closeAt(); open = false; }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); openAt(i - 1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); openAt(i + 1); }
-  });
-})();
-</script>
-<div class="vmodal" id="vmodal" role="dialog" aria-modal="true" aria-labelledby="vttl">
-  <div class="vshell">
-    <div class="vhead">
-      <h3 id="vttl"><small id="vcat">Reel</small><span id="vtit">Now Playing</span></h3>
-      <button type="button" class="vclose" id="vclose" aria-label="Close player">&#10005;</button>
-    </div>
-    <div class="vwrap">
-      <div class="vshow" id="vshow"><span class="pbtn2" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l11.06-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/></svg>
-      </span></div>
-      <iframe id="vframe" class="vframe" title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    </div>
-    <div class="vfoot">
-      <div class="vnav">
-        <button type="button" id="vprev">&#8249; Prev</button>
-        <button type="button" id="vnext">Next &#8250;</button>
-      </div>
-      <span class="vpos" id="vpos"></span>
-    </div>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict';
-  var modal = document.getElementById('vmodal');
-  if (!modal) return;
-  var frame = document.getElementById('vframe');
-  var vttl = document.getElementById('vttl');
-  var vttl2 = document.getElementById('vtit');
-  var vcat = document.getElementById('vcat');
-  var vpos = document.getElementById('vpos');
-  var vclose = document.getElementById('vclose');
-  var vprev = document.getElementById('vprev');
-  var vnext = document.getElementById('vnext');
-  var cards = Array.prototype.slice.call(document.querySelectorAll('[data-v]'));
-  var ids = cards.map(function (c) { return c.getAttribute('data-v'); });
-  var i = 0, open = false, lastScroll = 0;
-
-  function openAt(n) {
-    if (!cards.length) return;
-    i = (n % cards.length + cards.length) % cards.length;
-    var v = ids[i];
-    frame.src = 'https://www.youtube.com/embed/' + v + '?autoplay=1&rel=0&playsinline=1';
-    vttl2.textContent = cards[i].getAttribute('data-t') || 'Reel';
-    vpos.textContent = (i + 1) + ' / ' + cards.length;
-    lastScroll = (window.pageYOffset || document.documentElement.scrollTop) || 0;
-    modal.classList.add('open');
-    document.body.classList.add('vlock');
-    document.documentElement.classList.add('vlock');
-    window.scrollTo(0, 0);
-    vclose.focus();
-  }
-  function closeAt() {
-    if (!open) return;
-    modal.classList.remove('open');
-    frame.src = 'about:blank';
-    document.body.classList.remove('vlock');
-    document.documentElement.classList.remove('vlock');
-    window.scrollTo(0, lastScroll);
-  }
-
-  function fx(e) { e.preventDefault(); e.stopPropagation(); }
-
-  document.addEventListener('click', function (e) {
-    var c = e.target.closest ? e.target.closest('[data-v]') : null;
-    if (c) { fx(e); open = true; openAt(cards.indexOf(c)); return; }
-    if (e.target.closest && e.target.closest('#vclose')) { fx(e); closeAt(); open = false; return; }
-    if (e.target.closest && e.target.closest('#vprev')) { fx(e); openAt(i - 1); return; }
-    if (e.target.closest && e.target.closest('#vnext')) { fx(e); openAt(i + 1); return; }
-    if (e.target === modal) { e.preventDefault(); closeAt(); open = false; }
-  });
-
-  document.addEventListener('keydown', function (e) {
-    if (!modal.classList.contains('open')) return;
-    if (e.key === 'Escape') { e.preventDefault(); closeAt(); open = false; }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); openAt(i - 1); }
-    else if (e.key === 'ArrowRight') { e.preventDefault(); openAt(i + 1); }
-  });
-})();
-</script>
-</body>
-</html>
