@@ -16,6 +16,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
+// Shared "Call Now" + WhatsApp floating contact UI (identical to the home page).
+// a.php - e.php render through this file, so all five album pages pick it up here.
+require_once __DIR__ . '/lib_contact.php';
+
 $gallery = preg_replace('/[^a-e]/', '', (string) ($gallery ?? 'a')) ?: 'a';
 
 $esc = static function (string $v): string {
@@ -113,6 +117,7 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') { closeLightbox(); }
 });
 </script>
+<?php ds_contact_head(); ?>
 </head>
 <body>
 <header>
@@ -156,5 +161,7 @@ document.addEventListener('keydown', function (e) {
 </div>
 
 <footer>&copy; <?= date('Y') ?> Deepak Studios. All rights reserved.</footer>
+
+<?php ds_contact_fab(); ?>
 </body>
 </html>

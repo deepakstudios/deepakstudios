@@ -78,6 +78,9 @@ $EMPTYTEXT = [
     'birthday'    => 'Birthday films are in the edit. Explore the Wedding and Engagement collections in the meantime.',
     'anniversary' => 'Anniversary films are in the edit. Explore the Wedding and Engagement collections in the meantime.',
 ];
+
+// Shared "Call Now" + WhatsApp floating contact UI (identical to the home page).
+require_once __DIR__ . '/lib_contact.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -285,6 +288,7 @@ body.vlock,html.vlock{overflow:hidden}
 }
 /* ======== end luxury nav + hero ======== */
 </style>
+<?php ds_contact_head(); ?>
 </head>
 <body>
 
@@ -301,6 +305,7 @@ body.vlock,html.vlock{overflow:hidden}
       <a href="cinematography.php" class="on" aria-current="page">Cinematography</a>
       <a href="reels.php">Reels</a>
       <a href="index.html#contact">Contact Us</a>
+      <?php ds_contact_header_call(); ?>
     </nav>
     <button type="button" class="rburger" id="rburger" aria-label="Open menu"
             aria-expanded="false" aria-controls="rmobmenu">
@@ -371,6 +376,8 @@ aria-label="Play <?= $esc($r['t']) ?>">
 </main>
 
 <footer>&copy; <?= date('Y') ?> Deepak Studios. All rights reserved.</footer>
+
+<?php ds_contact_fab(); ?>
 
 <!-- ======== FILTER RENDER ======== -->
 <script>

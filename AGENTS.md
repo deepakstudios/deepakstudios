@@ -29,6 +29,7 @@ This file is the permanent documentation and memory for AI agents working on thi
 ├── health.php         # Health check endpoint
 ├── server-setup.sh    # One-time server bootstrap (VPS/shell hosts)
 ├── index.html         # Live site (Deepak Studios homepage)
+├── lib_contact.php    # Shared "Call Now" + WhatsApp floating contact UI (see 1.9.0)
 ├── README.md          # GitHub profile README
 ├── .gitignore         # Protects secrets & runtime state
 ├── storage/
@@ -245,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.8.2
+1.9.0
 ```
 
 ### Semver rules
@@ -264,6 +265,58 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.9.0 - 2026-09-29
+
+- **The homepage "Call Now" and WhatsApp contact controls now appear on every page of the site.**
+  Until now they existed only inside `index.html`, so a visitor landing directly on
+  `reels.php`, `wedding.php`, an album page, etc. had no way to call or WhatsApp the studio
+  without navigating back to the home page first. They are now shared by all 12 non-home pages.
+- **New `lib_contact.php` — one shared renderer, no duplication.** The homepage's existing CSS +
+  markup was moved *verbatim* into a new include exposing three idempotent functions
+  (each `function_exists`-guarded, so double-inclusion can never duplicate the UI):
+  - `ds_contact_head()` — the contact CSS, called from `<head>`
+  - `ds_contact_header_call()` — the gold desktop pill, called inside `nav.rnav-desk`
+  - `ds_contact_fab()` — the WhatsApp button + mobile bar + spacer, called before `</body>`
+  Pages wire it with `require_once`, so the include emits **0 bytes at include time**.
+- **Pixel-for-pixel identical to the homepage.** The WhatsApp `<a>` block is byte-identical to
+  the homepage (601 bytes each), and the `.wa` geometry (fixed bottom-right `3.5rem` circle,
+  `right:1.5rem`, `bottom:6rem` mobile / `2rem` desktop, `#25D366`, glow, 1.5s `ping` ripple,
+  `scale(1.1)` hover) plus the mobile bar are unchanged. The only intentional difference is that
+  the other pages inline the resolved dark-theme values the homepage gets from its variables
+  (`#18181b` / `#fafafa` / `#09090b` for the two bar halves, `#D4AF37` for the phone icon),
+  because those pages do not define `--card` / `--fg` / `--primary`; the rendered colours are
+  identical, and gold `#D4AF37` is the same in both homepage themes.
+- **Desktop gold "Call Now" pill on the premium pages only** — `reels.php`,
+  `cinematography.php` and `photography.php` — placed inside `.rnav-desk` immediately after
+  `Contact Us` and nowhere else (never in the mobile menu). The classic centred-header pages
+  keep their existing single centred nav, so they get the WhatsApp button and the mobile bar
+  only. This was an explicit decision.
+- **Mobile bottom bar on every page** — a 50/50 `Call Now` / `Book Now` bar, fixed to the
+  bottom, hidden at `min-width:768px`, with `padding-bottom:env(safe-area-inset-bottom)`, plus a
+  `4.25rem` `.ds-contact-pad` spacer on `max-width:767px` so the fixed bar never covers the
+  footer. `Call Now` uses the same `tel:+919031700464`; `Book Now` links to `index.html#contact`
+  rather than calling `openBooking()`, because that modal is defined only on `index.html` — this
+  keeps the button working everywhere without dragging a duplicate modal into 12 pages.
+- **The homepage is completely untouched.** `index.html` is byte-identical to its previous
+  state (no diff at all) and keeps its own inline controls and its own booking modal; it does
+  not use `lib_contact.php`, so there is still exactly one WhatsApp button and one mobile bar
+  on the home page. Same phone number (`+919031700464`) and same prefilled WhatsApp message as
+  before, on every page.
+- **Album pages inherit it for free.** `a.php` - `e.php` were **not modified** — they render
+  through `lib_gallery.php`, which now includes the contact UI once, so all five albums get it
+  without any duplication.
+- **Purely additive change.** The diff is **+49 / -0 across 8 files** (7 renderer files plus the
+  new `lib_contact.php`): no existing line was removed or rewritten anywhere. `index.html`,
+  `README.md`, `config.php.example`, `Install.php`, `deploy.php`, `health.php`,
+  `lib_migrations.php` and the data-only `lib_prewedding.php` were not modified.
+- **Verified by rendering every page in isolation and diffing against the homepage** (350
+  automated checks, 0 failures): exactly one WhatsApp button / `ping` / mobile bar /
+  mobile `Call Now` / `Book Now` / spacer per page, no `openBooking()` dependency outside the
+  home page, no duplicate modal, no duplicate CSS, correct pill placement (1 on premium, 0 on
+  classic), all 17 protected files byte-identical to the previous release, and `php -l` clean on
+  every changed file. This check also caught and fixed one real bug: the mobile bar's phone SVG
+  had been copied with the wrong arc radius (`a9 9` instead of the homepage's `a1 1`).
 
 ## 1.8.2 - 2026-09-29
 

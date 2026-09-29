@@ -21,6 +21,9 @@ ini_set('log_errors', '1');
 
 require __DIR__ . '/lib_prewedding.php';
 
+// Shared "Call Now" + WhatsApp floating contact UI (identical to the home page).
+require_once __DIR__ . '/lib_contact.php';
+
 $esc = static function (string $v): string {
     return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
 };
@@ -108,6 +111,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
   footer { text-align: center; padding: 1.6rem; color: #666; font-size: .85rem; }
 </style>
+<?php ds_contact_head(); ?>
 </head>
 <body>
 <header>
@@ -188,5 +192,6 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') { closeLB(); closeVideo(); }
 });
 </script>
+<?php ds_contact_fab(); ?>
 </body>
 </html>
