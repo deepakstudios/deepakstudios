@@ -58,6 +58,19 @@ $SUBLABEL = [
     'celebration' => ['All', 'Birthday', 'Annaprashan'],
 ];
 $CATLABEL = ['all' => 'All', 'wedding' => 'Wedding', 'prewedding' => 'Pre-Wedding', 'celebration' => 'Celebration'];
+
+/* =====================================================================
+ * REELS HERO IMAGE - SINGLE CONFIG POINT
+ * ------------------------------------------------------------------------
+ * To change the hero picture: edit ONLY the $reelsHeroImage path below.
+ * No HTML, CSS or JS change is needed anywhere else on this page.
+ *   $reelsHeroImage : image path (jpg / jpeg / png / webp all work)
+ *   $reelsHeroPos   : desktop object-position  (keeps the subject in frame)
+ *   $reelsHeroPosMb : phone object-position    (stops the subject being cropped)
+ * ===================================================================== */
+$reelsHeroImage = 'assets/images/reels-hero.jpg';
+$reelsHeroPos   = 'center center';
+$reelsHeroPosMb = 'center 30%';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -269,21 +282,174 @@ body.reel-lock{overflow:hidden}
 #reelfoot button{background:none;border:1px solid rgba(232,208,150,.55);color:#e9d19a;padding:.5rem 1rem;border-radius:999px;cursor:pointer;font-weight:800;font-size:.82rem;font-family:inherit;letter-spacing:.05em}
 #reelcount{color:#cbb061;font-size:.85rem;font-weight:800;letter-spacing:.06em}
 </style>
+<style id="reelsluxcss">
+/* ======== LUXURY REELS EXPERIENCE : fixed nav + cinematic hero ======== */
+:root{--rx-shell:1200px; --rx-head:74px;}
+
+/* ---------- premium navbar ---------- */
+.rnav{position:fixed;top:0;left:0;right:0;z-index:1200;border-bottom:1px solid transparent;
+      transition:background .35s ease,box-shadow .35s ease,border-color .35s ease}
+.rnav.solid{background:rgba(9,9,10,.9);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      border-bottom-color:rgba(201,168,106,.22);box-shadow:0 18px 44px -34px rgba(0,0,0,.95)}
+.rnav-in{max-width:var(--rx-shell);margin:0 auto;padding:1.15rem 1.25rem;display:flex;
+        align-items:center;justify-content:space-between;gap:1.4rem}
+.rbrand{text-decoration:none;display:flex;flex-direction:column;line-height:1.15}
+.rbrand-name{font-family:var(--serif);font-size:1.3rem;font-weight:400;letter-spacing:.15em;
+        text-transform:uppercase;color:var(--ink);transition:color .3s ease;white-space:nowrap}
+.rbrand:hover .rbrand-name{color:var(--gold2)}
+.rbrand-sub{margin-top:.32rem;font-size:.55rem;letter-spacing:.34em;text-transform:uppercase;
+        color:var(--gold);opacity:.88}
+.rnav-desk{display:none;align-items:center;gap:2rem}
+.rnav-desk a{position:relative;text-decoration:none;font-size:.7rem;letter-spacing:.24em;
+        text-transform:uppercase;color:var(--mut);padding:.45rem 0;transition:color .3s ease}
+.rnav-desk a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;
+        background:var(--gold);transition:width .35s ease}
+.rnav-desk a:hover{color:var(--ink)}
+.rnav-desk a:hover::after{width:100%}
+.rnav-desk a.on{color:var(--gold2)}
+.rnav-desk a.on::after{width:100%;height:1px;background:var(--gold);
+        box-shadow:0 0 12px rgba(230,201,128,.8)}
+.rburger{display:inline-flex;flex-direction:column;justify-content:center;gap:5px;
+        width:2.5rem;height:2.5rem;padding:0 .58rem;background:transparent;cursor:pointer;
+        border:1px solid rgba(201,168,106,.34);border-radius:999px}
+.rburger span{display:block;height:1px;background:var(--gold2);
+        transition:transform .3s ease,opacity .3s ease}
+.rburger.x span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.rburger.x span:nth-child(2){opacity:0}
+.rburger.x span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.rmobmenu{display:none;background:rgba(9,9,10,.97);backdrop-filter:blur(14px);
+        -webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(201,168,106,.18)}
+.rmobmenu.open{display:block}
+.rmobmenu a{display:block;padding:1.05rem 1.5rem;text-decoration:none;font-size:.72rem;
+        letter-spacing:.24em;text-transform:uppercase;color:var(--mut);
+        border-bottom:1px solid rgba(255,255,255,.045)}
+.rmobmenu a.on{color:var(--gold2)}
+@media (min-width:900px){
+  .rnav-desk{display:flex}
+  .rburger{display:none}
+  .rmobmenu{display:none!important}
+}
+
+/* ---------- cinematic hero ---------- */
+.rhero{position:relative;min-height:100vh;min-height:100svh;display:flex;
+        align-items:center;justify-content:center;overflow:hidden;isolation:isolate;background:#08080a}
+.rhero-img{position:absolute;inset:0;z-index:-3;width:100%;height:100%;
+        object-fit:cover;object-position:<?= $esc($reelsHeroPos) ?>;user-select:none}
+.rhero-ov{position:absolute;inset:0;z-index:-2;pointer-events:none;background:
+        linear-gradient(180deg,rgba(8,8,10,.88) 0%,rgba(8,8,10,.3) 44%,rgba(8,8,10,.93) 100%),
+        radial-gradient(ellipse at 62% 46%,rgba(6,6,8,.05) 0%,rgba(6,6,8,.8) 78%)}
+.rhero-grain{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.035;
+        background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .5px);
+        background-size:3px 3px}
+.rhero-in{position:relative;max-width:var(--rx-shell);margin:0 auto;text-align:center;
+        padding:calc(var(--rx-head) + 3.2rem) 1.35rem 6.4rem}
+.rhero-eyebrow{margin:0;font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;
+        color:var(--gold);opacity:.92}
+.rhero-eyebrow i{font-style:normal;opacity:.5;padding:0 .3em}
+.rhero-rule{display:block;width:62px;height:1px;margin:1.45rem auto;
+        background:linear-gradient(90deg,transparent,var(--gold),transparent);
+        box-shadow:0 0 12px rgba(230,201,128,.55)}
+.rhero-h{margin:0;font-size:clamp(2rem,7vw,5rem);font-weight:400;line-height:1.07;
+        letter-spacing:.1em;text-transform:uppercase;color:#f6f1e6;
+        text-shadow:0 2px 30px rgba(0,0,0,.72),0 0 62px rgba(201,168,106,.12)}
+.rhero-sub{margin:1.65rem auto 0;max-width:34rem;font-size:clamp(1rem,2.3vw,1.26rem);
+        line-height:1.62;color:#ddd5c6;font-style:italic}
+.rhero-sup{margin:.9rem auto 0;max-width:30rem;font-size:.85rem;letter-spacing:.05em;
+        color:var(--mut)}
+.rhero-cta{display:inline-block;margin-top:2.4rem;padding:.96rem 2.5rem;text-decoration:none;
+        font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#0b0b0c;
+        background:var(--gold2);border:1px solid var(--gold2);border-radius:999px;
+        box-shadow:0 14px 38px -14px rgba(230,201,128,.6);
+        transition:transform .3s ease,box-shadow .3s ease,background .3s ease}
+.rhero-cta:hover{transform:translateY(-2px);background:#f0dcae;
+        box-shadow:0 20px 46px -14px rgba(230,201,128,.75)}
+.rhero-scroll{position:absolute;left:0;right:0;bottom:1.5rem;margin:0;text-align:center;
+        font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mut);opacity:.72}
+.rhero-scroll i{font-style:normal;display:inline-block;margin-left:.45em;color:var(--gold)}
+
+/* ---------- reels section spacing (existing grid untouched) ---------- */
+html{overflow-x:hidden}
+body{overflow-x:hidden}
+main{padding-top:3.1rem}
+.rsec{text-align:center;margin:0 auto 1.9rem}
+.rsec-eyebrow{margin:0;font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.9}
+.rsec-h{margin:.7rem 0 0;font-size:clamp(1.15rem,3.4vw,1.7rem);font-weight:400;letter-spacing:.16em;
+        text-transform:uppercase;color:var(--ink)}
+.rsec-h i{font-style:normal;color:var(--gold);padding:0 .18em}
+
+/* ---------- mobile polish ---------- */
+@media (max-width:640px){
+  .rhero-img{object-position:<?= $esc($reelsHeroPosMb) ?>}
+  .rhero-in{padding-top:calc(var(--rx-head) + 2.1rem);padding-bottom:5.6rem}
+  .rhero-h{letter-spacing:.06em}
+  .rhero-eyebrow{font-size:.53rem;letter-spacing:.3em}
+  .rhero-sub{font-size:.97rem}
+  .rhero-cta{width:100%;max-width:19rem;padding:.92rem 1.4rem}
+  .rhero-rule{margin:1.15rem auto}
+  .rhero-scroll{letter-spacing:.3em}
+}
+@media (max-width:380px){
+  .rbrand-name{font-size:1.08rem;letter-spacing:.1em}
+  .rbrand-sub{font-size:.48rem;letter-spacing:.24em}
+}
+/* ======== end luxury nav + hero ======== */
+</style>
 </head>
 <body>
 
-<header>
-  <h1>REELS</h1>
-  <p>Cinematic Moments, Beautifully Preserved.</p>
-  <nav class="top">
+<!-- ======== PREMIUM NAVBAR ======== -->
+<header class="rnav" id="rnav">
+  <div class="rnav-in">
+    <a href="index.html" class="rbrand">
+      <span class="rbrand-name">Deepak Studios</span>
+      <span class="rbrand-sub">Cinematic Photography</span>
+    </a>
+    <nav class="rnav-desk" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="index.html#portfolio">Photography</a>
+      <a href="cinematography.php">Cinematography</a>
+      <a href="reels.php" class="on" aria-current="page">Reels</a>
+      <a href="index.html#contact">Contact Us</a>
+    </nav>
+    <button type="button" class="rburger" id="rburger" aria-label="Open menu"
+            aria-expanded="false" aria-controls="rmobmenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="rmobmenu" id="rmobmenu">
     <a href="index.html">Home</a>
+    <a href="index.html#portfolio">Photography</a>
     <a href="cinematography.php">Cinematography</a>
-    <a href="reels.php" style="color:var(--gold2)">Reels</a>
+    <a href="reels.php" class="on" aria-current="page">Reels</a>
     <a href="index.html#contact">Contact Us</a>
-  </nav>
+  </div>
 </header>
 
-<main>
+<!-- ======== CINEMATIC HERO ======== -->
+<section class="rhero" aria-labelledby="rhero-h">
+  <img class="rhero-img"
+       src="<?= $esc($reelsHeroImage) ?>"
+       alt="Deepak Studios cinematic wedding reel"
+       width="1920" height="1080"
+       fetchpriority="high" decoding="async">
+  <span class="rhero-ov" aria-hidden="true"></span>
+  <span class="rhero-grain" aria-hidden="true"></span>
+  <div class="rhero-in">
+    <p class="rhero-eyebrow">DEEPAK STUDIOS <i>&bull;</i> PHOTOGRAPHY</p>
+    <span class="rhero-rule" aria-hidden="true"></span>
+    <h1 class="rhero-h" id="rhero-h">THE STORIES WE CAPTURE</h1>
+    <p class="rhero-sub">Every emotion. Every celebration. Every unforgettable moment.</p>
+    <p class="rhero-sup">Explore our Wedding, Pre-Wedding &amp; Celebration Reels.</p>
+    <a class="rhero-cta" id="rheroCta" href="#reels">WATCH OUR REELS</a>
+  </div>
+  <p class="rhero-scroll" aria-hidden="true">SCROLL TO EXPLORE <i>&#8595;</i></p>
+</section>
+
+<main id="reels">
+  <div class="rsec">
+    <p class="rsec-eyebrow">OUR COLLECTION</p>
+    <h2 class="rsec-h">WEDDING <i>&bull;</i> PRE-WEDDING <i>&bull;</i> CELEBRATION</h2>
+  </div>
   <p class="lead">Short films, portrait-style. Filter by occasion and tap any frame to play.</p>
 
   <div class="filters" id="filters" role="tablist" aria-label="Reel category">
@@ -489,5 +655,54 @@ aria-label="Play <?= $esc($r['t']) ?>">
     else if (e.key === 'ArrowLeft') { e.preventDefault(); openAt(i - 1); }
     else if (e.key === 'ArrowRight') { e.preventDefault(); openAt(i + 1); }
   });
+})();
+</script>
+
+<!-- ======== PREMIUM NAV + HERO CTA (added, existing reel logic untouched) ======== -->
+<script>
+(function () {
+  'use strict';
+  var nav   = document.getElementById('rnav');
+  var burger= document.getElementById('rburger');
+  var menu  = document.getElementById('rmobmenu');
+  var cta   = document.getElementById('rheroCta');
+
+  if (nav) {
+    var onScroll = function () { nav.classList.toggle('solid', (window.pageYOffset || 0) > 24); };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  if (burger && menu) {
+    var setMenu = function (open) {
+      menu.classList.toggle('open', open);
+      burger.classList.toggle('x', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    burger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setMenu(!menu.classList.contains('open'));
+    });
+    menu.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a') : null;
+      if (a) setMenu(false);
+    });
+  }
+
+  if (cta) {
+    cta.addEventListener('click', function (e) {
+      var target = document.getElementById('reels');
+      if (!target) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var top = target.getBoundingClientRect().top + (window.pageYOffset || 0) - 70;
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      } else {
+        window.scrollTo(0, top);
+      }
+    });
+  }
 })();
 </script>

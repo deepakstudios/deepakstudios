@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.4.0
+1.5.0
 ```
 
 ### Semver rules
@@ -264,6 +264,29 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.5.0 - 2026-09-29
+
+- **Reels page premium "Luxury + Royal" experience.** `reels.php` gained a fixed premium
+  navbar (Deepak Studios brand mark; Home / Photography / Cinematography / Reels / Contact Us;
+  Reels shown as the active item via `.on` + `aria-current="page"`; gold hairline underline;
+  scrolled `backdrop-filter` state; mobile burger + slide-down menu) plus a new full-bleed
+  cinematic hero: eyebrow "DEEPAK STUDIOS - PHOTOGRAPHY", heading "THE STORIES WE CAPTURE",
+  subheading, supporting line, a "WATCH OUR REELS" CTA that smooth-scrolls to the reels section,
+  and a "SCROLL TO EXPLORE" indicator. Gold is used only as an accent (hairline rule, underline,
+  CTA); the page stays deep charcoal with a vignette and fine grain overlay. Desktop and the
+  <=640px / <=380px breakpoints reposition the hero via `object-position`.
+- **Replaceable hero image (single config point).** New `$reelsHeroImage` (plus `$reelsHeroPos`
+  and `$reelsHeroPosMb`) PHP variables live in one clearly commented block near the top of
+  `reels.php`. Swapping the hero picture means editing only that one path -- no HTML, CSS or JS
+  edits, and the path is not repeated anywhere else in the file. The image lives at
+  `assets/images/reels-hero.jpg` (1920x1080, ~39 KB, served with `object-fit:cover` and
+  `fetchpriority="high"`, no lazy-load; reel card thumbnails remain `loading="lazy"`).
+- **No functional changes.** Reels data, all 12 video IDs, the $MAIN / $SUB / $SUBLABEL /
+  $CATLABEL mapping, filter + subfilter rendering, the 9:16 in-page modal, Prev/Next, X/Esc
+  close, scroll lock and the YouTube nocookie embed are all untouched. No new libraries, no
+  `target="_blank"`, no YouTube Shorts links, and `prewedding.php` / `index.html` were not
+  modified.
 
 ## 1.4.0 - 2026-09-22
 
