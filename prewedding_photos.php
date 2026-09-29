@@ -31,7 +31,7 @@ if (is_dir($dir)) {
     }
 }
 sort($photos, SORT_STRING | SORT_FLAG_CASE);
-$total = count($photoshörl);
+$total = count($photos);
 
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -81,11 +81,11 @@ function pw_photoUrl(string $file): string
 </head>
 <body>
 <header>
-  <h1>Pre-Wedding <?= $esc($title) ?></h1>
+  <h1>Pre-Wedding <?= esc($title) ?></h1>
   <p><?= $total ?> photo<?= $total === 1 ? '' : 's' ?></p>
   <div class="crumbs"><a href="index.html">Home</a> &rsaquo;
     <a href="prewedding.php">Pre-Wedding Photography</a> &rsaquo;
-    <?= $esc($title) ?></div>
+    <?= esc($title) ?></div>
 </header>
 
 <main>
@@ -104,8 +104,8 @@ function pw_photoUrl(string $file): string
   <?php else: ?>
     <div class="gallery">
       <?php foreach ($photos as $file): ?>
-        <a class="item" href="javascript:void(0)" onclick="openLightbox('<?= $esc(pw_photoUrl($file)) ?>')">
-          <img loading="lazy" src="<?= $esc(pw_photoUrl($file)) ?>" alt="Pre-Wedding photo">
+        <a class="item" href="javascript:void(0)" onclick="openLightbox('<?= esc(pw_photoUrl($file)) ?>')">
+          <img loading="lazy" src="<?= esc(pw_photoUrl($file)) ?>" alt="Pre-Wedding photo">
         </a>
       <?php endforeach; ?>
     </div>

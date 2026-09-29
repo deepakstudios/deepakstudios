@@ -245,7 +245,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.7.0
+1.7.1
 ```
 
 ### Semver rules
@@ -264,6 +264,22 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.7.1 - 2026-09-29
+
+- **Fixed a fatal error that had killed the Pre-Wedding photo gallery.** `prewedding_photos.php`
+  had two pre-existing defects that made the page return a blank/fatal response:
+  1. Line 34 read `$total = count($photoshörl);` -- a corrupted variable name (a stray `ö` had
+     been typed in), so `count()` received `null` and threw
+     `TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given`.
+     Fixed to `$total = count($photos);`.
+  2. Lines 84, 88, 107 and 108 called `$esc(...)` as if it were a closure, but
+     `lib_prewedding.php` provides a **function** named `esc()`, not a `$esc` variable. The page
+     therefore also threw `Error: Value of type null is not callable`. Fixed to `esc(...)`.
+- The page now renders normally: `6 photos`, all 6 `.item` cards, and the existing
+  `#lightbox` / `#lb-img` / `openLightbox()` / `closeLightbox()` viewer intact. No photo, album,
+  link, style or behaviour was removed -- the diff is exactly 5 lines (1 variable name + 4 call
+  sites).
 
 ## 1.7.0 - 2026-09-29
 
