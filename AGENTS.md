@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.13.0
+1.14.0
 ```
 
 ### Semver rules
@@ -265,6 +265,17 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.14.0 - 2026-10-01
+
+- **Social media icons in footers.** Added Instagram (`deepakstudiosofficial_`),
+  Facebook (`deepakstudiosfotography`) and YouTube (`@deepakstudiosfotography`)
+  icon links (official SVG glyphs, no text, `target="_blank" rel="noopener"`)
+  to all 9 footers: `index.html` (brand column), `cinematography.php`,
+  `photography.php`, `reels.php`, `wedding.php`, `prewedding.php`,
+  `prewedding_photos.php`, `prewedding_videos.php` and `lib_gallery.php`
+  (also covers album pages `a.php`–`e.php`). Gold circular hover style matching
+  each page's theme; no other content touched.
 
 ## 1.13.0 - 2026-09-29
 
