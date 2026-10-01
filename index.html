@@ -334,27 +334,22 @@ header{padding:.9rem 0;background:linear-gradient(to bottom,rgba(9,9,11,.5),tran
 .logo-name{font-size:1.28rem}
 .logo-sub{font-size:8px;letter-spacing:.18em}
 /* hero */
-.hero{height:100svh;min-height:100svh;align-items:flex-start}
-.hero-ov{background:rgba(0,0,0,.32)}
-.hero-in{margin-top:0;padding-top:clamp(5rem,13svh,6.5rem);padding-bottom:0}
-.badge{margin-bottom:1.05rem;padding:.45rem .95rem;background:rgba(10,10,12,.42);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
-.badge .stars svg{width:.8rem;height:.8rem}
-.badge span{font-size:.76rem;letter-spacing:.02em;color:#e8e8ea}
-.hero h1{font-size:clamp(2.7rem,11vw,3.4rem);font-weight:600;line-height:1.03;letter-spacing:-.02em;margin:0 0 .95rem}
-.hero .hero-sub{font-size:1.02rem;line-height:1.5;letter-spacing:.04em;color:#e4e4e7;margin:0 0 .35rem}
-.hero .hero-loc{font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--primary);margin:0 0 1.05rem;opacity:.92}
-.hero .hero-tag{font-size:.9rem;line-height:1.55;max-width:20rem;color:#c9c9ce;margin:0 auto 1.35rem}
-.hero-cta{gap:.9rem}
-.btn-hero{width:100%;height:58px;border-radius:999px;font-size:1rem;letter-spacing:.05em;box-shadow:0 10px 34px -10px rgba(212,175,55,.5)}
-.btn-hero-ghost{height:44px;width:auto;padding:.6rem 1.5rem;font-size:.92rem;letter-spacing:.05em;color:#e9e9ec;background:rgba(10,10,12,.35);border:1px solid rgba(255,255,255,.25);border-radius:999px;backdrop-filter:blur(8px)}
-.btn-hero-ghost::after{content:" \2192";font-size:1rem;color:var(--primary)}
-/* scroll indicator */
-.scroll-ind{bottom:1.15rem;gap:.5rem}
-.scroll-ind span{font-size:0}
-.scroll-ind span::before{content:"Explore";font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.75)}
-.scroll-ind .scroll-line{display:none}
-.scroll-ind::after{content:"";width:1px;height:1.25rem;background:var(--primary);animation:dsBop 1.8s ease-in-out infinite}
-@keyframes dsBop{0%,100%{transform:scaleY(.45);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+.hero{height:100svh;min-height:100svh;align-items:flex-end}
+.hero-ov{background:rgba(0,0,0,.18)}
+.hero-ov2{background:linear-gradient(to top,#0b0b0f 0%,rgba(9,9,11,.8) 32%,rgba(9,9,11,.4) 55%,rgba(9,9,11,.12) 76%,transparent 100%)}
+.hero .hero-in{margin-top:0;padding-top:0;width:100%;padding-bottom:calc(3rem + env(safe-area-inset-bottom))}
+.hh-mobile,.sub-mobile,.hero-loc,.hero-tag,.scroll-ind{display:none}
+.hh-desktop,.sub-desktop{display:inline}
+.badge{margin-bottom:.7rem;padding:.42rem .95rem;background:rgba(10,10,12,.5);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(10px)}
+.badge .stars svg{width:.78rem;height:.78rem}
+.badge span{font-size:.74rem;letter-spacing:.02em;color:#ededf0}
+.hero h1{font-size:clamp(1.95rem,7.2vw,2.5rem);font-weight:600;line-height:1.06;letter-spacing:-.02em;margin:0 0 .5rem}
+.hero .hero-sub{font-size:.83rem;line-height:1.45;letter-spacing:.03em;color:#e9e9ec;margin:0 0 .5rem;max-width:24rem}
+.hero-cta{width:100%;gap:.6rem}
+.btn-hero{display:none;width:100%;height:54px;border-radius:999px;font-size:1.02rem;letter-spacing:.04em;box-shadow:0 12px 34px -10px rgba(212,175,55,.5)}
+.btn-hero-ghost{display:none}
+/* scroll indicator hidden on mobile: the text stack owns the bottom zone */
+.scroll-ind{display:none}
 /* intro + verified stat strip */
 .ds-intro{position:relative;padding:2.5rem 0 3rem;overflow:hidden;background:#0c0c0e;border-top:1px solid rgba(212,175,55,.16)}
 .ds-intro-bg{position:absolute;inset:0;background-image:url('photos/hero/deepakstudiosbokaro.webp');background-size:cover;background-position:center 42%;opacity:.13}
@@ -392,9 +387,19 @@ html.dark .svc:hover .svc-bg{opacity:.55}
 /* portfolio editorial */
 .tile{border-radius:.5rem;margin-bottom:1.2rem}
 .tile .tag{position:absolute;left:.85rem;bottom:.85rem;z-index:5;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:rgba(9,9,11,.45);border:1px solid rgba(255,255,255,.14);padding:.32rem .7rem;border-radius:999px;backdrop-filter:blur(4px)}
-@media(max-width:380px){
-.hero h1{font-size:clamp(2.55rem,10.5vw,3rem)}
-.hero .hero-tag{max-width:18.5rem}
+@media(max-height:799px){
+.hero .hero-sub{display:none}
+.hero h1{font-size:clamp(1.7rem,6.8vw,2.05rem);margin:0 0 .5rem}
+.badge{padding:.36rem .82rem;margin-bottom:.65rem}
+.badge span{font-size:.68rem}
+.btn-hero{height:52px;font-size:.98rem}
+.hero .hero-in{padding-bottom:calc(3rem + env(safe-area-inset-bottom))}
+}
+@media(max-height:699px){
+.badge{display:none}
+.hero h1{font-size:clamp(1.6rem,6.5vw,1.9rem);margin-bottom:.45rem}
+.btn-hero{height:50px}
+.hero .hero-in{padding-bottom:calc(2.75rem + env(safe-area-inset-bottom))}
 }
 /* whatsapp */
 .wa{width:3.25rem;height:3.25rem;right:1.1rem;bottom:calc(4.6rem + env(safe-area-inset-bottom));background:#25a855;box-shadow:0 10px 24px -8px rgba(0,0,0,.55)}
