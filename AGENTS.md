@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.14.0
+1.15.0
 ```
 
 ### Semver rules
@@ -265,6 +265,19 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.15.0 - 2026-10-01
+
+- **Mobile-only premium layer for the home page (`index.html`), desktop untouched.**
+  All new CSS lives in `@media(max-width:640px)` (plus `min-width:641px` hides for
+  mobile-only blocks); no desktop selector was modified. Mobile hero now shows the
+  review badge, "Wedding Photography & Cinematography" serif headline and a
+  "Bokaro · Jharkhand" location chip (no long paragraph, no duplicate CTAs — the
+  sticky CALL NOW / BOOK YOUR DATE bar is unchanged). Intro became WHY CHOOSE with
+  4 points; portfolio got a mobile PHOTOGRAPHY heading and 2-column grid; new
+  mobile-only Cinematography (6 linked cards), Reels (12 Shorts, main+sub filters,
+  9:16 grid, in-page modal, no new-tab YouTube) and Final CTA sections (all hidden
+  on desktop); reviews marquee renders stacked single-set cards on mobile.
 
 ## 1.14.0 - 2026-10-01
 

@@ -425,6 +425,120 @@ html.dark .svc:hover .svc-bg{opacity:.55}
 /* footer clearance */
 footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
 }
+
+/* ============ MOBILE PREMIUM v1.15.0 — max-width:640px only, desktop untouched ============ */
+@media(min-width:641px){
+.m-only,.port-mobile,.portd-mobile{display:none!important}
+}
+@media(max-width:640px){
+html,body{overflow-x:hidden}
+.port-mobile{display:inline}
+.portd-mobile{display:block}
+/* header: compact 62px premium bar */
+header{min-height:62px}
+.hdr{min-height:34px}
+#mobmenu{background:rgba(9,9,11,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+#mobmenu a{padding:1.05rem 1.5rem;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+#mobmenu a:hover{color:var(--primary)}
+/* hero copy: review line + heading + location chip, no long text, no duplicate CTAs */
+.hh-desktop,.sub-desktop,.sub-mobile{display:none!important}
+.hh-mobile{display:inline;font-family:"Playfair Display",Georgia,serif;font-weight:700;
+  font-size:clamp(1.9rem,8.5vw,2.6rem);line-height:1.12;letter-spacing:0;
+  background:linear-gradient(to bottom,#FFF5D1,#D4AF37 60%,#8B7322);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.8))}
+.hero-loc{display:inline-block!important;margin:.7rem 0 0;padding:.4rem 1rem;font-size:.72rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;color:#f0d896;border:1px solid rgba(212,175,55,.55);
+  border-radius:999px;background:rgba(10,10,12,.5);backdrop-filter:blur(8px)}
+/* why-choose points */
+.ds-points{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.8rem auto 0;max-width:26rem;text-align:left}
+.ds-point{display:flex;align-items:center;gap:.6rem;padding:.85rem .9rem;border:1px solid rgba(212,175,55,.25);
+  border-radius:.75rem;background:rgba(255,255,255,.02)}
+.ds-point i{font-style:normal;color:var(--primary);font-size:.65rem}
+.ds-point span{font-size:.82rem;font-weight:500;color:#e9e9ec;line-height:1.4}
+/* portfolio: premium 2-column grid */
+.masonry{columns:2;column-gap:.7rem}
+.tile{margin-bottom:.7rem}
+.tile .tag{font-size:.55rem;left:.6rem;bottom:.6rem;padding:.28rem .6rem}
+/* mobile-only section shell */
+.m-only{padding:3.4rem 0;position:relative;overflow:hidden}
+.m-sec-head{text-align:center;margin-bottom:2rem}
+.m-sec-head h2{font-size:clamp(1.8rem,7.5vw,2.45rem);font-weight:700;margin:0 0 .6rem;line-height:1.12}
+.m-sub{color:var(--muted);font-size:.94rem;margin:0}
+/* cinematography compact cards */
+.m-cine{background:#0b0b0d;border-top:1px solid var(--border)}
+.m-cine-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.m-cine-card{display:flex;align-items:center;gap:.6rem;padding:.95rem .9rem;border-radius:.75rem;
+  background:var(--card);border:1px solid var(--border);transition:border-color .3s}
+.m-cine-card:active{border-color:var(--primary)}
+.m-cine-card i{width:.5rem;height:.5rem;flex:0 0 auto;transform:rotate(45deg);background:var(--primary)}
+.m-cine-card span{flex:1;font-family:"Playfair Display",serif;font-size:1rem;font-weight:700;color:var(--fg)}
+.m-cine-card em{font-style:normal;font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--primary);border:1px solid rgba(212,175,55,.5);border-radius:999px;padding:.2rem .55rem}
+/* reels 9:16 grid + filters */
+.m-reels{background:#0b0b0d;border-top:1px solid var(--border)}
+.m-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:.4rem .9rem;margin-bottom:.9rem}
+.m-filters button{padding:.5rem .4rem;font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);font-family:inherit}
+.m-filters button.on{color:var(--primary);border-bottom-color:var(--primary)}
+.m-subfilters{display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem .8rem;margin-bottom:1.4rem;min-height:1.8rem}
+.m-subfilters button{padding:.4rem .3rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);font-family:inherit}
+.m-subfilters button.on{color:var(--primary);border-bottom-color:var(--primary)}
+.m-subfilters.hidden{visibility:hidden}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.m-rc{position:relative;display:block;border-radius:.75rem;overflow:hidden;background:var(--card);
+  border:1px solid var(--border);aspect-ratio:9/16}
+.m-rc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.m-rc .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,transparent 35%,rgba(0,0,0,.8) 100%)}
+.m-rc .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3rem;height:3rem;border-radius:50%;
+  display:grid;place-items:center;background:rgba(212,175,55,.94);color:#09090b;font-size:1rem;padding-left:.2rem}
+.m-rc .cat{position:absolute;top:.55rem;left:.55rem;font-size:.55rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:#f0d896;background:rgba(9,9,11,.55);border:1px solid rgba(212,175,55,.5);
+  padding:.24rem .55rem;border-radius:999px}
+.m-rc .ttl{position:absolute;left:.7rem;right:.7rem;bottom:.65rem;color:#fff;font-size:.82rem;line-height:1.3;font-weight:500}
+.m-more{display:flex;justify-content:center;margin-top:1.8rem}
+/* reels in-page modal */
+.m-vmodal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:1rem;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(6px)}
+.m-vmodal.open{display:flex}
+.m-vbox{width:min(94vw,340px);max-height:94vh;display:flex;flex-direction:column;background:#0d0c0a;
+  border:1px solid rgba(212,175,55,.45);border-radius:1rem;overflow:hidden}
+.m-vhead{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.8rem 1rem;
+  background:#151310;border-bottom:1px solid rgba(212,175,55,.4)}
+.m-vhead h3{margin:0;font-size:.95rem;color:#e9d19a;font-weight:600;line-height:1.3}
+.m-vhead h3 small{display:block;color:var(--primary);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.2rem}
+.m-vclose{background:none;border:1px solid rgba(212,175,55,.4);border-radius:50%;width:2.1rem;height:2.1rem;
+  color:#e9d19a;font-size:1.1rem;line-height:1;cursor:pointer;flex:0 0 auto}
+.m-vslot{position:relative;background:#000;aspect-ratio:9/16}
+.m-vslot iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.m-vposter{position:absolute;inset:0;display:grid;place-items:center;cursor:pointer;
+  background:radial-gradient(circle at 50% 40%,rgba(212,175,55,.14),transparent 60%)}
+.m-vplay{width:4rem;height:4rem;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;padding-left:.25rem;
+  color:#e9d19a;border:2px solid rgba(232,208,150,.8);background:rgba(232,208,150,.14)}
+.m-vfoot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.65rem 1rem;
+  background:#151310;border-top:1px solid rgba(212,175,55,.4)}
+.m-vfoot button{background:none;border:1px solid rgba(232,208,150,.55);color:#e9d19a;padding:.5rem .9rem;
+  border-radius:999px;cursor:pointer;font-size:.75rem;font-weight:700;font-family:inherit}
+.m-vfoot span{color:#cbb061;font-size:.78rem;font-weight:700}
+body.m-vlock{overflow:hidden}
+/* reviews: clean stacked cards */
+.marquee-wrap::before,.marquee-wrap::after{display:none}
+.marquee-wrap{display:block}
+.marquee{animation:none;flex-direction:column;gap:1rem}
+.marquee .tcard{width:100%;margin:0;flex-shrink:1}
+/* final CTA dark panel */
+.m-cta{background:radial-gradient(60% 60% at 50% 30%,rgba(212,175,55,.1),transparent 70%),#08080a;
+  border-top:1px solid var(--border);text-align:center}
+.m-cta h2{font-size:clamp(1.5rem,6.5vw,2rem);font-weight:700;line-height:1.25;margin:0 0 .8rem;text-transform:uppercase}
+.m-cta-btns{display:flex;flex-direction:column;gap:.7rem;margin-top:1.6rem}
+.m-cta-btns .btn{width:100%;padding:1rem;font-size:1rem;font-weight:700;border-radius:999px}
+.btn-ghost{background:transparent;border:1px solid rgba(212,175,55,.55);color:#fff}
+.btn-ghost:active{border-color:var(--primary)}
+/* social compact */
+.frow-foot .social a{width:2.25rem;height:2.25rem}
+.frow-foot .social svg{width:1.05rem;height:1.05rem}
+}
 </style>
 </head>
 <body>
@@ -493,9 +607,9 @@ footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
     <a class="badge" href="https://www.google.com/search?q=deepak+studios&amp;sca_esv=31fa6de42034ce83&amp;authuser=0&amp;sxsrf=APpeQnsbF5FQcvic2jXKmy42kZtdi0N0Pg%3A1789560771513&amp;source=hp&amp;ei=w4eqavONHcuq1sQPpKn0-Qo&amp;iflsig=ABILxe8AAAAAaqqV047CWriRhR3uPu7AqRulOxkBS5kj&amp;oq=dee&amp;gs_lp=Egdnd3Mtd2l6IgNkZWUqBAgAGCcyBBAjGCcyBBAjGCcyBBAjGCcyDhAuGJECGLEDGIAEGIoFMgsQABiABBiKBRiRAjILEAAYgAQYigUYQ0jyDlAAWKMDcAB4AJABAJgBtQGgAd0DqgEDMC4zuAEDyAEA-AEBmAIDoALvA8ICCxAuGJECGIAEGIoFmAMAkgcDMC4zoAfoI7IHAwMy-LPIBwyACAE&amp;sclient=gws-wiz#lrd=0x39f4238ea7c17f2f:0x5f77ac701f56ad7b,1,,,," target="_blank" rel="noopener" aria-label="View our Google reviews (opens in a new tab)">
       <div class="stars" id="heroStars"></div>
       <span class="badge-txt-desktop">4.9 (249+ Google Reviews)</span>
-      <span class="badge-txt-mobile">4.9 · 249+ Google Reviews</span>
+      <span class="badge-txt-mobile">4.9 (249+ Google Reviews)</span>
     </a>
-    <h1 class="pf"><span class="hh-desktop">Deepak Studios</span><span class="hh-mobile">Timeless.<br>Moments.</span></h1>
+    <h1 class="pf"><span class="hh-desktop">Deepak Studios</span><span class="hh-mobile">Wedding Photography<br>&amp; Cinematography</span></h1>
     <p class="hero-sub"><span class="sub-desktop">Wedding Photography <span class="amp">&amp;</span> Cinematography in Bokaro</span><span class="sub-mobile">Wedding Photography <span class="amp">&amp;</span> Cinematography</span></p>
     <p class="hero-loc">Bokaro · Jharkhand</p>
     <p class="hero-tag"><span class="tag-desktop">Capturing genuine emotions, beautiful celebrations and timeless stories with cinematic elegance.</span><span class="tag-mobile">Real emotions. Beautiful celebrations. Timeless memories.</span></p>
@@ -515,9 +629,15 @@ footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
       <div class="ds-stat"><span class="n">4.9<em>★</em></span><span class="l">Google Rating</span></div>
       <div class="ds-stat"><span class="n">249<em>+</em></span><span class="l">Google Reviews</span></div>
     </div>
-    <p class="eyebrow">More Than A Photograph</p>
-    <h2 class="pf">Stories worth remembering.</h2>
-    <p class="ds-intro-p">We capture genuine emotions, beautiful details and unforgettable celebrations with a cinematic approach.</p>
+    <p class="eyebrow">Why Choose Deepak Studios</p>
+    <h2 class="pf">We don't just capture moments.</h2>
+    <p class="ds-intro-p">We create memories that feel timeless.</p>
+    <div class="ds-points">
+      <div class="ds-point"><i>◆</i><span>Experienced Team</span></div>
+      <div class="ds-point"><i>◆</i><span>Cinematic Storytelling</span></div>
+      <div class="ds-point"><i>◆</i><span>Premium Quality</span></div>
+      <div class="ds-point"><i>◆</i><span>Complete Wedding Coverage</span></div>
+    </div>
   </div>
 </section>
 
@@ -537,12 +657,54 @@ footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
 <section id="portfolio" class="pad">
   <div class="container">
     <div class="sec-head">
-      <h2 class="pf reveal">Our <span class="gold">Portfolio</span></h2>
+      <h2 class="pf reveal"><span class="port-desktop">Our <span class="gold">Portfolio</span></span><span class="port-mobile">Photography</span></h2>
+      <p class="reveal portd-mobile">Real moments. Beautifully preserved.</p>
       <div class="filters reveal" id="filters"></div>
     </div>
     <div class="masonry" id="gallery"></div>
   </div>
 </section>
+
+<!-- CINEMATOGRAPHY (mobile only) -->
+<section id="m-cine" class="m-only m-cine">
+  <div class="container">
+    <div class="m-sec-head">
+      <p class="eyebrow">Filmed Like Cinema</p>
+      <h2 class="pf">Cinematography</h2>
+      <p class="m-sub">Turning Every Moment Into a Cinematic Story</p>
+    </div>
+    <div class="m-cine-grid">
+      <a class="m-cine-card" href="wedding.php"><i></i><span>Wedding</span><em>Live</em></a>
+      <a class="m-cine-card" href="prewedding.php"><i></i><span>Pre-Wedding</span><em>Live</em></a>
+      <a class="m-cine-card" href="cinematography.php"><i></i><span>Engagement</span><em>Soon</em></a>
+      <a class="m-cine-card" href="cinematography.php"><i></i><span>Anniversary</span><em>Soon</em></a>
+      <a class="m-cine-card" href="cinematography.php"><i></i><span>Birthday</span><em>Soon</em></a>
+      <a class="m-cine-card" href="cinematography.php"><i></i><span>Housewarming</span><em>Soon</em></a>
+    </div>
+  </div>
+</section>
+
+<!-- REELS (mobile only) -->
+<section id="m-reels" class="m-only m-reels">
+  <div class="container">
+    <div class="m-sec-head">
+      <p class="eyebrow">Vertical Shorts</p>
+      <h2 class="pf">Reels</h2>
+      <p class="m-sub">Short moments. Big emotions.</p>
+    </div>
+    <div class="m-filters" id="m-filters"></div>
+    <div class="m-subfilters" id="m-subfilters"></div>
+    <div class="m-grid" id="m-grid"></div>
+    <div class="m-more"><a class="btn btn-gold" href="reels.php">View All Reels</a></div>
+  </div>
+</section>
+<div class="m-only m-vmodal" id="m-vmodal" aria-hidden="true">
+  <div class="m-vbox">
+    <div class="m-vhead"><h3><small id="m-vcat"></small><span id="m-vtitle"></span></h3><button class="m-vclose" id="m-vclose" aria-label="Close">×</button></div>
+    <div class="m-vslot"><div class="m-vposter" id="m-vposter"><span class="m-vplay">▶</span></div></div>
+    <div class="m-vfoot"><button id="m-vprev">← Prev</button><span id="m-vcount"></span><button id="m-vnext">Next →</button></div>
+  </div>
+</div>
 
 <!-- REVIEWS -->
 <section id="reviews" class="pad" style="border-top:1px solid var(--border)">
@@ -570,6 +732,19 @@ footer{padding:3rem 0 calc(4.8rem + env(safe-area-inset-bottom))}
     </div>
   </div>
   <div class="marquee-wrap"><div class="marquee" id="marquee"></div></div>
+</section>
+
+<!-- FINAL CTA (mobile only) -->
+<section class="m-only m-cta">
+  <div class="container">
+    <p class="eyebrow">Book Your Date</p>
+    <h2 class="pf">Your Story Deserves<br>To Be Remembered.</h2>
+    <p class="m-sub">Let's create something timeless together.</p>
+    <div class="m-cta-btns">
+      <a class="btn btn-gold" href="tel:+919031700464">Call Now</a>
+      <button class="btn btn-ghost" onclick="openBooking()">Book Your Date</button>
+    </div>
+  </div>
 </section>
 
 <!-- CONTACT -->
@@ -799,7 +974,7 @@ renderGallery();
 function tcard(r){return '<div class="tcard">'+ICON.quote+'<div class="stars">'+star.repeat(5)+'</div>\
   <blockquote class="tq">&ldquo;'+r.q+'&rdquo;</blockquote><button class="tmore" aria-expanded="false">Read more</button>\
   <div class="tfoot"><div><h4>'+r.n+'</h4><p>Google Review</p><p class="twhen">'+r.t+'</p></div><div class="avatar">'+r.n.charAt(0)+'</div></div></div>';}
-  document.getElementById('marquee').innerHTML=REVIEWS.concat(REVIEWS).map(tcard).join('');
+  document.getElementById('marquee').innerHTML=(window.matchMedia&&matchMedia('(max-width:640px)').matches?REVIEWS:REVIEWS.concat(REVIEWS)).map(tcard).join('');
 document.querySelectorAll('.tmore').forEach(function(b){
   b.addEventListener('click',function(){
     var open=b.getAttribute('aria-expanded')==='true';
@@ -807,6 +982,79 @@ document.querySelectorAll('.tmore').forEach(function(b){
     b.textContent=open?'Read more':'Read less';
   });
 });
+
+/* ---------- mobile reels (m-only section; same Shorts data as reels.php) ---------- */
+var MREELS=[
+ {id:'jWbsPrWggaM',t:'City Lights Prelude',cat:'prewedding',sub:''},
+ {id:'JkVg9HcHKic',t:'Golden Hour Waltz',cat:'prewedding',sub:''},
+ {id:'oJyx7SCV3Rc',t:'Rooftop Rendezvous',cat:'prewedding',sub:''},
+ {id:'AMqMUmnb0K4',t:'Monsoon Frames',cat:'prewedding',sub:''},
+ {id:'kmblV9ddjJo',t:'Falling Leaves',cat:'prewedding',sub:''},
+ {id:'NygruuRRXhI',t:'Evening Whispers',cat:'prewedding',sub:''},
+ {id:'NO3eWfyXMKE',t:'Haldi Bloom',cat:'wedding',sub:'haldi'},
+ {id:'eP1Fmmfzfk8',t:'Haldi Rhythms',cat:'wedding',sub:'haldi'},
+ {id:'gkjS6aAZis8',t:'Wedding Vows',cat:'wedding',sub:'wedding'},
+ {id:'JbotebbamyI',t:'First Dance',cat:'wedding',sub:'wedding'},
+ {id:'xaNML7Jg7Dw',t:'Birthday Sparkle',cat:'celebration',sub:'birthday'},
+ {id:'cp0jqejvtJ0',t:'Candlelight Wishes',cat:'celebration',sub:'birthday'}
+];
+var MMAIN=['all','wedding','prewedding','celebration'];
+var MSUB={wedding:['all','haldi','mehendi','wedding','reception'],celebration:['all','birthday','annaprashan']};
+var MSUBLABEL={wedding:['All','Haldi','Mehendi','Wedding','Reception'],celebration:['All','Birthday','Annaprashan']};
+var MCATLABEL={all:'All',wedding:'Wedding',prewedding:'Pre-Wedding',celebration:'Celebration'};
+var mMain='all',mSub='all',mList=[],mIdx=0;
+function mThumb(id){return 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';}
+function mRenderFilters(){
+  document.getElementById('m-filters').innerHTML=MMAIN.map(function(c){
+    return '<button data-c="'+c+'" onclick="mSetMain(\''+c+'\')" class="'+(c===mMain?'on':'')+'">'+MCATLABEL[c]+'</button>';}).join('');
+  var subs=MSUB[mMain];
+  var box=document.getElementById('m-subfilters');
+  if(!subs){box.innerHTML='';box.classList.add('hidden');return;}
+  box.classList.remove('hidden');
+  box.innerHTML=subs.map(function(s,i){
+    return '<button data-s="'+s+'" onclick="mSetSub(\''+s+'\')" class="'+(s===mSub?'on':'')+'">'+MSUBLABEL[mMain][i]+'</button>';}).join('');
+}
+function mFiltered(){
+  return MREELS.filter(function(r){
+    if(mMain!=='all'&&r.cat!==mMain)return false;
+    if(MSUB[mMain]&&mSub!=='all'&&r.sub!==mSub)return false;
+    return true;});
+}
+function mRenderGrid(){
+  mList=mFiltered();
+  document.getElementById('m-grid').innerHTML=mList.map(function(r,i){
+    return '<a class="m-rc" href="javascript:void(0)" onclick="mOpen('+i+')" aria-label="Play '+r.t+'">\
+      <img loading="lazy" src="'+mThumb(r.id)+'" alt="'+r.t+' reel thumbnail">\
+      <div class="shade"></div><span class="cat">'+MCATLABEL[r.cat]+'</span>\
+      <span class="play">▶</span><span class="ttl">'+r.t+'</span></a>';}).join('')||
+    '<p class="m-sub" style="grid-column:1/-1;text-align:center">No reels in this filter yet.</p>';
+}
+function mSetMain(c){mMain=c;mSub='all';mRenderFilters();mRenderGrid();}
+function mSetSub(s){mSub=s;mRenderFilters();mRenderGrid();}
+function mEmbed(id){return 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0';}
+function mShow(){
+  var r=mList[mIdx];if(!r)return;
+  document.getElementById('m-vcat').textContent=MCATLABEL[r.cat];
+  document.getElementById('m-vtitle').textContent=r.t;
+  document.getElementById('m-vcount').textContent=(mIdx+1)+' / '+mList.length;
+  var p=document.getElementById('m-vposter');
+  p.innerHTML='<span class="m-vplay">▶</span>';
+  p.onclick=function(){
+    var f=document.createElement('iframe');
+    f.src=mEmbed(r.id);f.allow='autoplay; encrypted-media; picture-in-picture';f.allowFullscreen=true;
+    p.innerHTML='';p.appendChild(f);p.onclick=null;
+  };
+}
+function mOpen(i){mIdx=i;mShow();document.getElementById('m-vmodal').classList.add('open');document.body.classList.add('m-vlock');}
+function mClose(){document.getElementById('m-vmodal').classList.remove('open');document.body.classList.remove('m-vlock');
+  document.getElementById('m-vposter').innerHTML='<span class="m-vplay">▶</span>';}
+function mStep(d){if(!mList.length)return;mIdx=(mIdx+d+mList.length)%mList.length;mShow();}
+document.getElementById('m-vclose').onclick=mClose;
+document.getElementById('m-vprev').onclick=function(){mStep(-1);};
+document.getElementById('m-vnext').onclick=function(){mStep(1);};
+document.getElementById('m-vmodal').addEventListener('click',function(e){if(e.target===this)mClose();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')mClose();});
+mRenderFilters();mRenderGrid();
 
 document.addEventListener('click',function(e){
   var b=e.target.closest('.tmore');if(!b)return;var open=b.getAttribute('aria-expanded')==='true';
