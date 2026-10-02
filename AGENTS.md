@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.5
+1.16.6
 ```
 
 ### Semver rules
@@ -265,6 +265,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.6 - 2026-10-02
+
+- **Wedding teaser set.** Wedding films are now the 4 teasers shared by the owner:
+  The Vows, The Mandap, Nidhi & Shubham (new), Mehendi Mornings (restored).
+  Baraat Nights and Sangeet Sessions removed from the grid.
 
 ## 1.16.5 - 2026-10-02
 
