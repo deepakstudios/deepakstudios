@@ -44,6 +44,14 @@ $FILMS = [
     ['id' => 'JRoyOgR0Ckk', 't' => 'Baraat Nights',        'cat' => 'wedding',    'bg' => '#1a1410'],
     ['id' => 'IyRO4IKhl8g', 't' => 'Sangeet Sessions',     'cat' => 'wedding',    'bg' => '#131018'],
     ['id' => '7ZubbaOMFxY', 't' => 'The Mandap',          'cat' => 'wedding',    'bg' => '#161210'],
+    ['id' => 'vTg374RrzU0', 't' => 'First Look',          'cat' => 'wedding',    'bg' => '#1a1210'],
+    ['id' => 'WmZLZMhtlOk', 't' => 'Mehendi Mornings',    'cat' => 'wedding',    'bg' => '#10141a'],
+    ['id' => 'iAsgIhoLAQg', 't' => 'Ceremony in Gold',    'cat' => 'wedding',    'bg' => '#181308'],
+    ['id' => 'qZ3feBEq_d8', 't' => 'Reception Waltz',     'cat' => 'wedding',    'bg' => '#121016'],
+    ['id' => 'uVRB2XNLA1w', 't' => 'Vidaai',              'cat' => 'wedding',    'bg' => '#1c1414'],
+    ['id' => '9I9NnX8wAkE', 't' => 'Blessings',           'cat' => 'wedding',    'bg' => '#141418'],
+    ['id' => 'lOxZme5S_e4', 't' => 'The Aarti',           'cat' => 'wedding',    'bg' => '#1a120e'],
+    ['id' => 'BDBufwZhnK0', 't' => 'Forever Begins',      'cat' => 'wedding',    'bg' => '#0f1412'],
     ['id' => 'oWrlcf2tb_4', 't' => 'The Proposal',        'cat' => 'engagement', 'bg' => '#16121a'],
     ['id' => 'yvW6COhgwV0', 't' => 'The First Glimpse',   'cat' => 'prewedding', 'bg' => '#141210'],
     ['id' => 'Tcm2kFq0-sA', 't' => 'Before We Say Yes',   'cat' => 'prewedding', 'bg' => '#10141a'],
@@ -194,9 +202,7 @@ require_once __DIR__ . '/lib_contact.php';
 .filters button.on{color:var(--gold2);border-bottom-color:var(--gold)}
 
 /* ---------- 16:9 film cards ---------- */
-/* ---------- films grid + watch-more ---------- */
-.films-more{text-align:center}
-.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem}
+.fgrid{display:grid;grid-template-columns:1fr;gap:1.15rem}
 @media (min-width:560px){.fgrid{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:900px){.fgrid{grid-template-columns:repeat(3,1fr)}}
 .fc{position:relative;display:block;width:100%;padding:0;margin:0;text-align:left;cursor:pointer;
@@ -372,9 +378,6 @@ aria-label="Play <?= $esc($r['t']) ?>">
         <span class="ttl"><small>Film</small><?= $esc($r['t']) ?></span>
       </button>
     <?php endforeach; ?>
-  </div>
-  <div class="films-more">
-    <a class="rhero-cta" style="margin-top:2rem" href="https://www.youtube.com/@deepakstudiosfotography" target="_blank" rel="noopener noreferrer">Watch Our Films</a>
   </div>
 </main>
 

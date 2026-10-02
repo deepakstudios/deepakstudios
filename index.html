@@ -1225,18 +1225,10 @@ document.querySelectorAll('.tmore').forEach(function(b){
 
 /* ---------- mobile reels (m-only section; same Shorts data as reels.php) ---------- */
 var MREELS=[
- {id:'jWbsPrWggaM',t:'City Lights Prelude',cat:'prewedding',sub:''},
- {id:'JkVg9HcHKic',t:'Golden Hour Waltz',cat:'prewedding',sub:''},
- {id:'oJyx7SCV3Rc',t:'Rooftop Rendezvous',cat:'prewedding',sub:''},
- {id:'AMqMUmnb0K4',t:'Monsoon Frames',cat:'prewedding',sub:''},
- {id:'kmblV9ddjJo',t:'Falling Leaves',cat:'prewedding',sub:''},
- {id:'NygruuRRXhI',t:'Evening Whispers',cat:'prewedding',sub:''},
- {id:'NO3eWfyXMKE',t:'Haldi Bloom',cat:'wedding',sub:'haldi'},
- {id:'eP1Fmmfzfk8',t:'Haldi Rhythms',cat:'wedding',sub:'haldi'},
- {id:'gkjS6aAZis8',t:'Wedding Vows',cat:'wedding',sub:'wedding'},
- {id:'JbotebbamyI',t:'First Dance',cat:'wedding',sub:'wedding'},
- {id:'xaNML7Jg7Dw',t:'Birthday Sparkle',cat:'celebration',sub:'birthday'},
- {id:'cp0jqejvtJ0',t:'Candlelight Wishes',cat:'celebration',sub:'birthday'}
+ {id:'Cztd9udNlSo',t:'The Vows',cat:'wedding',sub:'wedding'},
+ {id:'7ZubbaOMFxY',t:'The Mandap',cat:'wedding',sub:'wedding'},
+ {id:'Kz2qEyeydgA',t:'Nidhi & Shubham',cat:'wedding',sub:'wedding'},
+ {id:'WmZLZMhtlOk',t:'Mehendi Mornings',cat:'wedding',sub:'wedding'}
 ];
 var MMAIN=['all','wedding','prewedding','celebration'];
 var MSUB={wedding:['all','haldi','mehendi','wedding','reception'],celebration:['all','birthday','annaprashan']};
@@ -1267,7 +1259,7 @@ function mRenderGrid(){
       <img loading="lazy" src="'+mThumb(r.id)+'" alt="'+r.t+' reel thumbnail">\
       <div class="shade"></div><span class="cat">'+MCATLABEL[r.cat]+'</span>\
       <span class="play">▶</span><span class="ttl">'+r.t+'</span></a>';}).join('')||
-    '<p class="m-sub" style="grid-column:1/-1;text-align:center">No reels in this filter yet.</p>';
+    '<p class="m-sub" style="grid-column:1/-1;text-align:center">No films in this filter yet.</p>';
 }
 function mSetMain(c){mMain=c;mSub='all';mRenderFilters();mRenderGrid();}
 function mSetSub(s){mSub=s;mRenderFilters();mRenderGrid();}

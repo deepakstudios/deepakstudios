@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.7
+1.16.8
 ```
 
 ### Semver rules
@@ -265,6 +265,15 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.8 - 2026-10-02
+
+- **Homepage mobile reels → wedding teasers; cinematography page restored.**
+  The mobile-only home reels grid now shows the 4 wedding teasers (The Vows,
+  The Mandap, Nidhi & Shubham, Mehendi Mornings) instead of the 12 Shorts;
+  filters/modal unchanged. `cinematography.php` restored to its pre-1.16.5 state
+  (12 wedding films, original grid, no Watch button) — owner's earlier
+  cinematography changes were meant for the home page.
 
 ## 1.16.7 - 2026-10-02
 
