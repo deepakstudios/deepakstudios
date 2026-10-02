@@ -651,6 +651,28 @@ body.m-vlock{overflow:hidden}
 .frow-foot .social a{width:2.25rem;height:2.25rem}
 .frow-foot .social svg{width:1.05rem;height:1.05rem}
 }
+
+/* ============ MOBILE PREMIUM v1.16.4 — max-width:640px only, desktop untouched ============ */
+@media(max-width:640px){
+/* hero: tighten gap between image bottom and rating by ~25% */
+.hero .hero-in{padding-bottom:calc(2.2rem + env(safe-area-inset-bottom))}
+@media(max-height:799px){
+.hero .hero-in{padding-bottom:calc(2.2rem + env(safe-area-inset-bottom))}
+}
+@media(max-height:699px){
+.hero .hero-in{padding-bottom:calc(2rem + env(safe-area-inset-bottom))}
+}
+/* why-choose: clean editorial list — no numbers, boxes, or cards */
+.ds-points{display:block;max-width:24rem;margin:1.7rem auto 0;text-align:left}
+.ds-point{display:block;padding:1rem .1rem;border:0;border-bottom:1px solid rgba(255,255,255,.09);
+  border-radius:0;background:none;box-shadow:none}
+.ds-point:last-child{border-bottom:0;padding-bottom:0}
+.ds-point i{display:none}
+.ds-point b{display:flex;align-items:baseline;gap:.7rem;font-size:1rem}
+.ds-point b::before{content:"";flex:0 0 auto;width:1.4rem;height:1px;background:var(--primary);opacity:.8;
+  transform:translateY(-.3rem)}
+.ds-point span{margin-top:.35rem}
+}
 </style>
 </head>
 <body>

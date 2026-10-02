@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.3
+1.16.4
 ```
 
 ### Semver rules
@@ -265,6 +265,15 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.4 - 2026-10-02
+
+- **Mobile-only refinements (`index.html`, `@media(max-width:640px)` only).**
+  Why-choose points restyled from numbered cards to a clean editorial list
+  (numbers hidden, boxes/borders removed, hairline separators, small gold dash
+  accents; point titles and descriptions unchanged). Mobile hero bottom gap
+  reduced ~25% (`padding-bottom` 3rem → 2.2rem, short-screen overrides kept
+  proportional) so the rating sits naturally closer. Desktop/tablet untouched.
 
 ## 1.16.3 - 2026-10-02
 
