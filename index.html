@@ -469,11 +469,13 @@ header{min-height:62px}
   letter-spacing:.22em;text-transform:uppercase;color:#f0d896;border:1px solid rgba(212,175,55,.55);
   border-radius:999px;background:rgba(10,10,12,.5);backdrop-filter:blur(8px)}
 /* why-choose points */
-.ds-points{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.8rem auto 0;max-width:26rem;text-align:left}
-.ds-point{display:flex;align-items:center;gap:.6rem;padding:.85rem .9rem;border:1px solid rgba(212,175,55,.25);
-  border-radius:.75rem;background:rgba(255,255,255,.02)}
-.ds-point i{font-style:normal;color:var(--primary);font-size:.65rem}
-.ds-point span{font-size:.82rem;font-weight:500;color:#e9e9ec;line-height:1.4}
+.ds-points{display:grid;grid-template-columns:1fr;gap:.7rem;margin:1.8rem auto 0;max-width:26rem;text-align:left}
+.ds-point{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;padding:1.05rem 1.1rem;
+  border:1px solid rgba(212,175,55,.25);border-radius:.75rem;background:rgba(255,255,255,.02)}
+.ds-point i{font-style:normal;font-family:"Playfair Display",serif;font-weight:700;font-size:1.35rem;
+  line-height:1;color:var(--primary);opacity:.6}
+.ds-point b{font-family:"Playfair Display",serif;font-size:1.02rem;font-weight:700;line-height:1.25;color:#f3f0e8}
+.ds-point span{font-size:.85rem;font-weight:400;color:#b7b7bd;line-height:1.6}
 /* portfolio: premium 2-column grid */
 .masonry{columns:2;column-gap:.7rem}
 .tile{margin-bottom:.7rem}
@@ -687,10 +689,26 @@ body.m-vlock{overflow:hidden}
     <h2 class="pf">We don't just capture moments.</h2>
     <p class="ds-intro-p">We create memories that feel timeless.</p>
     <div class="ds-points">
-      <div class="ds-point"><i>◆</i><span>Experienced Team</span></div>
-      <div class="ds-point"><i>◆</i><span>Cinematic Storytelling</span></div>
-      <div class="ds-point"><i>◆</i><span>Premium Quality</span></div>
-      <div class="ds-point"><i>◆</i><span>Complete Wedding Coverage</span></div>
+      <div class="ds-point">
+        <i>01</i>
+        <b>Cinematic Storytelling</b>
+        <span>We capture genuine emotions and turn your special moments into timeless visual stories.</span>
+      </div>
+      <div class="ds-point">
+        <i>02</i>
+        <b>Premium Albums &amp; Finishing</b>
+        <span>Beautifully designed albums, refined editing and premium finishing that make your memories truly special.</span>
+      </div>
+      <div class="ds-point">
+        <i>03</i>
+        <b>Well-Managed &amp; Supportive Team</b>
+        <span>Our experienced team carefully manages every shoot and actively supports you with creative ideas and suggestions to make your photographs and films even better.</span>
+      </div>
+      <div class="ds-point">
+        <i>04</i>
+        <b>On-Time Delivery</b>
+        <span>We value your time and work to deliver your photographs, films and albums within the committed timeline.</span>
+      </div>
     </div>
   </div>
 </section>
