@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.4
+1.16.5
 ```
 
 ### Semver rules
@@ -265,6 +265,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.5 - 2026-10-02
+
+- **Cinematography films trim.** Wedding category reduced to 4 films (The Vows,
+  Baraat Nights, Sangeet Sessions, The Mandap); films grid is now 2 columns from
+  mobile up (desktop 3-column breakpoint unchanged). Added a "Watch Our Films"
+  button below the grid linking to the YouTube channel. Engagement/pre-wedding
+  films untouched.
 
 ## 1.16.4 - 2026-10-02
 
