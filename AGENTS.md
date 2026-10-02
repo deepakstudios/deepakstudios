@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.15.0
+1.16.0
 ```
 
 ### Semver rules
@@ -265,6 +265,68 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.0 - 2026-10-02
+
+- **Desktop hero rebuilt: the studio name is no longer the headline, and "Why Choose Deepak
+  Studios" now lives inside the hero as a left-side panel.** `index.html` only.
+- **Headline hierarchy (`@media(min-width:1024px)`).** The desktop `h1` now reads
+  **"Wedding Photography & Cinematography"** via a new `.hh-main` span; the old
+  `.hh-desktop` "Deepak Studios" span is hidden at this breakpoint but **kept in the DOM**
+  (`.hh-mobile` is untouched), so nothing is deleted for SEO or for the smaller breakpoints.
+  `.hero-sub` is hidden on desktop to remove the now-duplicate second line.
+- **Location split into two spans.** `.hero-loc` now wraps `.loc-desktop`
+  ("Bokaro, Jharkhand", rendered as a gold uppercase pill with a blurred dark backdrop at
+  >=1024px) and the preserved `.loc-mobile` ("Bokaro · Jharkhand"). `.loc-desktop` is
+  `display:none` below 1024px and `.loc-mobile` above it, so exactly one is ever visible.
+- **Element order via flex `order` (no DOM reordering).** badge `-2` → tagline `-1` →
+  headline → location `1` → CTA row `2`. The two existing CTAs are reused byte-for-byte:
+  `CHECK AVAILABILITY` still calls `openBooking()` (still one `#booking` modal, still one of
+  the page's two `<form>`s) and `View Our Work` still links to `wedding.php`. No new route,
+  no duplicate button, no new asset. Hero CTA row tuned to `gap:.9rem` and
+  `min-width:14.5rem` so both buttons fit on one row down to 1024px.
+- **Scroll indicator removed.** The `.scroll-ind` markup, its CSS block, the `.scroll-line`
+  rule and the `@keyframes scrollDot` animation were all deleted; the CTA row occupies the
+  bottom zone instead. Zero references remain in `index.html`.
+- **"Why Choose Deepak Studios" moved into the hero (`#why`).** The former standalone
+  `<section id="why" class="pad why">` was re-parented as the last child of `<section
+  class="hero">` and relabelled `class="why hero-why"`, so `id="why"` and any inbound
+  `#why` anchor still resolve. The four card headings and bodies are byte-unchanged
+  ("Cinematic Storytelling", "Premium Albums & Finishing", "Well-Managed & Supportive Team",
+  "On-Time Delivery"). The `pad`/`glow` wrappers and the `reveal` classes were dropped, so
+  the panel renders immediately with no IntersectionObserver dependency.
+  - `>=1024px`: absolutely positioned left panel -- `left:clamp(1.5rem,4vw,5rem)`,
+    `top:50%`, `translateY(-42%)` (below optical centre), `width:min(25rem,30vw)`, one
+    column, translucent cards (`rgba(16,16,19,.62)` + `blur(12px)`).
+    `.hero-in` moves right to `width:min(56rem,54%)` so the copy column and the panel sit
+    side by side.
+  - `768-1023px` (tablet): the panel stays in normal flow under the hero copy as a
+    two-column block on an opaque `--bg` fill with a top hairline, so it never becomes a
+    translucent box floating over the photograph.
+  - `<768px`: still hidden, exactly as before -- the mobile WHY CHOOSE copy in `#intro` is
+    the mobile presentation and was not touched.
+  - A `min-width:1024px and max-height:780px` pass tightens card padding/type so the panel
+    still fits short laptop viewports.
+- **Hero text lifted clear of the couple.** `photos/hero/deepakstudiosbokaro.webp` is
+  1920x1080; a pixel-luminance probe of the frame locates the subject at roughly
+  `y=633-774` of a 844px-tall hero. `.hero-in` gained `padding-bottom:7.5rem` (and the same
+  in the tablet pass) so the headline/location/CTA block ends at `y≈580-594` instead of
+  overlapping that band. Verified as a measured 0px overlap at every width, for the panel
+  and for the text block.
+- **Mobile and tablet are measurably unchanged.** The new rules live in
+  `@media(min-width:768px)` / `min-width:1024px` only; the only edit below 768px is the
+  removal of the `scroll-ind` hide rule (its element is gone). Re-measured against the
+  previous `HEAD` build at 320/375/390/430/640px: identical headline text, `.hh-desktop`
+  visibility, tagline visibility, location chip text, hero-button visibility, `#intro`
+  visibility and overflow state. At 768px and 900px the headline and CTA visibility also
+  match the baseline.
+- **Verified in real headless Chrome.** `1024/1100/1152/1280/1366/1440/1600/1920`: no
+  horizontal overflow, hero height locked to the viewport, panel never overlaps the copy
+  column or clips, photo subject uncovered, both CTAs on one row. `768/900`: no overflow,
+  stacked panel, subject clear. DOM checks: 0 JS errors, 4 why cards, `#why` is the last
+  child of `.hero`, `#why` precedes `#services`, still exactly 2 `<form>` elements and 1
+  `#booking` modal, `scroll-ind` count 0, `section`/`div`/`form` tags balanced,
+  `php -l` clean.
 
 ## 1.15.0 - 2026-10-01
 
