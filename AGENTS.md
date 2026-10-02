@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.2
+1.16.3
 ```
 
 ### Semver rules
@@ -265,6 +265,32 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.3 - 2026-10-02
+
+- **Fixed the pulsing/flickering hero bottom introduced in 1.16.2.** Animating `.hero-ov2`
+  in lockstep with `.hero-bg` stopped the photo escaping the fade but made the bottom visibly
+  blink: the gradient is a separate compositing layer, so scaling it forced a re-rasterise
+  every frame -- it shimmered against the photo and the ramp boundary drifted up and down
+  through the 26s cycle. A static overlay cannot flicker.
+- **`.hero-ov2` is no longer animated at all.** Instead it now over-reaches the photo, so the
+  fade is correct at every point of the zoom without either layer having to move. At
+  `>=768px` the fade is `height:104vh` with `top:0`, giving it **7px of cover at peak zoom**
+  (`scale(1.06)`) and 30px at `scale(1)`. `prefers-reduced-motion` was reverted to its 1.16.1
+  form since the fade no longer animates.
+- **Verified across the whole animation, not just its endpoints.** Sampled `scale(1.00)`,
+  `1.015`, `1.03`, `1.045`, `1.06` at 900px and 1440px: `animationName` is `none` and the
+  fade covers the photo at **every** step, so there is no frame at which the photo can escape.
+- **The fade's overhang is provably invisible.** A pixel diff of the page against the same page
+  with `.hero-ov2` removed shows the fade stops exactly at its own bottom edge and spills
+  **0px** past it at 900/1023/1440px, while still differing from the no-fade render 120px
+  above that edge (so the fade is genuinely present, not a false pass). This matters because
+  the hero is `overflow:visible` at `>=768px`, so the overhang paints over the next section.
+- **Full regression sweep at 360/390/640/768/900/1023/1280/1440/1920px.** At `>=900px`
+  (where the hero is `overflow:visible`) the fade covers the photo with 7px to spare; at
+  `<=768px` the hero is `overflow:hidden` and clips the photo's overhang, so the negative
+  cover there is contained. No horizontal overflow, `php -l` clean, CSS-only.
+- Supersedes the 1.16.2 lockstep approach, which fixed the overhang but caused this flicker.
 
 ## 1.16.2 - 2026-10-02
 
