@@ -673,6 +673,39 @@ body.m-vlock{overflow:hidden}
   transform:translateY(-.3rem)}
 .ds-point span{margin-top:.35rem}
 }
+
+/* ============ MOBILE FILMS 2x2 + PLAYER v1.16.9 — max-width:640px only ============ */
+@media(max-width:640px){
+/* exactly 2 columns x 2 rows, 16:9 cards */
+.m-fgrid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.m-fc{position:relative;display:block;border-radius:.75rem;overflow:hidden;background:var(--card);
+  border:1px solid var(--border);aspect-ratio:16/9}
+.m-fc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.m-fc .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,transparent 40%,rgba(0,0,0,.78) 100%)}
+.m-fc .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2.6rem;height:2.6rem;
+  border-radius:50%;display:grid;place-items:center;background:rgba(212,175,55,.94);color:#09090b;
+  font-size:.85rem;padding-left:.15rem}
+.m-fc .ttl{position:absolute;left:.65rem;right:.65rem;bottom:.55rem;color:#fff;font-size:.78rem;
+  line-height:1.3;font-weight:500}
+/* in-page 16:9 player */
+.m-fmodal{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;
+  padding:1rem;background:rgba(4,4,6,.82)}
+.m-fmodal.open{display:flex}
+.m-fbox{width:min(94vw,560px);background:#0d0c0a;border:1px solid rgba(212,175,55,.45);
+  border-radius:1rem;overflow:hidden}
+.m-fhead{display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.8rem 1rem;
+  background:#151310;border-bottom:1px solid rgba(212,175,55,.4)}
+.m-fhead span{font-size:.92rem;color:#e9d19a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-fx{background:none;border:1px solid rgba(212,175,55,.4);border-radius:50%;width:2.5rem;height:2.5rem;
+  color:#e9d19a;font-size:1.2rem;line-height:1;cursor:pointer;flex:0 0 auto}
+.m-fslot{position:relative;aspect-ratio:16/9;background:#000}
+.m-fslot iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.m-ffoot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.7rem .9rem;
+  background:#151310;border-top:1px solid rgba(212,175,55,.4)}
+.m-ffoot button{background:none;border:1px solid rgba(232,208,150,.55);color:#e9d19a;min-width:3.2rem;min-height:2.75rem;
+  padding:.5rem .9rem;border-radius:999px;cursor:pointer;font-size:.78rem;font-weight:700;font-family:inherit}
+.m-ffoot button:active{background:rgba(212,175,55,.15)}
+}
 </style>
 </head>
 <body>
@@ -842,10 +875,21 @@ body.m-vlock{overflow:hidden}
       <h2 class="pf">Relive Every Emotion</h2>
       <p class="m-sub">From the first look to the last dance, we turn your wedding moments into films you&rsquo;ll want to watch again and again.</p>
     </div>
-    <div class="m-grid" id="m-filmgrid"></div>
+    <div class="m-fgrid" id="m-filmgrid"></div>
     <div class="m-more"><a class="btn btn-gold" href="cinematography.php">Watch Our Films →</a></div>
   </div>
 </section>
+<div class="m-only m-fmodal" id="m-fmodal" role="dialog" aria-label="Film player" aria-hidden="true">
+  <div class="m-fbox">
+    <div class="m-fhead"><span id="m-ftitle">Film</span><button class="m-fx" id="m-fclose" aria-label="Close">×</button></div>
+    <div class="m-fslot" id="m-fslot"></div>
+    <div class="m-ffoot">
+      <button id="m-fprev" aria-label="Previous film">← Prev</button>
+      <button id="m-fplay" aria-label="Play or pause">❚❚</button>
+      <button id="m-fnext" aria-label="Next film">Next →</button>
+    </div>
+  </div>
+</div>
 
 <!-- SERVICES -->
 <section id="services" class="pad">
@@ -1188,18 +1232,44 @@ document.getElementById('m-pgrid').innerHTML=MSHOWCASE.map(function(p){
   return '<figure class="m-pg"><img loading="lazy" decoding="async" src="'+url(p.s)+'" alt="'+p.alt+'">\
     <span class="shade"></span><figcaption class="cap">'+p.c+'</figcaption></figure>';}).join('');
 
-/* ---------- mobile film showcase (m-films section) ----------
-   Reuses the SAME video ids as the reels section below and the same
-   9:16 card + in-page modal pattern. Replace titles as needed. */
+/* ---------- mobile film showcase (m-films section): exactly these 4 teasers ---------- */
 var MSHOWFILMS=[
-  {id:'gkjS6aAZis8',t:'Wedding Vows',cat:'wedding'},
-  {id:'JbotebbamyI',t:'First Dance',cat:'wedding'}
+  {id:'Cztd9udNlSo',t:'The Vows'},
+  {id:'7ZubbaOMFxY',t:'The Mandap'},
+  {id:'Kz2qEyeydgA',t:'Nidhi & Shubham'},
+  {id:'WmZLZMhtlOk',t:'Mehendi Mornings'}
 ];
 var mFilmList=MSHOWFILMS;
 document.getElementById('m-filmgrid').innerHTML=mFilmList.map(function(r,i){
-  return '<a class="m-rc" href="javascript:void(0)" onclick="mFilmOpen('+i+')" aria-label="Play '+r.t+'">\
+  return '<a class="m-fc" href="javascript:void(0)" onclick="mFilmOpen('+i+')" aria-label="Play '+r.t+'">\
     <img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/'+r.id+'/hqdefault.jpg" alt="'+r.t+' film thumbnail">\
     <span class="shade"></span><span class="play">▶</span><span class="ttl">'+r.t+'</span></a>';}).join('');
+
+/* ---------- mobile 16:9 in-page film player (Play/Pause/Prev/Next/X/ESC) ---------- */
+var mFIdx=0,mFPlaying=true,mFSavedY=0;
+function mFEmbed(id){return 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0&enablejsapi=1';}
+function mFPlayBtn(){document.getElementById('m-fplay').textContent=mFPlaying?'\u275A\u275A':'\u25B6';}
+function mFCmd(func){var f=document.querySelector('#m-fslot iframe');
+  if(f&&f.contentWindow){f.contentWindow.postMessage('{"event":"command","func":"'+func+'","args":""}','*');}}
+function mFToggle(){if(mFPlaying){mFCmd('pauseVideo');}else{mFCmd('playVideo');}mFPlaying=!mFPlaying;mFPlayBtn();}
+function mFLoad(){
+  var r=mFilmList[mFIdx];if(!r)return;
+  document.getElementById('m-ftitle').textContent=r.t;
+  mFPlaying=true;mFPlayBtn();
+  document.getElementById('m-fslot').innerHTML='<iframe src="'+mFEmbed(r.id)+'" title="'+r.t+'" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+}
+function mFilmOpen(i){mFIdx=i;mFSavedY=window.scrollY||0;
+  document.getElementById('m-fmodal').classList.add('open');document.body.classList.add('m-vlock');mFLoad();}
+function mFClose(){document.getElementById('m-fslot').innerHTML='';
+  document.getElementById('m-fmodal').classList.remove('open');document.body.classList.remove('m-vlock');
+  window.scrollTo(0,mFSavedY);}
+function mFStep(d){if(!mFilmList.length)return;mFIdx=(mFIdx+d+mFilmList.length)%mFilmList.length;mFLoad();}
+document.getElementById('m-fclose').onclick=mFClose;
+document.getElementById('m-fplay').onclick=mFToggle;
+document.getElementById('m-fprev').onclick=function(){mFStep(-1);};
+document.getElementById('m-fnext').onclick=function(){mFStep(1);};
+document.getElementById('m-fmodal').addEventListener('click',function(e){if(e.target===this)mFClose();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')mFClose();});
 
 renderGallery();
 
@@ -1278,9 +1348,6 @@ function mShow(){
   };
 }
 function mOpen(i){mIdx=i;mShow();document.getElementById('m-vmodal').classList.add('open');document.body.classList.add('m-vlock');}
-function mFilmOpen(i){
-  mList=mFilmList;mIdx=i;mShow();
-  document.getElementById('m-vmodal').classList.add('open');document.body.classList.add('m-vlock');}
 function mClose(){document.getElementById('m-vmodal').classList.remove('open');document.body.classList.remove('m-vlock');
   document.getElementById('m-vposter').innerHTML='<span class="m-vplay">▶</span>';}
 function mStep(d){if(!mList.length)return;mIdx=(mIdx+d+mList.length)%mList.length;mShow();}

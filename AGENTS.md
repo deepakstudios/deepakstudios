@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.8
+1.16.9
 ```
 
 ### Semver rules
@@ -265,6 +265,17 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.9 - 2026-10-02
+
+- **Mobile Cinematic Films: exact 2×2 teaser grid + 16:9 in-page player
+  (`index.html`, mobile only).** The showcase below "View Our Photography" now
+  shows exactly the 4 wedding teasers (The Vows, The Mandap, Nidhi & Shubham,
+  Mehendi Mornings) as 16:9 cards in a fixed 2-column × 2-row grid (no slider,
+  no stacking). Tapping a card opens a dedicated premium modal (dark overlay,
+  autoplay via youtube-nocookie embed, 16:9, Play/Pause via IFrame API
+  postMessage, Prev/Next in-modal, X + ESC close, video stopped on close, body
+  scroll locked with position restored). Desktop untouched.
 
 ## 1.16.8 - 2026-10-02
 
