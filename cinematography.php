@@ -41,9 +41,9 @@ $cineHeroPosMb = 'center 30%';
  * ===================================================================== */
 $FILMS = [
     ['id' => 'Cztd9udNlSo', 't' => 'The Vows',             'cat' => 'wedding',    'bg' => '#141210'],
+    ['id' => 'JRoyOgR0Ckk', 't' => 'Baraat Nights',        'cat' => 'wedding',    'bg' => '#1a1410'],
+    ['id' => 'IyRO4IKhl8g', 't' => 'Sangeet Sessions',     'cat' => 'wedding',    'bg' => '#131018'],
     ['id' => '7ZubbaOMFxY', 't' => 'The Mandap',          'cat' => 'wedding',    'bg' => '#161210'],
-    ['id' => 'Kz2qEyeydgA', 't' => 'Nidhi & Shubham',     'cat' => 'wedding',    'bg' => '#10141a'],
-    ['id' => 'WmZLZMhtlOk', 't' => 'Mehendi Mornings',    'cat' => 'wedding',    'bg' => '#141210'],
     ['id' => 'oWrlcf2tb_4', 't' => 'The Proposal',        'cat' => 'engagement', 'bg' => '#16121a'],
     ['id' => 'yvW6COhgwV0', 't' => 'The First Glimpse',   'cat' => 'prewedding', 'bg' => '#141210'],
     ['id' => 'Tcm2kFq0-sA', 't' => 'Before We Say Yes',   'cat' => 'prewedding', 'bg' => '#10141a'],
