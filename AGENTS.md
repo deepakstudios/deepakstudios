@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.0
+1.16.1
 ```
 
 ### Semver rules
@@ -265,6 +265,43 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.1 - 2026-10-02
+
+- **Desktop "Why Choose Deepak Studios" is now one cohesive panel instead of four stacked
+  cards.** Desktop-only visual fix to 1.16.0; `index.html` only. The diff is **CSS-only**
+  (+21 / -14) and every changed rule lives inside `@media(min-width:1024px)`.
+- **Not markup: the `#why` block is byte-identical to 1.16.0** (1425 bytes, zero line
+  differences). All four headings and bodies are unchanged ("Cinematic Storytelling",
+  "Premium Albums & Finishing", "Well-Managed & Supportive Team", "On-Time Delivery"). The
+  `01-04` labels and gold rules are **hidden with `display:none` at `>=1024px`** rather than
+  deleted, so the markup keeps working for the tablet presentation.
+- **The four point cards became one surface.** `.hero-why` now carries the panel treatment
+  itself -- `background:rgba(10,10,12,.5)` + `backdrop-filter:blur(14px)`, a subtle
+  `rgba(212,175,55,.16)` border and `border-radius:1.15rem`. Each `.why-card` is reset to
+  `padding:0; background:none; border:0; border-radius:0; box-shadow:none` with hover
+  transform/shadow disabled, so there is no per-card box and nothing shifts on hover.
+- **No dividers between points.** `.why-n` and `.why-rule` are hidden and the
+  `.why-card + .why-card` hairline was removed; the four points are separated by spacing
+  alone (`.why-grid` `gap` raised from `.8rem` to `1.35rem`). Hierarchy comes from type
+  alone -- Playfair Display 700 `#f6f3ea` titles vs. weight-300 `rgba(255,255,255,.62)`
+  descriptions -- plus one hairline under the section head.
+- **Tablet and mobile are provably untouched.** An earlier pass in this work also stripped
+  the numbers from the shared markup, which changed the `768-1023px` panel; that was
+  reverted, so tablet measures identically to the baseline (2 columns, `rgb(24,24,27)`
+  cards, 16px radius, numbers visible) and `<768px` still uses the separate `#intro`
+  `.ds-point` list with its own 4 numbers.
+- **No unrelated change.** The `overflow:hidden` that was briefly added to `.hero` at
+  `>=1024px` was removed again: `html` already sets `overflow-x:hidden`, so it was
+  unnecessary and out of scope. The occasional 1px `scrollWidth` is the pre-existing `kb`
+  `scale(1.06)` animation bleed -- reproducible on 1.16.0 itself and unrelated to this fix.
+- **Verified in real headless Chrome at 1920/1600/1440/1366/1280/1152/1100/1024.** Desktop:
+  0 of 4 numbers visible, 0 of 4 rules visible, transparent cards, 1 column, panel never
+  clipped and never colliding with the `.hero-in` copy column. `768/900`: unchanged from
+  baseline. `320/390/430/640/700`: `#intro` visible with its 4 numbers and the desktop panel
+  hidden. A pixel-diff of the normal render against a photo-only render over the couple's
+  mapped band (source cluster `880,840 -> 1080,1040` of 1920x1080) returned **0 changed
+  pixels** at 1440/1366/1024. `php -l` clean on all deploy files.
 
 ## 1.16.0 - 2026-10-02
 
@@ -297,9 +334,9 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
   the panel renders immediately with no IntersectionObserver dependency.
   - `>=1024px`: absolutely positioned left panel -- `left:clamp(1.5rem,4vw,5rem)`,
     `top:50%`, `translateY(-42%)` (below optical centre), `width:min(25rem,30vw)`, one
-    column, translucent cards (`rgba(16,16,19,.62)` + `blur(12px)`).
+    column, per-point translucent cards (`rgba(16,16,19,.62)` + `blur(12px)`).
     `.hero-in` moves right to `width:min(56rem,54%)` so the copy column and the panel sit
-    side by side.
+    side by side. (Superseded in 1.16.1: the four cards became one cohesive panel.)
   - `768-1023px` (tablet): the panel stays in normal flow under the hero copy as a
     two-column block on an opaque `--bg` fill with a top hairline, so it never becomes a
     translucent box floating over the photograph.
