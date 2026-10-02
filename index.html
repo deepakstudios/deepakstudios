@@ -100,8 +100,27 @@ html.dark .sun{display:none} html:not(.dark) .moon{display:none}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;
   background-image:url('photos/hero/deepakstudiosbokaro.webp')}
 .hero-ov{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:10}
-.hero-ov2{position:absolute;inset:0;z-index:10;background:linear-gradient(to top,var(--bg),color-mix(in srgb,var(--bg) 20%,transparent) 45%,transparent)}
+.hero-ov2{position:absolute;inset:0;z-index:10;pointer-events:none;
+/* Bottom fade-out: dissolves the photo into the page background so there is no hard seam
+   against the next section.
+   - Multi-stop S-curve rather than a 2-stop ramp, so the falloff is monotonic and
+     kink-free, and it clears by 50% leaving the upper half of the photo clean.
+   - The first stops are SOLID var(--bg) (0-4%). The photo is Ken Burns scaled up to
+     1.06, which pushes its bottom edge past this overlay, so the fade needs a solid
+     landing zone at its own foot to stay seamless at every point in the animation.
+   - It carries the SAME `kb` animation as .hero-bg (below) so image and fade always
+     scale together and the fade can never be outrun by the photo it is fading out. */
+  background:linear-gradient(to top,
+    var(--bg) 0%,
+    var(--bg) 4%,
+    color-mix(in srgb,var(--bg) 90%,transparent) 11%,
+    color-mix(in srgb,var(--bg) 72%,transparent) 20%,
+    color-mix(in srgb,var(--bg) 50%,transparent) 29%,
+    color-mix(in srgb,var(--bg) 30%,transparent) 38%,
+    color-mix(in srgb,var(--bg) 14%,transparent) 46%,
+    transparent 54%)}
 .hero-bg{animation:kb 26s ease-in-out infinite alternate}
+.hero-ov2{animation:kb 26s ease-in-out infinite alternate}
 @keyframes kb{from{transform:scale(1)}to{transform:scale(1.06)}}
 .hero-in>*{animation:rise .8s both}
 .hero-in>*:nth-child(1){animation-delay:.05s}
@@ -109,7 +128,7 @@ html.dark .sun{display:none} html:not(.dark) .moon{display:none}
 .hero-in>*:nth-child(3){animation-delay:.25s}
 .hero-in>*:nth-child(4){animation-delay:.35s}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){.hero-bg,.hero-in>*{animation:none}}
+@media(prefers-reduced-motion:reduce){.hero-bg,.hero-ov2,.hero-in>*{animation:none}}
 .hero-in{position:relative;z-index:20;text-align:center;margin-top:5rem;display:flex;flex-direction:column;align-items:center}
 .badge{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;background:rgba(24,24,27,.5);
   backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:.5rem 1rem;border-radius:999px}
@@ -422,7 +441,9 @@ header{padding:.9rem 0;background:linear-gradient(to bottom,rgba(9,9,11,.5),tran
 /* hero */
 .hero{height:100svh;min-height:100svh;align-items:flex-end}
 .hero-ov{background:rgba(0,0,0,.18)}
-.hero-ov2{background:linear-gradient(to top,#0b0b0f 0%,rgba(9,9,11,.8) 32%,rgba(9,9,11,.4) 55%,rgba(9,9,11,.12) 76%,transparent 100%)}
+/* solid hold at 0-5% for the same reason as the base rule: the photo is scaled, so the
+   fade's own foot is what has to stay solid, and it lands on #0c0c0e + the gold hairline */
+.hero-ov2{background:linear-gradient(to top,#0b0b0f 0%,#0b0b0f 5%,rgba(9,9,11,.8) 32%,rgba(9,9,11,.4) 55%,rgba(9,9,11,.12) 76%,transparent 100%)}
 .hero .hero-in{margin-top:0;padding-top:0;width:100%;padding-bottom:calc(3rem + env(safe-area-inset-bottom))}
 .hh-mobile,.sub-mobile,.hero-loc,.hero-tag{display:none}
 .hh-desktop,.sub-desktop{display:inline}

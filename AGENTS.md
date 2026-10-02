@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.1
+1.16.2
 ```
 
 ### Semver rules
@@ -265,6 +265,30 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.2 - 2026-10-02
+
+- **Fixed the hero photograph escaping its bottom fade during the Ken Burns zoom.** The
+  photo (`.hero-bg`) is animated `kb 26s` to `scale(1.06)` while the bottom fade
+  (`.hero-ov2`) was a static sibling, so the image grew past the bottom of the gradient and
+  left an un-faded strip sitting below the dark area -- most visible in the 768-1023px band
+  where `.hero` is `overflow:visible` to make room for the `#why` panel. `index.html` only.
+- **`.hero-ov2` now carries the same `kb` animation as `.hero-bg`**, so image and fade
+  always scale together and the fade can never be outrun by the photo it is fading out.
+  Measured overhang drops from **22px to 0px** at 360/390/640/768/900/1023/1280/1440/1920.
+- **`prefers-reduced-motion` now stops `.hero-ov2` as well.** Without this, reduced-motion
+  froze the photo while the fade kept zooming -- reintroducing exactly the desync above.
+- **The fade's first stops are now solid** (`var(--bg)` 0-4% desktop, `#0b0b0f` 0-5% mobile).
+  Because the photo is scaled, the fade's own foot has to stay solid to remain seamless at
+  every point in the animation. The mobile solid zone lands on `#intro`'s `#0c0c0e` and its
+  gold hairline, so that handoff is unchanged.
+- **Rebuilt the fade as a multi-stop S-curve** (was a 2-stop ramp) so the falloff is
+  monotonic and kink-free, clearing by 54% and leaving the upper half of the photo clean.
+  Verified at the animation's worst frame: the ramp descends monotonically into the page
+  background (mean luminance 14.8 -> 13.3) with no visible step.
+- **Known pre-existing issue, not addressed here:** `.hero-bg`'s zoom also escapes the
+  `overflow:visible` hero horizontally, adding 27px at 900px and 43px at 1440px. Verified
+  independent of this change (identical with and without the `.hero-ov2` animation).
 
 ## 1.16.1 - 2026-10-02
 
