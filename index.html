@@ -143,6 +143,24 @@ section.pad{padding:6rem 0;position:relative;overflow:hidden}
 .sec-head p{color:var(--muted);max-width:42rem;margin:0 auto}
 .glow{position:absolute;border-radius:999px;background:rgba(212,175,55,.06);filter:blur(140px);pointer-events:none}
 
+/* ---------- why choose (desktop only; hidden below 768px) ---------- */
+.why{display:none}
+@media(min-width:768px){
+.why{display:block}
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.75rem}
+.why-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:1rem;
+  padding:2.25rem 2.25rem 1.75rem;transition:transform .35s,border-color .35s,box-shadow .35s}
+.why-card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--primary) 45%,transparent);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.45)}
+.why-n{font-family:"Playfair Display",serif;font-size:2.75rem;font-weight:700;line-height:1;
+  color:var(--primary);opacity:.32;margin:0 0 .75rem;transition:opacity .35s}
+.why-card:hover .why-n{opacity:.8}
+.why-card h3{font-family:"Playfair Display",serif;font-size:1.35rem;font-weight:700;line-height:1.25;margin:0 0 .6rem}
+.why-card p{color:var(--muted);line-height:1.7;margin:0;font-size:.95rem}
+.why-rule{margin-top:1.5rem;height:2px;width:2.6rem;background:var(--primary);transition:width .45s}
+.why-card:hover .why-rule{width:100%}
+}
+
 .grid3{display:grid;grid-template-columns:1fr;gap:2rem}
 @media(min-width:768px){.grid3{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1024px){.grid3{grid-template-columns:repeat(3,1fr)}}
@@ -619,6 +637,42 @@ body.m-vlock{overflow:hidden}
     </div>
   </div>
   <div class="scroll-ind"><span>Scroll</span><div class="scroll-line"><i></i></div></div>
+</section>
+
+<!-- WHY CHOOSE (desktop only; the mobile version lives in #intro below) -->
+<section id="why" class="pad why" aria-label="Why Choose Deepak Studios">
+  <div class="glow" style="top:50%;left:50%;transform:translate(-50%,-50%);width:70%;height:70%"></div>
+  <div class="container" style="position:relative;z-index:10">
+    <div class="sec-head">
+      <h2 class="pf reveal">Why Choose <span class="gold">Deepak Studios</span></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <p class="why-n">01</p>
+        <h3>Cinematic Storytelling</h3>
+        <p>We capture genuine emotions and turn your special moments into timeless visual stories.</p>
+        <div class="why-rule"></div>
+      </div>
+      <div class="why-card reveal">
+        <p class="why-n">02</p>
+        <h3>Premium Albums &amp; Finishing</h3>
+        <p>Beautifully designed albums, refined editing and premium finishing that make your memories truly special.</p>
+        <div class="why-rule"></div>
+      </div>
+      <div class="why-card reveal">
+        <p class="why-n">03</p>
+        <h3>Well-Managed &amp; Supportive Team</h3>
+        <p>Our experienced team carefully manages every shoot and actively supports you with creative ideas and suggestions to make your photographs and films even better.</p>
+        <div class="why-rule"></div>
+      </div>
+      <div class="why-card reveal">
+        <p class="why-n">04</p>
+        <h3>On-Time Delivery</h3>
+        <p>We value your time and work to deliver your photographs, films and albums within the committed timeline.</p>
+        <div class="why-rule"></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- INTRO (mobile only) -->
