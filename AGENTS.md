@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.21.0
+1.22.0
 ```
 
 ### Semver rules
@@ -265,6 +265,15 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.22.0 - 2026-10-03
+
+- **Home Reels rebuilt: 5 Shorts, no filters (`index.html` only).** Grid now shows
+  exactly the 5 specified Shorts on desktop (one row of 5 at ≥1024px) and the
+  first 4 on mobile (2×2, 5th excluded from grid and modal navigation). All
+  filter/sub-filter UI and logic removed; card design, 9:16 nocookie modal,
+  autoplay, Prev/Next, ESC, scroll lock + position restore unchanged.
+  `reels.php` and other pages untouched.
 
 ## 1.21.0 - 2026-10-03
 

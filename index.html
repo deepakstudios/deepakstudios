@@ -838,6 +838,7 @@ body.m-vlock{overflow:hidden}
 .m-subfilters.hidden{visibility:hidden}
 /* reels responsive row */
 .m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+@media(min-width:1024px){.m-grid{grid-template-columns:repeat(5,1fr)}}
 .m-rc{position:relative;display:block;border-radius:.85rem;overflow:hidden;background:var(--card);
   border:1px solid var(--border);aspect-ratio:9/16}
 .m-rc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
@@ -1080,11 +1081,9 @@ body.m-vlock{overflow:hidden}
   <div class="container">
     <div class="m-sec-head">
       <p class="eyebrow">Vertical Shorts</p>
-      <h2 class="pf">Wedding Reels</h2>
+      <h2 class="pf">Reels</h2>
       <p class="m-sub">Short moments. Big emotions. Beautifully captured.</p>
     </div>
-    <div class="m-filters" id="m-filters"></div>
-    <div class="m-subfilters" id="m-subfilters"></div>
     <div class="m-grid" id="m-grid"></div>
     <div class="m-more"><a class="btn btn-gold" href="reels.php">View All Reels</a></div>
   </div>
@@ -1619,46 +1618,26 @@ document.querySelectorAll('.tmore').forEach(function(b){
   });
 });
 
-/* ---------- mobile reels (m-only section; same Shorts data as reels.php) ---------- */
-var MREELS=[
- {id:'Cztd9udNlSo',t:'The Vows',cat:'wedding',sub:'wedding'},
- {id:'7ZubbaOMFxY',t:'The Mandap',cat:'wedding',sub:'wedding'},
- {id:'Kz2qEyeydgA',t:'Nidhi & Shubham',cat:'wedding',sub:'wedding'},
- {id:'WmZLZMhtlOk',t:'Mehendi Mornings',cat:'wedding',sub:'wedding'}
+/* ---------- home reels: exactly these 5 Shorts (desktop 5, mobile first 4) ---------- */
+var MWREELS=[
+ {id:'eP1Fmmfzfk8',t:'Haldi Rhythms',cat:'wedding'},
+ {id:'gkjS6aAZis8',t:'Wedding Vows',cat:'wedding'},
+ {id:'NygruuRRXhI',t:'Evening Whispers',cat:'prewedding'},
+ {id:'jWbsPrWggaM',t:'City Lights Prelude',cat:'prewedding'},
+ {id:'kmblV9ddjJo',t:'Falling Leaves',cat:'prewedding'}
 ];
-var MMAIN=['all','wedding','prewedding','celebration'];
-var MSUB={wedding:['all','haldi','mehendi','wedding','reception'],celebration:['all','birthday','annaprashan']};
-var MSUBLABEL={wedding:['All','Haldi','Mehendi','Wedding','Reception'],celebration:['All','Birthday','Annaprashan']};
-var MCATLABEL={all:'All',wedding:'Wedding',prewedding:'Pre-Wedding',celebration:'Celebration'};
-var mMain='all',mSub='all',mList=[],mIdx=0;
+var MCATLABEL={wedding:'Wedding',prewedding:'Pre-Wedding',celebration:'Celebration'};
+var mList=[],mIdx=0;
 function mThumb(id){return 'https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';}
-function mRenderFilters(){
-  document.getElementById('m-filters').innerHTML=MMAIN.map(function(c){
-    return '<button data-c="'+c+'" onclick="mSetMain(\''+c+'\')" class="'+(c===mMain?'on':'')+'">'+MCATLABEL[c]+'</button>';}).join('');
-  var subs=MSUB[mMain];
-  var box=document.getElementById('m-subfilters');
-  if(!subs){box.innerHTML='';box.classList.add('hidden');return;}
-  box.classList.remove('hidden');
-  box.innerHTML=subs.map(function(s,i){
-    return '<button data-s="'+s+'" onclick="mSetSub(\''+s+'\')" class="'+(s===mSub?'on':'')+'">'+MSUBLABEL[mMain][i]+'</button>';}).join('');
-}
-function mFiltered(){
-  return MREELS.filter(function(r){
-    if(mMain!=='all'&&r.cat!==mMain)return false;
-    if(MSUB[mMain]&&mSub!=='all'&&r.sub!==mSub)return false;
-    return true;});
-}
+function mwIsMobile(){return window.matchMedia&&matchMedia('(max-width:640px)').matches;}
 function mRenderGrid(){
-  mList=mFiltered();
+  mList=mwIsMobile()?MWREELS.slice(0,4):MWREELS.slice();
   document.getElementById('m-grid').innerHTML=mList.map(function(r,i){
     return '<a class="m-rc" href="javascript:void(0)" onclick="mOpen('+i+')" aria-label="Play '+r.t+'">\
       <img loading="lazy" src="'+mThumb(r.id)+'" alt="'+r.t+' reel thumbnail">\
       <div class="shade"></div><span class="cat">'+MCATLABEL[r.cat]+'</span>\
-      <span class="play">▶</span><span class="ttl">'+r.t+'</span></a>';}).join('')||
-    '<p class="m-sub" style="grid-column:1/-1;text-align:center">No films in this filter yet.</p>';
+      <span class="play">▶</span><span class="ttl">'+r.t+'</span></a>';}).join('');
 }
-function mSetMain(c){mMain=c;mSub='all';mRenderFilters();mRenderGrid();}
-function mSetSub(s){mSub=s;mRenderFilters();mRenderGrid();}
 function mEmbed(id){return 'https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?autoplay=1&rel=0';}
 function mShow(){
   var r=mList[mIdx];if(!r)return;
@@ -1682,7 +1661,7 @@ document.getElementById('m-vprev').onclick=function(){mStep(-1);};
 document.getElementById('m-vnext').onclick=function(){mStep(1);};
 document.getElementById('m-vmodal').addEventListener('click',function(e){if(e.target===this)mClose();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')mClose();});
-mRenderFilters();mRenderGrid();
+mRenderGrid();
 
 document.addEventListener('click',function(e){
   var b=e.target.closest('.tmore');if(!b)return;var open=b.getAttribute('aria-expanded')==='true';
