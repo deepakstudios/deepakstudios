@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.22.0
+1.22.1
 ```
 
 ### Semver rules
@@ -265,6 +265,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.22.1 - 2026-10-03
+
+- **Reels page mobile 2-column grid (`reels.php` only).** The films grid base is
+  now 2 columns (was single column under 520px); tablet/desktop breakpoints
+  unchanged. Card design, filters and modal untouched.
 
 ## 1.22.0 - 2026-10-03
 

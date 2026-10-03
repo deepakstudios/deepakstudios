@@ -120,8 +120,8 @@ require_once __DIR__ . '/lib_contact.php';
   .subfilters.hidden{visibility:hidden}
 
   /* ---------- 9:16 vertical cards ---------- */
-  .grid{display:grid;grid-template-columns:1fr;gap:1.15rem}
-  @media (min-width:520px){.grid{grid-template-columns:repeat(2,1fr)}}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.8rem}
+  @media (min-width:520px){.grid{gap:1.15rem}}
   @media (min-width:820px){.grid{grid-template-columns:repeat(3,1fr)}}
   @media (min-width:1080px){.grid{grid-template-columns:repeat(5,1fr)}}
   .rc{position:relative;display:block;border-radius:10px;overflow:hidden;
