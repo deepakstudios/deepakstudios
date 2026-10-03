@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.10
+1.16.11
 ```
 
 ### Semver rules
@@ -265,6 +265,13 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.11 - 2026-10-03
+
+- **Removed CINEMATIC labels from mobile gallery tiles (`index.html`).**
+  The category tag is now skipped for Cinematic photos in the portfolio grid;
+  Wedding/Pre-Wedding tags unchanged. Desktop unaffected (tile tags are
+  desktop-hidden by CSS).
 
 ## 1.16.10 - 2026-10-03
 

@@ -1174,7 +1174,7 @@ function renderGallery(){
   document.getElementById('gallery').innerHTML=GALLERY.filter(function(g){return active==='All'||g.c===active;})
   .map(function(g){return '<div class="tile reveal" onclick="openLightbox(\''+url(g.s)+'\')">\
     <div style="aspect-ratio:'+g.r+'"><img loading="lazy" src="'+url(g.s)+'" alt="'+g.c+' photography by Deepak Studios">\
-    <div class="ov">'+ICON.expand+'</div></div><span class="tag">'+g.c+'</span></div>';}).join('');
+    <div class="ov">'+ICON.expand+'</div></div>'+(g.c==='Cinematic'?'':'<span class="tag">'+g.c+'</span>')+'</div>';}).join('');
   observeReveals();
 }
 function setFilter(c){
