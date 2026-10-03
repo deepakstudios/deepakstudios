@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.20.0
+1.21.0
 ```
 
 ### Semver rules
@@ -265,6 +265,16 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.21.0 - 2026-10-03
+
+- **Showcase / Films / Wedding Reels now on desktop too (`index.html` only).**
+  New `min-width:768px` CSS un-hides the three sections (mobile CSS/JS untouched):
+  asymmetric 4-column editorial photo grid with subtle hover zoom, films in 2×2
+  with a wider player, reels as a responsive auto-fill 9:16 row with the same
+  filters and in-page modal. Headings updated (Your Moments Our Craft /
+  Cinematic Films / Wedding Reels). Mobile Reels block moved directly below
+  Cinematic Films so the flow reads Moments → Films → Reels on all sizes.
 
 ## 1.20.0 - 2026-10-03
 
