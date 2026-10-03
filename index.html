@@ -308,6 +308,28 @@ html.dark .svc:hover .svc-bg{opacity:.3}
 .svc-walk-in p b{color:var(--fg);font-weight:600}
 .svc-walk-in .svc-list{margin:0}
 
+/* wedding packages */
+.pkg{position:relative;border-radius:1rem;display:flex;flex-direction:column;
+  padding:2rem 1.75rem;background:linear-gradient(180deg,rgba(90,22,28,.14),rgba(9,9,11,0) 55%),var(--card);
+  border:1px solid var(--border);transition:border-color .35s,box-shadow .35s,transform .35s}
+.pkg:hover{border-color:color-mix(in srgb,var(--primary) 45%,transparent);
+  box-shadow:0 0 28px rgba(212,175,55,.1);transform:translateY(-4px)}
+.pkg-feat{border-color:color-mix(in srgb,var(--primary) 65%,transparent);
+  box-shadow:0 0 34px rgba(212,175,55,.14)}
+.pkg-flag{position:absolute;top:-.8rem;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:.62rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--primary-fg);background:var(--primary);border-radius:999px;padding:.32rem 1rem}
+.pkg-num{font-family:"Playfair Display",Georgia,serif;font-size:.85rem;letter-spacing:.3em;color:var(--muted)}
+.pkg h3{font-family:"Playfair Display",Georgia,serif;font-size:1.6rem;font-weight:700;margin:.7rem 0 .3rem}
+.pkg-tag{font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin:0 0 1.2rem}
+.pkg-list{list-style:none;margin:0 0 1.25rem;padding:0;display:flex;flex-direction:column;gap:.55rem}
+.pkg-list li{display:flex;align-items:baseline;gap:.6rem;font-size:.88rem;color:var(--muted);line-height:1.5}
+.pkg-list li::before{content:"";flex:0 0 auto;width:.32rem;height:.32rem;transform:rotate(45deg);
+  background:color-mix(in srgb,var(--primary) 70%,transparent)}
+.pkg-fit{margin:0 0 1.4rem;padding-top:1rem;border-top:1px solid var(--border);
+  font-size:.82rem;line-height:1.6;color:var(--muted);font-style:italic}
+.pkg-cta{margin-top:auto;align-self:stretch;justify-content:center}
+
 /* portfolio */
 .filters{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-top:2rem}
 .filters button{padding:.5rem 1.5rem;border-radius:999px;font-size:.875rem;font-weight:600;cursor:pointer;border:0;
@@ -530,6 +552,8 @@ section.pad{padding:3.4rem 0}
 .grid3{gap:1.35rem}
 .svc-cat{padding:1.5rem 1.25rem}
 .svc-cat h3{font-size:1.2rem}
+.pkg{padding:1.5rem 1.25rem}
+.pkg h3{font-size:1.4rem}
 .svc-bg{opacity:.55}
 html.dark .svc-bg{opacity:.55}
 .svc:hover .svc-bg{transform:none;opacity:.55}
@@ -1065,6 +1089,81 @@ body.m-vlock{overflow:hidden}
     </div>
   </div>
   <div class="marquee-wrap"><div class="marquee" id="marquee"></div></div>
+</section>
+
+<!-- WEDDING PACKAGES -->
+<section id="packages" class="pad" style="border-top:1px solid var(--border)">
+  <div class="glow" style="top:30%;left:50%;transform:translate(-50%,-50%);width:70%;height:60%"></div>
+  <div class="container" style="position:relative;z-index:10">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Wedding Packages</p>
+      <h2 class="pf reveal">Every Wedding Is Different.<br><span class="gold">Your Package Should Be Too.</span></h2>
+      <p class="reveal">Choose the experience that fits your celebration, or let us create a custom package around your wedding.</p>
+    </div>
+    <div class="grid3">
+      <div class="pkg reveal">
+        <span class="pkg-num">01</span>
+        <h3>Essential</h3>
+        <p class="pkg-tag">For Beautiful Wedding Memories</p>
+        <ul class="pkg-list">
+          <li>Traditional Wedding Photography</li>
+          <li>Traditional Wedding Videography</li>
+          <li>Candid Photography</li>
+          <li>Full Wedding Ceremony Coverage</li>
+          <li>Bride &amp; Groom Portraits</li>
+          <li>Family &amp; Guest Photography</li>
+          <li>Edited High-Resolution Photos</li>
+          <li>Full Wedding Video</li>
+          <li>Premium Digital Delivery</li>
+        </ul>
+        <p class="pkg-fit">Perfect for intimate &amp; traditional weddings</p>
+        <a class="btn btn-gold pkg-cta" href="#contact">Get Custom Quote</a>
+      </div>
+      <div class="pkg pkg-feat reveal">
+        <span class="pkg-flag">Most Popular</span>
+        <span class="pkg-num">02</span>
+        <h3>Signature</h3>
+        <p class="pkg-tag">Our Complete Wedding Experience</p>
+        <ul class="pkg-list">
+          <li>Everything in Essential</li>
+          <li>Dedicated Candid Photographer</li>
+          <li>Dedicated Cinematographer</li>
+          <li>Cinematic Wedding Film</li>
+          <li>Drone Photography &amp; Videography</li>
+          <li>Pre-Wedding Shoot</li>
+          <li>Wedding Reels / Short Videos</li>
+          <li>Premium Photo Album</li>
+          <li>Full-Length Wedding Film</li>
+          <li>Highlight Film</li>
+        </ul>
+        <p class="pkg-fit">Perfect for couples who want their wedding beautifully documented from every angle</p>
+        <a class="btn btn-gold pkg-cta" href="#contact">Get Custom Quote</a>
+      </div>
+      <div class="pkg reveal">
+        <span class="pkg-num">03</span>
+        <h3>Cinematic</h3>
+        <p class="pkg-tag">The Complete Luxury Wedding Experience</p>
+        <ul class="pkg-list">
+          <li>Everything in Signature</li>
+          <li>Multi-Camera Cinematic Coverage</li>
+          <li>Premium Cinematography</li>
+          <li>Drone Coverage</li>
+          <li>Pre-Wedding Cinematic Film</li>
+          <li>Multiple Wedding Reels</li>
+          <li>Same-Day / Fast Highlight Options</li>
+          <li>Premium Wedding Album</li>
+          <li>Parent Albums</li>
+          <li>Large-Format Wedding Frames</li>
+          <li>Pre-Wedding Photo Walkway</li>
+          <li>55" LED TV / LED Wall Display</li>
+          <li>Live Wedding Telecast</li>
+          <li>Complete Digital Wedding Collection</li>
+        </ul>
+        <p class="pkg-fit">Designed for couples who want their wedding to feel like a cinematic story.</p>
+        <a class="btn btn-gold pkg-cta" href="#contact">Get Custom Quote</a>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FINAL CTA (mobile only) -->

@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.18.0
+1.19.0
 ```
 
 ### Semver rules
@@ -265,6 +265,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.19.0 - 2026-10-03
+
+- **New Wedding Packages section (`index.html` only).** Inserted between Reviews
+  and Final CTA: 3 cards (Essential 9 items, Signature 10 items featured with
+  "Most Popular" tag, Cinematic 14 items), no prices — all CTAs link to the
+  existing `#contact` anchor. Near-black maroon-tinted cards with gold accents,
+  3-column desktop, stacked mobile. No other section touched.
 
 ## 1.18.0 - 2026-10-03
 
