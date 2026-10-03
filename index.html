@@ -330,6 +330,29 @@ html.dark .svc:hover .svc-bg{opacity:.3}
   font-size:.82rem;line-height:1.6;color:var(--muted);font-style:italic}
 .pkg-cta{margin-top:auto;align-self:stretch;justify-content:center}
 
+/* faq accordion */
+.faq-list{display:flex;flex-direction:column;gap:.7rem;margin-bottom:2.2rem}
+.faq-item{border-radius:.9rem;background:var(--card);border:1px solid var(--border);
+  overflow:hidden;transition:border-color .3s}
+.faq-item.open{border-color:color-mix(in srgb,var(--primary) 50%,transparent)}
+.faq-q{display:flex;align-items:center;gap:1rem;width:100%;padding:1.05rem 1.2rem;background:none;
+  border:0;cursor:pointer;font-family:inherit;text-align:left;color:var(--fg);
+  font-size:.95rem;font-weight:600;line-height:1.5}
+.faq-ic{flex:0 0 auto;margin-left:auto;width:1.7rem;height:1.7rem;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid color-mix(in srgb,var(--primary) 50%,transparent);color:var(--primary);
+  font-size:1rem;font-weight:400;line-height:1}
+.faq-ic::before{content:"+";transition:transform .3s}
+.faq-item.open .faq-ic::before{content:"\2212"}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.faq-a-in{padding:0 1.2rem 1.15rem}
+.faq-a p{margin:0;font-size:.88rem;line-height:1.7;color:var(--muted)}
+.faq-cta{text-align:center;padding:2rem 1.5rem;border-radius:1rem;
+  background:linear-gradient(180deg,rgba(212,175,55,.07),rgba(212,175,55,.02));
+  border:1px solid color-mix(in srgb,var(--primary) 35%,transparent)}
+.faq-cta h3{font-family:"Playfair Display",Georgia,serif;font-size:1.4rem;margin:0 0 .4rem}
+.faq-cta p{color:var(--muted);font-size:.9rem;margin:0 0 1.2rem}
+
 /* portfolio */
 .filters{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;margin-top:2rem}
 .filters button{padding:.5rem 1.5rem;border-radius:999px;font-size:.875rem;font-weight:600;cursor:pointer;border:0;
@@ -1166,6 +1189,72 @@ body.m-vlock{overflow:hidden}
   </div>
 </section>
 
+<!-- FAQ -->
+<section id="faq" class="pad" style="border-top:1px solid var(--border)">
+  <div class="container" style="max-width:800px;position:relative;z-index:10">
+    <div class="sec-head">
+      <p class="eyebrow reveal">Good To Know</p>
+      <h2 class="pf reveal">Frequently Asked <span class="gold">Questions</span></h2>
+      <p class="reveal">Everything you need to know before booking your wedding photography &amp; cinematography.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>How early should we book our wedding date?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>We recommend booking as early as possible, especially for weddings during the peak season. Once your date is confirmed, contact us so we can check availability and plan your coverage accordingly.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>What services do you provide for weddings?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>We offer complete wedding photography and cinematography services including candid photography, traditional photography, cinematic films, wedding reels, drone coverage, pre-wedding shoots, premium albums, live telecast, LED display solutions and other wedding experiences.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you provide both photography and videography?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. We provide both photography and cinematography, with coverage planned according to your wedding functions and selected package.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you provide drone photography and videography?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. Drone coverage can be included depending on the selected package, venue conditions and applicable safety/permission requirements.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you provide pre-wedding photography and cinematography?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. We offer pre-wedding photography and cinematic pre-wedding films with outdoor concepts, creative locations and customized storytelling.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Can we customize the wedding package?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. Every wedding is different, so packages can be customized according to your functions, number of days, coverage requirements and selected services. Contact us for a custom quotation.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you provide wedding albums and frames?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. Premium wedding albums, parent albums and selected photo frames can be included according to your package or added separately.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you provide Live Telecast and LED Display?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. We provide live wedding telecast along with 55-inch LED TV / LED Wall display options, depending on the event requirements.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>What is the Pre-Wedding Photo Walkway?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Our Pre-Wedding Photo Walkway transforms the wedding entrance passage into a beautiful visual journey. Your pre-wedding photographs are printed in 24×36 inch standees and arranged in a stylish zig-zag pattern, with a minimum of 10 standees creating an attractive entrance experience.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>How long does it take to receive the photos and videos?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Delivery time depends on the type of coverage, editing requirements and selected package. We will share the expected delivery timeline at the time of booking.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>Do you cover weddings outside Bokaro?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Yes. We provide wedding photography and cinematography services across Bokaro and nearby locations. For events outside our regular service area, travel and accommodation requirements may apply.</p></div></div>
+      </div>
+      <div class="faq-item reveal">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span>How can we check your availability and book our date?</span><span class="faq-ic"></span></button>
+        <div class="faq-a"><div class="faq-a-in"><p>Simply contact us through WhatsApp, phone or the enquiry form. Share your wedding date, venue and required services, and we will check availability and guide you through the booking process.</p></div></div>
+      </div>
+    </div>
+    <div class="faq-cta reveal">
+      <h3 class="pf">Still have questions?</h3>
+      <p>Let’s talk about your wedding.</p>
+      <a class="btn btn-gold" href="#contact">Check Availability</a>
+    </div>
+  </div>
+</section>
+
 <!-- FINAL CTA (mobile only) -->
 <section class="m-only m-cta">
   <div class="container">
@@ -1508,6 +1597,13 @@ function toggleWalkway(btn){
   var card=btn.closest('.svc-walk');if(!card)return;
   var body=card.querySelector('.svc-walk-body');if(!body)return;
   var open=card.classList.toggle('open');
+  btn.setAttribute('aria-expanded',open?'true':'false');
+  body.style.maxHeight=open?body.scrollHeight+'px':'0px';
+}
+function toggleFaq(btn){
+  var item=btn.closest('.faq-item');if(!item)return;
+  var body=item.querySelector('.faq-a');if(!body)return;
+  var open=item.classList.toggle('open');
   btn.setAttribute('aria-expanded',open?'true':'false');
   body.style.maxHeight=open?body.scrollHeight+'px':'0px';
 }

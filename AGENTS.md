@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.19.0
+1.20.0
 ```
 
 ### Semver rules
@@ -265,6 +265,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.20.0 - 2026-10-03
+
+- **New FAQ section (`index.html` only).** Inserted between Wedding Packages and
+  Final CTA: 12 accordion items (collapsed by default, smooth max-height
+  expand/collapse, CSS +/− indicator, aria-expanded, no reload) plus a subtle
+  bottom CTA linking to the existing `#contact` anchor. Dark/gold styling,
+  full-width touch-friendly on mobile. No other section touched.
 
 ## 1.19.0 - 2026-10-03
 
