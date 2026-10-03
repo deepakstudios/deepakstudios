@@ -167,6 +167,8 @@ a{color:var(--gold);text-decoration:none}
 .ab-mphoto small{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
 .ab-mphoto-img{width:100%;aspect-ratio:4/4.4;object-fit:cover;object-position:center 25%;display:block;
   border-bottom:1px solid var(--line)}
+.ab-mphoto-img.ujjwal{object-position:center top}
+.ab-mphoto-img.rajesh{transform:scale(1.12)}
 .ab-mbody{padding:1.3rem 1.3rem 1.4rem}
 .ab-mbody h3{font-family:"Playfair Display",Georgia,serif;font-size:1.15rem;margin:0 0 .2rem;color:var(--ink)}
 .ab-mbody .r{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}
@@ -363,11 +365,11 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
     </div>
     <div class="ab-team-grid">
       <div class="ab-member">
-        <img class="ab-mphoto-img" src="photos/Team/rajesh.webp" alt="Rajesh Dhibar at work" loading="lazy" decoding="async">
+        <img class="ab-mphoto-img rajesh" src="photos/Team/rajesh.webp" alt="Rajesh Dhibar at work" loading="lazy" decoding="async">
         <div class="ab-mbody"><h3>Rajesh Dhibar</h3><p class="r">Photographer &amp; Editor</p><p>&ldquo;With a sharp eye for detail and an instinct for the right moment, Rajesh rarely lets a special frame slip away. Honest, focused, and deeply committed to his work, he stays on the job until everything is done just right.&rdquo;</p></div>
       </div>
       <div class="ab-member">
-        <img class="ab-mphoto-img" src="photos/Team/ujjwal.webp" alt="Ujjwal Dey at work" loading="lazy" decoding="async">
+        <img class="ab-mphoto-img ujjwal" src="photos/Team/ujjwal.webp" alt="Ujjwal Dey at work" loading="lazy" decoding="async">
         <div class="ab-mbody"><h3>Ujjwal Dey</h3><p class="r">Cinematographer</p><p>&ldquo;The cheerful and approachable member of our team, Ujjwal has a natural ability to make clients feel comfortable. Once his gimbal starts moving, ordinary moments can take on a truly cinematic, movie-like feel.&rdquo;</p></div>
       </div>
       <div class="ab-member">
