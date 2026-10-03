@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.12
+1.17.0
 ```
 
 ### Semver rules
@@ -265,6 +265,16 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.17.0 - 2026-10-03
+
+- **Services section redesigned (`index.html` only).** The JS-rendered image cards
+  are replaced by 3 static premium category cards (01 Photography & Films, 02
+  Live Wedding Experience, 03 Event Add-Ons) with serif numbers, line icons, gold
+  accents and supporting text. Priority services (Live Telecast, 55" LED TV,
+  LED Wall, Drone) get a glowing gold marker. Existing page links preserved
+  (wedding.php, cinematography.php, prewedding_photos.php, prewedding.php).
+  3-column desktop, stacked compact cards on mobile. No other section touched.
 
 ## 1.16.12 - 2026-10-03
 
