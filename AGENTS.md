@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.17.0
+1.18.0
 ```
 
 ### Semver rules
@@ -265,6 +265,16 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.18.0 - 2026-10-03
+
+- **Services section: 4 categories + interactive Photo Walkway (`index.html`
+  only).** Static cards for Weddings, Celebrations, Special Events and Live &
+  Event Experience (existing page links kept, priority services keep the gold
+  marker), plus a full-width highlighted "Pre-Wedding Photo Walkway" accordion
+  (collapsed by default, smooth max-height expand/collapse, rotating chevron,
+  aria-expanded, no reload). 4-column desktop ≥1100px, 2-column tablet, stacked
+  mobile. No other section touched.
 
 ## 1.17.0 - 2026-10-03
 
