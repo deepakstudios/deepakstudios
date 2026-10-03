@@ -29,6 +29,7 @@ This file is the permanent documentation and memory for AI agents working on thi
 ├── health.php         # Health check endpoint
 ├── server-setup.sh    # One-time server bootstrap (VPS/shell hosts)
 ├── index.html         # Live site (Deepak Studios homepage)
+├── about.php          # "About Us" page — story, founder, team, promise (see 1.24.0)
 ├── lib_contact.php    # Shared "Call Now" + WhatsApp floating contact UI (see 1.9.0)
 ├── README.md          # GitHub profile README
 ├── .gitignore         # Protects secrets & runtime state
@@ -265,6 +266,98 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.24.0 - 2026-10-04
+
+- **Replaces the `about.php` body shipped in 1.23.0 with a larger build of the same page**
+  (1137 lines vs 545). This is an `add/add` resolution, not a new page: 1.23.0 already
+  created `about.php` and pointed the navbars at it, so the file path, the URL, the section
+  class prefixes (`ab-*`) and every navbar target are unchanged from 1.23.0. What grows is
+  the page itself — 36 scroll-reveal sections instead of a much shorter set, plus a founder
+  block, a 5-step process, a services grid, a behind-the-scenes block, a promise block and
+  the Google trust strip. Nothing that 1.23.0 put on screen is removed.
+- **New `about.php` — a dedicated "About Us" page**, in the same premium dark-maroon /
+  champagne-gold cinematic language as `reels.php` / `cinematography.php` / `photography.php`.
+  Self-contained: all of its CSS is either `ab-`-prefixed or an exact copy of the existing
+  `.rnav*` navbar rules, so it cannot affect any other page.
+- **Homepage navbar: "Contact Us" → "About Us"** pointing at `about.php`. The diff in
+  `index.html` is **exactly 2 lines** (2 removed / 2 added), the single `href` + label in the
+  desktop `nav.desk` list and the same pair in the `#mobmenu`. Nothing else in `index.html`
+  changed: the `#contact` section, the floating WhatsApp button, the mobile bar and both
+  `<form>`s (`submitEnquiry`, `submitBooking`) are byte-identical, so every existing enquiry
+  and booking path still works.
+- **Reuses the shared contact UI instead of duplicating it.** `about.php` calls
+  `ds_contact_head()`, `ds_contact_header_call()` and `ds_contact_fab()` from `lib_contact.php`
+  (1.9.0), so it gets the same gold Call Now pill, the same WhatsApp button and the same mobile
+  bar as every other non-home page, with the same number and positioning.
+- **Sections:** hero ("We Don't Just Capture Moments. We Preserve Them."), Our Story,
+  Founder (Deepak Modak), Team, Vision, Philosophy, How We Work (5 steps), More Than
+  Photography (10 cards), Behind the Scenes, Our Promise, Google trust strip and a final CTA
+  that routes to the existing `index.html#contact` booking form and `wedding.php`.
+- **Team photos are honest about what exists.** The five photo boxes are all an identical
+  `aspect-ratio:1/1` with `object-fit:cover`, so the mixed portrait/landscape originals are
+  cropped, never stretched. Real photos are used for Rajesh and Ujjwal; Aryan, Jogen and
+  Jaitun have no photo in `photos/Team/` and get a designed monogram placeholder rather than a
+  borrowed or invented face. The founder image is `photos/Team/deepak.webp`. Every image path
+  goes through a `$abHasAsset()` existence check, so a missing file degrades to the
+  placeholder instead of a broken image.
+- **The hand-tuned team framing from 1.23.0 is preserved, not lost.** Because 1.24.0 replaces
+  the whole `about.php` body, the two per-member framing tweaks that were dialled in against
+  the 1.23.0 page (Ujjwal framed from the top, Rajesh zoomed in slightly) had to be carried
+  over by hand. They are now keyed off a class derived from the photo filename
+  (`pathinfo($m['photo'], PATHINFO_FILENAME)`), so the hook follows the file and needs no
+  edit if a member's photo changes: `.ab-tcard-photo img.ujjwal{object-position:center top}`
+  and `.ab-tcard-photo img.rajesh{transform:scale(1.12)}`. The generic
+  `.ab-tcard:hover .ab-tcard-photo img{transform:scale(1.05)}` rule is the more specific
+  selector and would have pulled Rajesh *back* from 1.12 to 1.05 on hover, so a matching
+  `.ab-tcard:hover .ab-tcard-photo img.rajesh{transform:scale(1.17)}` is declared to keep the
+  hover lift proportional.
+- **The founder portrait was replaced with a new `photos/Team/deepak.webp` (1080x1451
+  portrait, 255 KB).** `about.php` was already pointing at that filename, so the only code
+  change was the recorded size in the file's header comment (1066x1599 -> 1080x1451). The
+  replacement is a better fit for the founder frame than the old one: measured in Chrome at
+  456x570 desktop and 458x611 mobile it fills 93% / 99% of the box height under
+  `object-fit:cover` with no distortion, 0 broken images and 0 console errors. The image is
+  committed here: `photos/Team/` was force-added to git in 1.23.0, so once a `photos/Team/`
+  file is tracked the `.gitignore` entry for `photos/` no longer applies to it and the new
+  portrait ships with the push.
+- **One binary asset changed, none added.** The only binary in this release is the replaced
+  `photos/Team/deepak.webp`; no new image, font or library was introduced, and every other
+  path on the page points at a file that already existed.
+- **Scroll reveal can no longer strand the page invisible.** This was a real bug found while
+  verifying: the reveal started from `opacity:0` in plain CSS and was un-hidden only by an
+  `IntersectionObserver` callback, and measured in Chrome **0 of 36 sections ever became
+  visible** — everything below the hero stayed at `opacity:0`. Two changes:
+  - The hidden start state is now **opt-in**: it is scoped to `.ab-js .ab-reveal`, and `ab-js`
+    is added by a tiny inline script in `<head>`. With JavaScript disabled the class is never
+    added and the whole page renders visible.
+  - The reveal itself is driven by **plain scroll-position maths** (`getBoundingClientRect()`
+    against `pageYOffset + innerHeight * 0.92`) on `scroll`/`resize`, plus a short 400 ms
+    sweep for the first ~6 s, instead of an observer API that may never call back. No other
+    page on the site uses `IntersectionObserver`.
+- **Verified in real Chrome, both with and without JavaScript.** JS on: 36/36 sections
+  revealed after scrolling, all settling at `opacity:1`, 0 stranded, 0 console errors, no
+  horizontal overflow at 1440/768/500 px, all 10 images decoded, all 11 required section ids
+  present, 5 nav links with About Us active, burger menu opens/closes with `aria-expanded`
+  tracking. JS off (scripts stripped server-side): all 36 below-the-fold sections at
+  `opacity:1`, page text and all 5 team cards intact. `php -l` clean.
+- **Navbars on the other pages are now consistent too, and that came from 1.23.0, not from
+  here.** When this work was originally scoped to the homepage navbar only,
+  `photography.php` / `cinematography.php` / `reels.php` were deliberately left reading
+  "Contact Us" and that was recorded here as a follow-up. 1.23.0 then changed all three
+  (desktop + mobile, 2 lines each), so the site is now uniform and **this release does not
+  touch those files**. The only follow-up still open is that the About page trust strip shows
+  4.9 / 249+ Google Reviews as text and does not link out, to avoid changing the existing
+  review-link behaviour.
+- **`index.html` diff is 2 lines. `about.php` is new. No other tracked file changed.**
+
+## 1.23.0 - 2026-10-03
+
+- **Superseded on the page itself by 1.24.0.** 1.23.0 shipped a first `about.php` together
+  with the `photos/Team/` photos and the four-page navbar change. 1.24.0 replaces that
+  `about.php` with a larger build of the same page. Everything 1.23.0 did **besides** the
+  page body is kept: the navbar change on all four pages, and `photos/Team/` being tracked
+  in git, which is what lets the new founder portrait ship with a push.
 
 ## 1.23.0 - 2026-10-03
 
