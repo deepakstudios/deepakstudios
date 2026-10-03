@@ -419,7 +419,7 @@ main{padding-top:3.1rem}
       <a href="photography.php">Photography</a>
       <a href="cinematography.php">Cinematography</a>
       <a href="reels.php" class="on" aria-current="page">Reels</a>
-      <a href="index.html#contact">Contact Us</a>
+      <a href="about.php">About Us</a>
       <?php ds_contact_header_call(); ?>
     </nav>
     <button type="button" class="rburger" id="rburger" aria-label="Open menu"
@@ -432,7 +432,7 @@ main{padding-top:3.1rem}
     <a href="photography.php">Photography</a>
     <a href="cinematography.php">Cinematography</a>
     <a href="reels.php" class="on" aria-current="page">Reels</a>
-    <a href="index.html#contact">Contact Us</a>
+    <a href="about.php">About Us</a>
   </div>
 </header>
 

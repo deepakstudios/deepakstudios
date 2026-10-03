@@ -310,7 +310,7 @@ body.vlock,html.vlock{overflow:hidden}
       <a href="photography.php">Photography</a>
       <a href="cinematography.php" class="on" aria-current="page">Cinematography</a>
       <a href="reels.php">Reels</a>
-      <a href="index.html#contact">Contact Us</a>
+      <a href="about.php">About Us</a>
       <?php ds_contact_header_call(); ?>
     </nav>
     <button type="button" class="rburger" id="rburger" aria-label="Open menu"
@@ -323,7 +323,7 @@ body.vlock,html.vlock{overflow:hidden}
     <a href="photography.php">Photography</a>
     <a href="cinematography.php" class="on" aria-current="page">Cinematography</a>
     <a href="reels.php">Reels</a>
-    <a href="index.html#contact">Contact Us</a>
+    <a href="about.php">About Us</a>
   </div>
 </header>
 

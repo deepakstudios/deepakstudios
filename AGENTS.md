@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.22.1
+1.23.0
 ```
 
 ### Semver rules
@@ -265,6 +265,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.23.0 - 2026-10-03
+
+- **New About Us page + navbar update.** New `about.php` (story, founder,
+  team, vision, philosophy, 5-step process, services, BTS, promise, trust
+  strip, final CTA) with real Team photos (`photos/Team/`, force-added —
+  `photos/` stays ignored). Navbar Contact Us → About Us on home,
+  cinematography, photography and reels pages (desktop + mobile).
 
 ## 1.22.1 - 2026-10-03
 
