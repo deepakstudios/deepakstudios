@@ -893,18 +893,6 @@ body.m-vlock{overflow:hidden}
   </div>
 </section>
 
-<!-- PORTFOLIO -->
-<section id="portfolio" class="pad">
-  <div class="container">
-    <div class="sec-head">
-      <h2 class="pf reveal"><span class="port-desktop">Our <span class="gold">Portfolio</span></span><span class="port-mobile">Photography</span></h2>
-      <p class="reveal portd-mobile">Real moments. Beautifully preserved.</p>
-      <div class="filters reveal" id="filters"></div>
-    </div>
-    <div class="masonry" id="gallery"></div>
-  </div>
-</section>
-
 <!-- REELS (mobile only) -->
 <section id="m-reels" class="m-only m-reels">
   <div class="container">
@@ -1109,8 +1097,6 @@ body.m-vlock{overflow:hidden}
   </div>
 </div>
 
-<!-- LIGHTBOX -->
-<div class="modal" id="lightbox" onclick="closeModal('lightbox')"><img id="lightbox-img" src="" alt=""></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1151,37 +1137,8 @@ document.getElementById('services-grid').innerHTML=SERVICES.map(function(s){var 
   <div class="svc-rule"><i></i></div></div>';var link=s.l?'<a class="svc" style="position:relative;overflow:hidden;border-radius:.75rem;display:block" href="'+s.l+'">':'<div class="svc">';var close=s.l?'</a>':'</div>';return '\
 '+link+'<div style="position:absolute;inset:0"><div class="svc-bg" style="background-image:url('+s.img+')"></div><div class="svc-fade"></div></div>'+b+close;}).join('');
 
-/* ---------- gallery ---------- */
-var GALLERY=[
- {c:'Wedding',r:'4/3',s:'photo-1511285560929-80b456fea0bc?q=80&w=2069'},
- {c:'Pre-Wedding',r:'3/4',s:'photo-1606800052052-a08af7148866?q=80&w=2070'},
- {c:'Cinematic',r:'16/9',s:'photo-1532712938310-34cb3982ef74?q=80&w=2070'},
- {c:'Wedding',r:'3/4',s:'photo-1519741497674-611481863552?q=80&w=2070'},
- {c:'Pre-Wedding',r:'4/3',s:'photo-1583939411023-14783179e581?q=80&w=2070'},
- {c:'Cinematic',r:'3/4',s:'photo-1574103180491-9e798e1e791b?q=80&w=2070'},
- {c:'Wedding',r:'16/9',s:'photo-1537158866380-04ac23674c3e?q=80&w=2070'},
- {c:'Pre-Wedding',r:'4/3',s:'photo-1520854221256-17451cc331bf?q=80&w=2070'},
- {c:'Wedding',r:'3/4',s:'photo-1511285560929-80b456fea0bc?q=80&w=2069'},
- {c:'Cinematic',r:'16/9',s:'photo-1469334031218-e382a71b716b?q=80&w=2070'},
- {c:'Pre-Wedding',r:'4/3',s:'photo-1494663363458-769165d216f4?q=80&w=2070'},
- {c:'Wedding',r:'4/3',s:'photo-1515934751635-c81c6bc9a2d8?q=80&w=2070'}
-];
-var CATS=['All','Wedding','Pre-Wedding','Cinematic'],active='All';
-document.getElementById('filters').innerHTML=CATS.map(function(c){
-  return '<button data-c="'+c+'" onclick="setFilter(\''+c+'\')" class="'+(c==='All'?'active':'')+'">'+c+'</button>';}).join('');
+/* portfolio gallery removed (v1.16.12); url() below is kept for the showcase grid */
 function url(s){return 'https://images.unsplash.com/'+s+'&auto=format&fit=crop';}
-function renderGallery(){
-  document.getElementById('gallery').innerHTML=GALLERY.filter(function(g){return active==='All'||g.c===active;})
-  .map(function(g){return '<div class="tile reveal" onclick="openLightbox(\''+url(g.s)+'\')">\
-    <div style="aspect-ratio:'+g.r+'"><img loading="lazy" src="'+url(g.s)+'" alt="'+g.c+' photography by Deepak Studios">\
-    <div class="ov">'+ICON.expand+'</div></div>'+(g.c==='Cinematic'?'':'<span class="tag">'+g.c+'</span>')+'</div>';}).join('');
-  observeReveals();
-}
-function setFilter(c){
-  active=c;
-  document.querySelectorAll('#filters button').forEach(function(b){b.classList.toggle('active',b.dataset.c===c);});
-  renderGallery();
-}
 
 /* ---------- mobile photography showcase (m-showcase section) ----------
    REPLACE THESE SLOTS with your real wedding photographs.
@@ -1241,8 +1198,6 @@ document.getElementById('m-fprev').onclick=function(){mFStep(-1);};
 document.getElementById('m-fnext').onclick=function(){mFStep(1);};
 document.getElementById('m-fmodal').addEventListener('click',function(e){if(e.target===this)mFClose();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')mFClose();});
-
-renderGallery();
 
 /* ---------- testimonials ---------- */
  var REVIEWS=[
@@ -1338,8 +1293,7 @@ document.addEventListener('click',function(e){
 function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
 function closeModal(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
 function openBooking(){openModal('booking');}
-function openLightbox(src){document.getElementById('lightbox-img').src=src;openModal('lightbox');}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal('booking');closeModal('lightbox');}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal('booking');}});
 
 var toastTimer;
 function toast(msg){

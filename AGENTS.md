@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.11
+1.16.12
 ```
 
 ### Semver rules
@@ -265,6 +265,14 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.12 - 2026-10-03
+
+- **Removed the Our Portfolio section from the home page (`index.html`).**
+  Section HTML, gallery data/filter/render JS and the now-unused lightbox modal
+  + helper removed. The shared `url()` helper stays (showcase grid uses it).
+  Nav never linked `#portfolio` (Photography points to `photography.php`), so
+  no links break.
 
 ## 1.16.11 - 2026-10-03
 
