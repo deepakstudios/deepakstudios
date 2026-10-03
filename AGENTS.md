@@ -246,7 +246,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.16.9
+1.16.10
 ```
 
 ### Semver rules
@@ -265,6 +265,12 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.16.10 - 2026-10-03
+
+- **Removed the mobile-only Cinematography category section (`#m-cine`)** from the
+  home page, including its dedicated CSS. The section was mobile-only so desktop
+  is unaffected. Cinematography remains reachable via nav, services and footer.
 
 ## 1.16.9 - 2026-10-02
 
