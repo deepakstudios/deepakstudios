@@ -247,7 +247,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.23.0
+1.24.1
 ```
 
 ### Semver rules
@@ -266,6 +266,15 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.24.1 - 2026-10-04
+
+- **Aryan photo live + BTS filename case fix (`about.php`).** Added
+  `photos/Team/aryan.webp` (lowercase, matching the auto-render check) so
+  Aryan's card shows his real photo. Fixed BTS lead path case
+  (`Deepakstudiosteam.webp` → `deepakstudiosteam.webp`) which would 404 on
+  case-sensitive servers. Founder already serves the new portrait via
+  `deepak.webp`.
 
 ## 1.24.0 - 2026-10-04
 

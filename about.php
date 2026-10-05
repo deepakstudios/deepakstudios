@@ -23,7 +23,7 @@
  *   photos/Team/deepak.webp                  founder portrait  (1080x1451)
  *   photos/Team/rajesh.webp                  team             (1599x1066)
  *   photos/Team/ujjwal.webp                  team             (1512x1006)
- *   photos/Team/Deepakstudiosteam.webp       behind the scenes(2048x1363)
+ *   photos/Team/deepakstudiosteam.webp       behind the scenes(2048x1363)
  *   photos/hero/deepakstudiosbokaro.webp     hero             (1920x1080)
  *   photos/hero/hero-bg.webp                 vision           (2069x1381)
  *   photos/prewedding/*.jpg                  behind the scenes(480x360)
@@ -53,7 +53,7 @@ $abHeroPosMb = 'center 38%';
 
 $abVisionImage = 'photos/hero/hero-bg.webp';             // vision(2069x1381)
 
-$abBtsLead  = 'photos/Team/Deepakstudiosteam.webp';      // behind the scenes lead
+$abBtsLead  = 'photos/Team/deepakstudiosteam.webp';      // behind the scenes lead
 $abBtsThumbs = [                                          // behind the scenes mosaic
     'photos/prewedding/yvW6COhgwV0.jpg',
     'photos/prewedding/YfccOo4h4Kk.jpg',
