@@ -906,6 +906,31 @@ footer{text-align:center;padding:2.2rem 1rem;color:#6d6156;font-size:.85rem;
   </div>
 </section>
 
+<!-- ======================= ALWAYS LEARNING ======================= -->
+<section class="ab-sec ab-band" aria-labelledby="abLearnH">
+  <div class="ab-shell">
+    <div class="ab-sec-head ab-reveal">
+      <p class="ab-eyebrow">The Craft</p>
+      <span class="ab-rule" aria-hidden="true"></span>
+      <h2 class="ab-h2" id="abLearnH">Always Learning. <em>Always Evolving.</em></h2>
+    </div>
+    <div class="ab-story ab-reveal">
+      <div class="ab-story-body">
+      <p>At Deepak Studios, our journey has never been about simply owning a camera. It has always been about <strong>learning what comes next and becoming better at telling stories.</strong></p>
+      <p>Over the years, we have continuously upgraded our craft — from moving to advanced <strong>mirrorless camera technology</strong> and professional lenses to modern lighting systems, gimbals, drones and other filmmaking equipment.</p>
+      <p>But equipment is only one part of the story.</p>
+      <p>We have attended workshops, learned directly through mentors associated with leading camera brands, explored new techniques and constantly kept ourselves updated with the latest developments in photography and filmmaking.</p>
+      <p>Because our goal has always been bigger than capturing a wedding.</p>
+      <p><strong>We want to transform an ordinary wedding into a cinematic story — filled with emotion, movement, atmosphere and moments that truly feel alive.</strong></p>
+      <p>And the learning never stops.</p>
+      <p>We continue to experiment, upgrade our skills and train our entire team so that every new celebration we capture is better than the last.</p>
+      <p>Because in a world where technology keeps evolving, we believe the best way to stay ahead is to <strong>never stop learning.</strong></p>
+      </div>
+      <div class="ab-story-quote"><p>We don&rsquo;t just capture moments.<br>We keep evolving to tell them better.</p></div>
+    </div>
+  </div>
+</section>
+
 <!-- ======================= MORE THAN PHOTOGRAPHY ======================= -->
 <section class="ab-sec" aria-labelledby="abMoreH">
   <div class="ab-shell">
