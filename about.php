@@ -87,7 +87,7 @@ $TEAM = [
     [
         'name'  => 'Aryan',
         'role'  => 'Drone Operator',
-        'photo' => '',            // no photograph yet - placeholder by design
+        'photo' => 'aryan.webp',
         'mono'  => 'AR',
         'bio'   => 'Cool, creative, and always ready for the perfect aerial perspective, Aryan brings a premium touch to our films. His cinematic drone shots add a grand, royal feel that makes every celebration look even more spectacular.',
     ],
