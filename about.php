@@ -316,6 +316,21 @@ p{margin:0}
         font-size:clamp(1.12rem,3vw,1.6rem);line-height:1.5;color:#fdf6e8;
         position:relative;z-index:1}
 
+/* vision / craft split + demo placeholders (swap .ab-ph for img.ab-ph-img) */
+.ab-split{display:grid;gap:2.2rem;align-items:center}
+@media(min-width:900px){.ab-split{grid-template-columns:1.05fr .95fr;gap:3.2rem}}
+.ab-split-copy .ab-rule{margin-left:0;margin-right:0}
+.ab-split-copy p{margin:0 0 1.1rem;color:#ded2c2;font-size:1rem;line-height:1.85}
+.ab-split-copy p:last-child{margin-bottom:0}
+.ab-ph{position:relative;aspect-ratio:4/3;border-radius:16px;overflow:hidden;
+        display:flex;align-items:center;justify-content:center;
+        background:linear-gradient(160deg,#3d1518,#1c0f10 70%);
+        border:1px solid rgba(201,168,106,.3)}
+.ab-ph span{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;
+        color:var(--ab-gold2);opacity:.85}
+img.ab-ph-img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;display:block;
+        border:1px solid rgba(201,168,106,.3)}
+
 /* ==========================================================================
    FOUNDER
    ========================================================================== */
@@ -663,56 +678,42 @@ footer{text-align:center;padding:2.2rem 1rem;color:#6d6156;font-size:.85rem;
   <p class="ab-hero-scroll" aria-hidden="true">Scroll <i>&#8595;</i></p>
 </section>
 
-<!-- ======================= OUR STORY ======================= -->
-<section class="ab-sec" id="story" aria-labelledby="abStoryH">
+<!-- ======================= OUR VISION ======================= -->
+<section class="ab-sec" aria-labelledby="abVisionH">
   <div class="ab-shell">
-    <div class="ab-sec-head ab-reveal">
-      <p class="ab-eyebrow">Our Story</p>
-      <span class="ab-rule" aria-hidden="true"></span>
-      <h2 class="ab-h2" id="abStoryH">It Started With a Camera. <em>It Grew With Love.</em></h2>
-    </div>
-
-    <div class="ab-story ab-reveal">
-      <div class="ab-story-body">
-        <p>Deepak Studios ki kahani sirf photography se shuru nahi hui thi&mdash;ye shuru hui thi
-          logon ke pyaar, bharose aur apnapan se.</p>
-        <p>Shuruaat mein humara kaam tha khoobsurat moments ko camera mein capture karna. Lekin
-          jaise-jaise humne families ke saath waqt bitaya, unki khushiyon ka hissa bane aur unke
-          special moments ko apni aankhon se dekha, humare liye photography ka matlab bhi badalta
-          gaya.</p>
-        <p>Logon ka pyaar milta gaya, aur Deepak Studios aage badhta gaya.</p>
-        <p>Har happy client ka feedback humare liye sirf ek review nahi tha&mdash;it was a reminder
-          that we were moving in the right direction. Har event ke baad milne wali appreciation ne
-          humari team ke junoon aur lagan ko aur strong kiya.</p>
-        <p>Humara aim kabhi sirf ek normal photograph dena nahi tha.</p>
-        <p>Hum chahte the ki saalon baad jab koi apni photographs dekhe, toh use sirf ye yaad na aaye
-          ki us din kya hua tha, balki woh tasveer dekhte hi us pal ki hansi, khushi, emotions aur
-          apnapan phir se mehsoos kar sake.</p>
-        <p>Aur us moment ko yaad karte hue, unhe woh photographer bhi yaad aaye&mdash;jisne us khushi
-          ko usi waqt mehsoos karke, us ek perfect frame mein hamesha ke liye sambhal liya tha.</p>
-
-        <p class="ab-story-pull">Isi soch ke saath humara ek aur sapna tha:</p>
-
-        <div class="ab-story-quote">
-          <p>&ldquo;Log humein sirf apna photographer na samjhein, balki apne ghar ke ek apne family
-            member ki tarah samjhein.&rdquo;</p>
-        </div>
-
-        <p>Isliye humne sirf photographs lene par focus nahi kiya. Humne relationships banane par
-          focus kiya&mdash;clients ko comfortable feel karana, unki needs samajhna, unke celebrations
-          mein genuinely involved rehna aur har important moment ke liye poori dedication ke saath
-          khade rehna.</p>
-        <p>Aaj jab hum peeche mudkar dekhte hain, toh humein sirf photographs, albums aur films nahi
-          dikhte. Humein un families ke chehre, unki khushiyan, unka trust aur woh countless memories
-          dikhai deti hain jinka humein hissa banne ka mauka mila.</p>
-        <p>Aur shayad isi wajah se Deepak Studios ka ye karwaan dheere-dheere badhta gaya&mdash;ek
-          client se doosre client tak, ek family se doosri family tak, aur ek beautiful story se
-          doosri story tak.</p>
+    <div class="ab-split ab-reveal">
+      <div class="ab-split-copy">
+        <p class="ab-eyebrow">Our Vision</p>
+        <span class="ab-rule" aria-hidden="true"></span>
+        <h2 class="ab-h2" id="abVisionH">To create timeless visual stories that let people relive their most beautiful moments for years to come.</h2>
+        <div style="height:1.1rem"></div>
+        <p>We believe photography is more than capturing how a moment looked &mdash; it is about preserving how it felt. Our goal is to create timeless photographs and films that bring back the emotions, laughter, and love of life&rsquo;s most precious moments.</p>
       </div>
+      <!-- REPLACE_WITH_REAL_VISION_IMAGE: swap this div for
+           <img class="ab-ph-img" src="YOUR-VISION-PHOTO.jpg" alt="..."> (4:3 landscape) -->
+      <div class="ab-ph" role="img" aria-label="Vision photograph coming soon"><span>Photo Coming Soon</span></div>
+    </div>
+  </div>
+</section>
 
-      <div class="ab-close">
-        <p>&ldquo;Aisi tasveerein banana, jinhe dekhkar yaadein sirf yaad na aayein &mdash; balki phir
-          se jeeti hui mehsoos hon.&rdquo;</p>
+<!-- ======================= THE CRAFT ======================= -->
+<section class="ab-sec ab-band" aria-labelledby="abCraftH">
+  <div class="ab-shell">
+    <div class="ab-split ab-reveal">
+      <!-- REPLACE_WITH_REAL_CRAFT_IMAGE: swap this div for
+           <img class="ab-ph-img" src="YOUR-CRAFT-PHOTO.jpg" alt="..."> (4:3 landscape) -->
+      <div class="ab-ph" role="img" aria-label="Craft photograph coming soon"><span>Photo Coming Soon</span></div>
+      <div class="ab-split-copy">
+        <p class="ab-eyebrow">The Craft</p>
+        <span class="ab-rule" aria-hidden="true"></span>
+        <h2 class="ab-h2" id="abCraftH">Always Learning. <em>Always Evolving.</em></h2>
+        <div style="height:1.1rem"></div>
+        <p>At Deepak Studios, we believe great storytelling comes from continuous learning, creativity, and the right technology.</p>
+        <p>From advanced mirrorless cameras and professional lenses to modern lighting, gimbals, and drones, we keep upgrading our equipment and skills. Through workshops, guidance from industry mentors, and hands-on experience, we continue to explore new techniques in photography and filmmaking.</p>
+        <p>Our goal is to transform weddings and celebrations into cinematic stories filled with genuine emotions, beautiful movement, and unforgettable moments.</p>
+        <div class="ab-close">
+          <p>&ldquo;We don&rsquo;t just capture moments.<br>We keep evolving to tell them better.&rdquo;</p>
+        </div>
       </div>
     </div>
   </div>
@@ -801,29 +802,6 @@ footer{text-align:center;padding:2.2rem 1rem;color:#6d6156;font-size:.85rem;
   </div>
 </section>
 
-<!-- ======================= OUR VISION ======================= -->
-<section class="ab-vision" aria-labelledby="abVisionH">
-  <?php if ($abHasAsset($abVisionImage)): ?>
-    <img class="ab-vision-img" src="<?= $esc($abVisionImage) ?>"
-         alt="" aria-hidden="true" loading="lazy" decoding="async">
-  <?php endif; ?>
-  <span class="ab-vision-ov" aria-hidden="true"></span>
-  <span class="ab-grain" aria-hidden="true"></span>
-  <div class="ab-vision-in">
-    <p class="ab-eyebrow">Our Vision</p>
-    <h2 class="ab-vision-h" id="abVisionH">Our Vision</h2>
-    <span class="ab-rule" aria-hidden="true"></span>
-    <p class="ab-vision-lead">&ldquo;To create timeless visual stories that let people relive their
-      most beautiful moments for years to come.&rdquo;</p>
-    <p class="ab-vision-p">This is what every photograph and every film we make is measured against.
-      A frame can record how a moment looked, but our work goes one step further &mdash; it is meant
-      to hold how that moment <em>felt</em>. The laugh that could not be staged, the quiet glance
-      nobody noticed at the time, the warmth of a room full of people who love each other: those are
-      the things we are really trying to keep. Decades from now, when someone opens an album from
-      Deepak Studios, we want them to feel the day again &mdash; not simply recognise it.</p>
-  </div>
-</section>
-
 <!-- ======================= OUR PHILOSOPHY ======================= -->
 <section class="ab-sec" aria-labelledby="abPhilH">
   <div class="ab-shell">
@@ -902,31 +880,6 @@ footer{text-align:center;padding:2.2rem 1rem;color:#6d6156;font-size:.85rem;
         <h3>Deliver</h3>
         <p>Albums, films and final memories delivered with care and attention to timelines.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================= ALWAYS LEARNING ======================= -->
-<section class="ab-sec ab-band" aria-labelledby="abLearnH">
-  <div class="ab-shell">
-    <div class="ab-sec-head ab-reveal">
-      <p class="ab-eyebrow">The Craft</p>
-      <span class="ab-rule" aria-hidden="true"></span>
-      <h2 class="ab-h2" id="abLearnH">Always Learning. <em>Always Evolving.</em></h2>
-    </div>
-    <div class="ab-story ab-reveal">
-      <div class="ab-story-body">
-      <p>At Deepak Studios, our journey has never been about simply owning a camera. It has always been about <strong>learning what comes next and becoming better at telling stories.</strong></p>
-      <p>Over the years, we have continuously upgraded our craft — from moving to advanced <strong>mirrorless camera technology</strong> and professional lenses to modern lighting systems, gimbals, drones and other filmmaking equipment.</p>
-      <p>But equipment is only one part of the story.</p>
-      <p>We have attended workshops, learned directly through mentors associated with leading camera brands, explored new techniques and constantly kept ourselves updated with the latest developments in photography and filmmaking.</p>
-      <p>Because our goal has always been bigger than capturing a wedding.</p>
-      <p><strong>We want to transform an ordinary wedding into a cinematic story — filled with emotion, movement, atmosphere and moments that truly feel alive.</strong></p>
-      <p>And the learning never stops.</p>
-      <p>We continue to experiment, upgrade our skills and train our entire team so that every new celebration we capture is better than the last.</p>
-      <p>Because in a world where technology keeps evolving, we believe the best way to stay ahead is to <strong>never stop learning.</strong></p>
-      </div>
-      <div class="ab-story-quote"><p>We don&rsquo;t just capture moments.<br>We keep evolving to tell them better.</p></div>
     </div>
   </div>
 </section>
