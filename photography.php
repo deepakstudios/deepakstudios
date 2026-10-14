@@ -1,22 +1,25 @@
 <?php
 /**
- * photography.php - Photography Hub | Deepak Studios
+ * photography.php — Photography Hub | Deepak Studios
  *
- * Premium photography portfolio in the same luxury dark + gold studio language as
- * reels.php and cinematography.php: fixed premium navbar (Photography active),
- * full-bleed hero with a replaceable hero image, a clean category filter and a
- * photo / album card grid that opens the existing working lightbox in-page.
+ * Royal Luxury redesign (dark maroon / deep black / gold). Page-specific
+ * styles only — the navbar, footer, WhatsApp/mobile bar and Call Now pill
+ * are the existing shared implementations (navbar CSS copied from the other
+ * premium pages; floating controls come from lib_contact.php).
  *
- * This page only READS the existing photo folders - it stores no copies and deletes
- * nothing, so every photograph, album, link and folder below keeps working exactly as
- * before on wedding.php, prewedding_photos.php and the album pages a.php - e.php:
+ * IMAGE PLACEHOLDERS — every photograph on this page is a "COMING SOON"
+ * placeholder. To add a real photograph, replace the placeholder <div>
+ * with an <img> that keeps the SAME aspect-ratio class, e.g.:
  *
- *   photos/prewedding/       -> Pre-Wedding photographs (flat folder)
- *   photos/wedding/a .. e/   -> Wedding albums (one folder per album page)
+ *   <div class="ph ph-43"><span>COMING SOON</span></div>
+ *      becomes
+ *   <img class="ph ph-43 ph-img" src="YOUR-PHOTO.jpg" alt="...">
  *
- * PHOTOS: just upload image files into those folders (BaoTa File Manager / FTP) and
- * they appear here automatically - no code edit, no deploy. Supported:
- * jpg, jpeg, png, webp, gif, avif.
+ * Slots:
+ *   HERO visual .....: set --pg-hero-img below (url) or leave empty
+ *   STORY 1..6 ......: search STORY-1 .. STORY-6
+ *   OCCASION 1..4 ...: search OCC-1 .. OCC-4
+ *   ALBUM A..E ......: search ALBUM-A .. ALBUM-E
  */
 
 declare(strict_types=1);
@@ -32,123 +35,13 @@ $esc = static function (string $v): string {
 };
 
 /* =====================================================================
- * HERO IMAGE - SINGLE CONFIG POINT
+ * HERO BACKGROUND - SINGLE CONFIG POINT
  * ------------------------------------------------------------------------
- * To change the hero picture: edit ONLY the $photoHeroImage path below.
- * No HTML, CSS or JS change is needed anywhere else on this page - the path
- * is not repeated anywhere else in the file.
- *   $photoHeroImage : image path (jpg / jpeg / png / webp all work)
- *   $photoHeroPos   : desktop object-position  (keeps the subject in frame)
- *   $photoHeroPosMb : phone object-position    (stops the subject being cropped)
+ * Set $pgHeroImage to a local image path (jpg / jpeg / png / webp) when
+ * the real hero photograph is ready. Leave it EMPTY ('') to keep the
+ * elegant dark-maroon placeholder with the COMING SOON label.
  * ===================================================================== */
-$photoHeroImage = 'photos/hero/deepakstudiosbokaro.webp';
-$photoHeroPos   = 'center center';
-$photoHeroPosMb = 'center center';
-
-/* =====================================================================
- * PHOTO SOURCES - the existing folders, untouched.
- * ===================================================================== */
-$EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
-
-/** Scan one photo folder and return its image files, name-sorted. */
-$scanFolder = static function (string $dir) use ($EXTENSIONS): array {
-    $files = [];
-    if (is_dir($dir)) {
-        foreach (new DirectoryIterator($dir) as $file) {
-            if ($file->isDot() || !$file->isFile()) {
-                continue;
-            }
-            $ext = strtolower(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
-            if (in_array($ext, $EXTENSIONS, true)) {
-                $files[] = $file->getFilename();
-            }
-        }
-    }
-    sort($files, SORT_STRING | SORT_FLAG_CASE);
-    return $files;
-};
-
-/* The existing pre-wedding photographs are stored under their own YouTube ID.
-   Give them the same names used on cinematography.php so the two hubs read as one
-   brand; any newly uploaded file still works and simply falls back to a generic
-   label, so the folder stays owner-managed. */
-$PREW_TITLES = [
-    'yvW6COhgwV0.jpg' => 'The First Glimpse',
-    'Tcm2kFq0-sA.jpg' => 'Before We Say Yes',
-    'YfccOo4h4Kk.jpg' => 'Rooftop Confessions',
-    'LhjChNCyl9E.jpg' => 'Golden Hour Walk',
-    'NEJ4yZ-cs6g.jpg' => 'Frames of Forever',
-    'r0EflaC0a_U.jpg' => 'Before the Bells',
-];
-
-/* The existing wedding albums keep their own pages (a.php - e.php). */
-$ALBUMS = [
-    'a' => ['label' => 'Album A', 'tint' => '#141210'],
-    'b' => ['label' => 'Album B', 'tint' => '#1a1410'],
-    'c' => ['label' => 'Album C', 'tint' => '#131018'],
-    'd' => ['label' => 'Album D', 'tint' => '#161210'],
-    'e' => ['label' => 'Album E', 'tint' => '#10141a'],
-];
-
-/* =====================================================================
- * CARD DATA - one entry per photograph and per album.
- *   type : photo (opens the lightbox) | album (opens its existing album page)
- *   cat  : prewedding | wedding
- * ===================================================================== */
-$ITEMS = [];
-$photoCount = 0;
-$albumCount = 0;
-
-foreach ($scanFolder(__DIR__ . '/photos/prewedding') as $file) {
-    $ITEMS[] = [
-        'type' => 'photo',
-        'cat'  => 'prewedding',
-        'src'  => 'photos/prewedding/' . rawurlencode($file),
-        't'    => $PREW_TITLES[$file] ?? 'Pre-Wedding Photograph',
-        'meta' => 'Pre-Wedding',
-    ];
-    $photoCount++;
-}
-
-foreach ($ALBUMS as $letter => $album) {
-    $inAlbum = count($scanFolder(__DIR__ . '/photos/wedding/' . $letter));
-    $ITEMS[] = [
-        'type' => 'album',
-        'cat'  => 'wedding',
-        'href' => $letter . '.php',
-        't'    => $album['label'],
-        'meta' => $inAlbum . ' photo' . ($inAlbum === 1 ? '' : 's'),
-        'tint' => $album['tint'],
-    ];
-    $albumCount++;
-}
-
-/* =====================================================================
- * CATEGORY FILTER - only the categories that actually hold content are
- * rendered, so no empty tab is ever shown.
- * ===================================================================== */
-$CATS = [];
-foreach ($ITEMS as $item) {
-    if (!isset($CATS[$item['cat']])) {
-        $CATS[$item['cat']] = 0;
-    }
-    $CATS[$item['cat']]++;
-}
-
-$CATLABEL = [
-    'all'        => 'All',
-    'prewedding' => 'Pre-Wedding',
-    'wedding'    => 'Wedding',
-];
-
-$MAIN = ['all'];
-foreach (['prewedding', 'wedding'] as $key) {
-    if (isset($CATS[$key])) {
-        $MAIN[] = $key;
-    }
-}
-
-$grandTotal = $photoCount + $albumCount;
+$pgHeroImage = '';
 
 // Shared "Call Now" + WhatsApp floating contact UI (identical to the home page).
 require_once __DIR__ . '/lib_contact.php';
@@ -159,20 +52,22 @@ require_once __DIR__ . '/lib_contact.php';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Photography | Deepak Studios</title>
-<meta name="description" content="Luxury wedding, pre-wedding and celebration photography by Deepak Studios. Timeless photographs, authentic emotions, beautifully preserved.">
+<meta name="description" content="Royal luxury wedding photography by Deepak Studios. Signature wedding stories, occasions, craft and albums.">
 <style>
   :root{
     --bg:#0b0b0c; --panel:#141416; --card:#18181a; --line:#26262a;
     --ink:#f2ecdf; --mut:#a8a294; --gold:#c9a86a; --gold2:#e6c980;
+    --maroon:#4a1216;
     --serif:Georgia,"Times New Roman",serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
         font-family:var(--serif);overflow-x:hidden}
+  html{scroll-behavior:smooth}
   a{color:var(--gold);text-decoration:none}
   img{max-width:100%}
 
-/* ======== LUXURY NAV + PHOTOGRAPHY HERO (shared design language with reels.php + cinematography.php) ======== */
+/* ======== LUXURY NAV (same implementation as reels.php / cinematography.php) ======== */
 :root{--rx-shell:1200px; --rx-head:74px;}
 
 /* ---------- premium navbar ---------- */
@@ -219,155 +114,174 @@ require_once __DIR__ . '/lib_contact.php';
   .rmobmenu{display:none!important}
 }
 
-/* ---------- photography hero ---------- */
-.rhero{position:relative;min-height:100vh;min-height:100svh;display:flex;
+/* ======== HERO (placeholder until $pgHeroImage is set) ======== */
+.pg-hero{position:relative;min-height:100vh;min-height:100svh;display:flex;
         align-items:center;justify-content:center;overflow:hidden;isolation:isolate;background:#08080a}
-.rhero-img{position:absolute;inset:0;z-index:-3;width:100%;height:100%;
-        object-fit:cover;object-position:<?= $esc($photoHeroPos) ?>;user-select:none}
-.rhero-ov{position:absolute;inset:0;z-index:-2;pointer-events:none;background:
-        linear-gradient(180deg,rgba(8,8,10,.88) 0%,rgba(8,8,10,.3) 44%,rgba(8,8,10,.93) 100%),
-        radial-gradient(ellipse at 38% 46%,rgba(6,6,8,.05) 0%,rgba(6,6,8,.8) 78%)}
-.rhero-grain{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.035;
-        background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .5px);
-        background-size:3px 3px}
-.rhero-in{position:relative;max-width:var(--rx-shell);margin:0 auto;text-align:center;
+.pg-hero-bg{position:absolute;inset:0;z-index:-3;
+        background:
+          radial-gradient(ellipse at 50% 38%,rgba(201,168,106,.14),transparent 62%),
+          radial-gradient(ellipse at 50% 110%,rgba(74,18,22,.55),transparent 60%),
+          linear-gradient(180deg,#141013 0%,#0b0b0e 55%,#08080a 100%);
+        background-size:cover;background-position:center}
+.pg-hero-ov{position:absolute;inset:0;z-index:-2;pointer-events:none;background:
+        linear-gradient(180deg,rgba(8,8,10,.82) 0%,rgba(8,8,10,.38) 46%,rgba(8,8,10,.94) 100%)}
+.pg-hero-in{position:relative;max-width:var(--rx-shell);margin:0 auto;text-align:center;
         padding:calc(var(--rx-head) + 3.2rem) 1.35rem 6.4rem}
-.rhero-eyebrow{margin:0;font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;
+.pg-hero-eyebrow{margin:0;font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;
         color:var(--gold);opacity:.92}
-.rhero-eyebrow i{font-style:normal;opacity:.5;padding:0 .3em}
-.rhero-rule{display:block;width:62px;height:1px;margin:1.45rem auto;
+.pg-hero-rule{display:block;width:62px;height:1px;margin:1.45rem auto;
         background:linear-gradient(90deg,transparent,var(--gold),transparent);
         box-shadow:0 0 12px rgba(230,201,128,.55)}
-.rhero-h{margin:0;font-size:clamp(1.85rem,6.4vw,4.6rem);font-weight:400;line-height:1.08;
+.pg-hero-h{margin:0;font-size:clamp(1.85rem,6.4vw,4.4rem);font-weight:400;line-height:1.1;
         letter-spacing:.1em;text-transform:uppercase;color:#f6f1e6;
         text-shadow:0 2px 30px rgba(0,0,0,.72),0 0 62px rgba(201,168,106,.12)}
-.rhero-sub{margin:1.65rem auto 0;max-width:34rem;font-size:clamp(1rem,2.3vw,1.26rem);
+.pg-hero-sub{margin:1.65rem auto 0;max-width:36rem;font-size:clamp(1rem,2.3vw,1.26rem);
         line-height:1.62;color:#ddd5c6;font-style:italic}
-.rhero-sup{margin:.9rem auto 0;max-width:31rem;font-size:.85rem;letter-spacing:.05em;
-        color:var(--mut)}
-.rhero-cta{display:inline-block;margin-top:2.4rem;padding:.96rem 2.5rem;text-decoration:none;
+.pg-hero-ph{display:inline-block;margin-top:1.8rem;font-size:.62rem;letter-spacing:.3em;
+        text-transform:uppercase;color:var(--gold2);border:1px dashed rgba(201,168,106,.55);
+        border-radius:999px;padding:.55rem 1.4rem;background:rgba(10,10,12,.5)}
+.pg-hero-cta{display:inline-block;margin-top:2.2rem;padding:.96rem 2.5rem;text-decoration:none;
         font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:#0b0b0c;
         background:var(--gold2);border:1px solid var(--gold2);border-radius:999px;
         box-shadow:0 14px 38px -14px rgba(230,201,128,.6);
         transition:transform .3s ease,box-shadow .3s ease,background .3s ease}
-.rhero-cta:hover{transform:translateY(-2px);background:#f0dcae;
+.pg-hero-cta:hover{transform:translateY(-2px);background:#f0dcae;
         box-shadow:0 20px 46px -14px rgba(230,201,128,.75)}
-.rhero-scroll{position:absolute;left:0;right:0;bottom:1.5rem;margin:0;text-align:center;
+.pg-hero-scroll{position:absolute;left:0;right:0;bottom:1.5rem;margin:0;text-align:center;
         font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--mut);opacity:.72}
-.rhero-scroll i{font-style:normal;display:inline-block;margin-left:.45em;color:var(--gold)}
+.pg-hero-scroll i{font-style:normal;display:inline-block;margin-left:.45em;color:var(--gold)}
 
-/* ---------- section head ---------- */
-.rsec{text-align:center;margin:0 auto 1.9rem}
-.rsec-eyebrow{margin:0;font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.9}
-.rsec-h{margin:.7rem 0 0;font-size:clamp(1.15rem,3.4vw,1.7rem);font-weight:400;letter-spacing:.16em;
+/* ======== shared section chrome ======== */
+.pg-sec{padding:5rem 0;position:relative}
+.pg-wrap{max-width:1120px;margin:0 auto;padding:0 1.2rem;position:relative;z-index:2}
+.pg-head{text-align:center;margin:0 auto 2.6rem;max-width:46rem}
+.pg-eyebrow{margin:0;font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);opacity:.9}
+.pg-h{margin:.8rem 0 0;font-size:clamp(1.5rem,4.5vw,2.6rem);font-weight:400;letter-spacing:.08em;
+        text-transform:uppercase;color:var(--ink);line-height:1.25}
+.pg-h em{font-style:normal;color:var(--gold2)}
+.pg-sub{margin:1rem auto 0;max-width:38rem;color:var(--mut);font-size:.95rem;font-style:italic;line-height:1.7}
+.pg-rule{display:block;width:62px;height:1px;margin:1.4rem auto 0;
+        background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ======== reusable image placeholder ========
+   Swap any .ph <div> for <img class="ph <same-ratio> ph-img" src="...">.
+   Ratios: .ph-169 (16:9) .ph-43 (4:3) .ph-34 (3:4) .ph-11 (1:1) .ph-219 (21:9) */
+.ph{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+        width:100%;border-radius:12px;background:linear-gradient(160deg,#2a1215,#120c0d 72%);
+        border:1px solid rgba(201,168,106,.32)}
+.ph span{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold2);opacity:.9;
+        border:1px dashed rgba(201,168,106,.5);border-radius:999px;padding:.45rem 1.1rem;background:rgba(8,8,10,.45)}
+.ph-169{aspect-ratio:16/9}
+.ph-43{aspect-ratio:4/3}
+.ph-34{aspect-ratio:3/4}
+.ph-11{aspect-ratio:1/1}
+.ph-219{aspect-ratio:21/9}
+img.ph-img{object-fit:cover;padding:0}
+img.ph-img span{display:none}
+/* category label pinned over a story/occasion slot */
+.ph-tag{position:absolute;left:.9rem;bottom:.8rem;z-index:2;font-size:.6rem;letter-spacing:.2em;
+        text-transform:uppercase;color:#f0d896;background:rgba(9,9,10,.6);
+        border:1px solid rgba(201,168,106,.45);border-radius:999px;padding:.32rem .75rem}
+
+/* ======== signature stories: asymmetric editorial grid ======== */
+.stories-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+.st{display:block;position:relative}
+a.st{transition:transform .35s ease}
+a.st:hover{transform:translateY(-3px)}
+@media(min-width:640px){
+  .stories-grid{grid-template-columns:repeat(2,1fr)}
+  .st-wide{grid-column:span 2}
+}
+@media(min-width:1024px){
+  .stories-grid{grid-template-columns:repeat(6,1fr);gap:1.15rem}
+  .st-a{grid-column:span 4}
+  .st-b{grid-column:span 2}
+  .st-c,.st-d,.st-e{grid-column:span 2}
+  .st-f{grid-column:span 6}
+}
+
+/* ======== occasions ======== */
+.occ-grid{display:grid;grid-template-columns:1fr;gap:1.15rem}
+@media(min-width:640px){.occ-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.occ-grid{grid-template-columns:repeat(4,1fr)}}
+.occ{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;
+        overflow:hidden;transition:border-color .3s ease,transform .3s ease,box-shadow .3s ease}
+a.occ:hover{border-color:rgba(201,168,106,.6);transform:translateY(-3px);
+        box-shadow:0 18px 44px -20px rgba(0,0,0,.9),0 0 22px rgba(201,168,106,.12)}
+.occ .ph{border:0;border-radius:0;border-bottom:1px solid var(--line)}
+.occ h3{margin:0;padding:1.1rem 1.2rem 1.25rem;font-size:1.02rem;font-weight:400;
+        letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+a.occ:hover h3{color:var(--gold2)}
+
+/* ======== craft ======== */
+.craft{background:#0d0d0f;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.craft-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin-top:2.6rem}
+@media(min-width:640px){.craft-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.craft-grid{grid-template-columns:repeat(4,1fr)}}
+.craft-card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:1.7rem 1.4rem;transition:border-color .3s ease,transform .3s ease}
+.craft-card:hover{border-color:rgba(201,168,106,.5);transform:translateY(-3px)}
+.craft-ico{display:inline-flex;padding:.7rem;border-radius:999px;color:var(--gold);
+        border:1px solid rgba(201,168,106,.45);background:rgba(201,168,106,.07);margin-bottom:1.1rem}
+.craft-ico svg{width:1.4rem;height:1.4rem}
+.craft-card h3{margin:0 0 .55rem;font-size:1rem;font-weight:400;letter-spacing:.1em;
         text-transform:uppercase;color:var(--ink)}
-.rsec-sup{margin:.75rem 0 0;color:var(--mut);font-size:.9rem;font-style:italic}
+.craft-card p{margin:0;font-size:.86rem;line-height:1.65;color:var(--mut)}
 
-/* ---------- filter bar ---------- */
-.filters{display:flex;gap:.6rem .95rem;justify-content:center;flex-wrap:wrap;margin:0 0 2rem}
-.filters button{cursor:pointer;color:var(--mut);font-family:var(--serif);font-size:.78rem;
-        letter-spacing:.16em;text-transform:uppercase;background:transparent;border:0;
-        border-bottom:2px solid transparent;padding:.5rem .15rem;
-        transition:color .25s ease,border-color .25s ease}
-.filters button:hover{color:var(--ink)}
-.filters button.on{color:var(--gold2);border-bottom-color:var(--gold)}
+/* ======== albums ======== */
+.alb-grid{display:grid;grid-template-columns:1fr;gap:1.15rem}
+@media(min-width:640px){.alb-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.alb-grid{grid-template-columns:repeat(5,1fr);gap:1rem}}
+.alb{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.alb .ph{border:0;border-radius:0;border-bottom:1px solid var(--line)}
+.alb-in{padding:1.1rem 1.15rem 1.3rem}
+.alb-in h3{margin:0 0 .45rem;font-size:.95rem;font-weight:400;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--gold2)}
+.alb-in p{margin:0;font-size:.82rem;line-height:1.6;color:var(--mut);font-style:italic}
 
-/* ---------- photo / album cards ---------- */
-main{max-width:var(--rx-shell);margin:0 auto;padding:3.4rem 1.25rem 4.2rem}
-.pgrid{display:grid;grid-template-columns:1fr;gap:1.15rem}
-@media (min-width:560px){.pgrid{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:900px){.pgrid{grid-template-columns:repeat(3,1fr)}}
-.pc{position:relative;display:block;width:100%;padding:0;margin:0;text-align:left;cursor:pointer;
-      font-family:var(--serif);color:inherit;border-radius:12px;overflow:hidden;
-      border:1px solid var(--line);background:var(--card);aspect-ratio:4/3;
-      box-shadow:0 10px 28px -12px rgba(0,0,0,.7);
-      transition:border-color .35s ease,box-shadow .35s ease}
-.pc:hover{border-color:#3a3a3e;box-shadow:0 18px 40px -16px rgba(0,0,0,.85)}
-.pc .th{display:block;width:100%;height:100%;object-fit:cover;
-      transition:transform .5s cubic-bezier(.22,.61,.36,1)}
-.pc:hover .th{transform:scale(1.04)}
-.pc .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.14) 0%,
-      rgba(0,0,0,0) 34%,rgba(0,0,0,.82) 100%)}
-.pc .zoom{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3.2rem;height:3.2rem;
-      border-radius:50%;display:grid;place-items:center;background:rgba(201,168,106,.94);
-      color:#0b0b0c;opacity:0;transition:opacity .3s ease,transform .3s ease;
-      box-shadow:0 6px 18px rgba(0,0,0,.45)}
-.pc:hover .zoom{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
-.pc .cat{position:absolute;top:.7rem;left:.7rem;font-size:.6rem;letter-spacing:.16em;
-      text-transform:uppercase;color:#e9d9b5;background:rgba(10,10,10,.55);
-      border:1px solid rgba(201,168,106,.5);padding:.26rem .55rem;border-radius:999px}
-.pc .ttl{position:absolute;left:.85rem;right:.85rem;bottom:.72rem;color:var(--ink);
-      font-size:.95rem;line-height:1.25}
-.pc .ttl small{display:block;color:var(--gold);font-size:.66rem;letter-spacing:.12em;
-      text-transform:uppercase;margin-bottom:.22rem}
-.pc .letter{display:grid;place-items:center;position:absolute;inset:0;font-size:clamp(2.6rem,9vw,4.2rem);
-      font-weight:400;letter-spacing:.06em;color:rgba(201,168,106,.5)}
+/* ======== booking ======== */
+.book{background:radial-gradient(60% 60% at 50% 28%,rgba(74,18,22,.5),transparent 70%),#08080a;
+        border-top:1px solid var(--line);text-align:center}
+.book h2{margin:.8rem 0 0;font-size:clamp(1.4rem,4.2vw,2.4rem);font-weight:400;line-height:1.35;
+        letter-spacing:.06em;text-transform:uppercase;color:#f6f1e6}
+.book h2 em{font-style:normal;color:var(--gold2)}
+.book p{margin:1rem auto 0;max-width:36rem;color:var(--mut);font-style:italic;line-height:1.7}
+.book-btns{display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;margin-top:2.2rem}
+.book-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.95rem 2.2rem;border-radius:999px;
+        font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
+        transition:transform .3s ease,box-shadow .3s ease,background .3s ease,border-color .3s ease}
+.book-gold{color:#0b0b0c;background:var(--gold2);border:1px solid var(--gold2);
+        box-shadow:0 14px 38px -14px rgba(230,201,128,.6)}
+.book-gold:hover{transform:translateY(-2px);background:#f0dcae}
+.book-ghost{color:#fff;background:rgba(24,24,27,.35);border:1px solid rgba(201,168,106,.55)}
+.book-ghost:hover{transform:translateY(-2px);border-color:var(--gold2)}
 
-/* ---------- owner note (kept from the existing gallery pages) ---------- */
-.onote{max-width:760px;margin:0 auto 2.2rem;padding:1.1rem 1.35rem;border-radius:12px;
-      border:1px dashed var(--line);background:linear-gradient(180deg,rgba(201,168,106,.03),transparent);
-      color:var(--mut);font-size:.86rem;line-height:1.7;text-align:center}
-.onote b{color:var(--gold2);font-weight:400}
-.onote code{color:var(--gold);font-family:var(--serif)}
-
-/* ---------- premium empty state ---------- */
-.empty{text-align:center;color:var(--mut);padding:3.4rem 1.4rem;border:1px dashed var(--line);
-      border-radius:14px;background:linear-gradient(180deg,rgba(201,168,106,.035),transparent)}
-.empty .emark{display:block;font-size:.58rem;letter-spacing:.42em;text-transform:uppercase;
-      color:var(--gold);opacity:.85;margin-bottom:.95rem}
-.empty strong{display:block;color:var(--gold2);font-weight:400;font-size:1.08rem;letter-spacing:.14em;
-      text-transform:uppercase;margin-bottom:.8rem}
-.empty p{margin:0 auto;max-width:32rem;font-size:.9rem;line-height:1.75}
-
-footer{text-align:center;padding:1.6rem 1rem;color:#6e6a60;font-size:.85rem}
-.social{display:flex;gap:.7rem;justify-content:center;margin:0 0 1rem}
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:2rem 1rem;text-align:center;color:#6a6a6a;
+  font-size:.85rem;background:#060606}
+footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);font-weight:700}
+.social{display:flex;gap:.7rem;justify-content:center;margin:1rem 0 0}
 .social a{width:2.4rem;height:2.4rem;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;
   border:1px solid rgba(201,168,106,.35);color:#8a8a8a;transition:all .3s}
-.social a:hover{color:#0d0d0d;background:var(--gold);border-color:var(--gold);transform:translateY(-2px);
-  box-shadow:0 0 18px rgba(201,168,106,.45)}
+.social a:hover{color:#0d0d0d;background:var(--gold);border-color:var(--gold);transform:translateY(-2px)}
 .social svg{width:1.1rem;height:1.1rem;fill:currentColor}
-
-/* ---------- premium lightbox (same open/close API as the existing galleries) ---------- */
-.lightbox{display:none;position:fixed;inset:0;z-index:1600;align-items:center;justify-content:center;
-      padding:1.4rem;cursor:zoom-out;background:rgba(6,6,8,.97);
-      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.lightbox.open{display:flex}
-.lb-shell{position:relative;max-width:min(94vw,1200px);max-height:90vh;display:flex;
-      flex-direction:column;gap:.85rem}
-.lightbox img.lb-img{display:block;max-width:100%;max-height:82vh;border-radius:12px;
-      border:1px solid rgba(201,168,106,.34);box-shadow:0 50px 120px -30px rgba(0,0,0,.95);
-      background:#0d0d0d}
-.lb-cap{text-align:center;color:var(--ink);font-size:.92rem;line-height:1.4}
-.lb-cap small{display:block;color:var(--gold);font-size:.62rem;letter-spacing:.2em;
-      text-transform:uppercase;margin-bottom:.24rem}
-.lb-close{position:fixed;top:.9rem;right:1.3rem;width:2.6rem;height:2.6rem;border-radius:50%;
-      display:grid;place-items:center;font-size:1.2rem;line-height:1;color:var(--mut);
-      background:rgba(12,12,14,.7);border:1px solid var(--line);cursor:pointer;transition:.2s ease}
-.lb-close:hover{color:var(--ink);border-color:var(--gold);background:rgba(201,168,106,.12)}
-body.vlock,html.vlock{overflow:hidden}
 
 /* ---------- mobile polish ---------- */
 @media (max-width:640px){
-  .rhero-img{object-position:<?= $esc($photoHeroPosMb) ?>}
-  .rhero-in{padding-top:calc(var(--rx-head) + 2.1rem);padding-bottom:5.6rem}
-  .rhero-h{letter-spacing:.06em}
-  .rhero-eyebrow{font-size:.53rem;letter-spacing:.3em}
-  .rhero-sub{font-size:.97rem}
-  .rhero-cta{width:100%;max-width:19rem;padding:.92rem 1.4rem}
-  .rhero-rule{margin:1.15rem auto}
-  .rhero-scroll{letter-spacing:.3em}
-  main{padding-top:2.6rem}
-  .lightbox{padding:.9rem}
-  .lb-shell{max-height:88vh}
-  .lightbox img.lb-img{max-height:74vh}
+  .pg-hero-in{padding-top:calc(var(--rx-head) + 2.1rem);padding-bottom:5.6rem}
+  .pg-hero-h{letter-spacing:.06em}
+  .pg-hero-eyebrow{font-size:.53rem;letter-spacing:.3em}
+  .pg-hero-sub{font-size:.97rem}
+  .pg-hero-cta{width:100%;max-width:19rem;padding:.92rem 1.4rem}
+  .pg-hero-rule{margin:1.15rem auto}
+  .pg-hero-scroll{letter-spacing:.3em}
+  .pg-sec{padding:3.4rem 0}
+  .book-btns .book-btn{width:100%;max-width:19rem;justify-content:center}
 }
 @media (max-width:380px){
   .rbrand-name{font-size:1.08rem;letter-spacing:.1em}
   .rbrand-sub{font-size:.48rem;letter-spacing:.24em}
-  .filters button{font-size:.7rem;letter-spacing:.12em}
-  .rhero-sup{font-size:.78rem}
 }
-/* ======== end luxury nav + hero ======== */
 </style>
 <?php ds_contact_head(); ?>
 </head>
@@ -402,177 +316,182 @@ body.vlock,html.vlock{overflow:hidden}
   </div>
 </header>
 
-<!-- ======== PHOTOGRAPHY HERO ======== -->
-<section class="rhero" aria-labelledby="rhero-h">
-  <img class="rhero-img"
-       src="<?= $esc($photoHeroImage) ?>"
-       alt="Deepak Studios wedding photography"
-       width="1920" height="1080"
-       fetchpriority="high" decoding="async">
-  <span class="rhero-ov" aria-hidden="true"></span>
-  <span class="rhero-grain" aria-hidden="true"></span>
-  <div class="rhero-in">
-    <p class="rhero-eyebrow">DEEPAK STUDIOS <i>&bull;</i> PHOTOGRAPHY</p>
-    <span class="rhero-rule" aria-hidden="true"></span>
-    <h1 class="rhero-h" id="rhero-h">THE ART OF CAPTURING MOMENTS</h1>
-    <p class="rhero-sub">Timeless photographs. Authentic emotions. Beautifully preserved.</p>
-    <p class="rhero-sup">Explore our Wedding, Pre-Wedding, Engagement &amp; Celebration Photography.</p>
-    <a class="rhero-cta" id="rheroCta" href="#gallery">EXPLORE PHOTOGRAPHY</a>
+<!-- ======== HERO (bg photo set via $pgHeroImage; empty = maroon placeholder) ======== -->
+<section class="pg-hero" aria-label="Wedding photography">
+  <?php if ($pgHeroImage !== ''): ?>
+    <img style="position:absolute;inset:0;z-index:-3;width:100%;height:100%;object-fit:cover" src="<?= $esc($pgHeroImage) ?>"
+         alt="Deepak Studios wedding photography" fetchpriority="high" decoding="async">
+  <?php endif; ?>
+  <div class="pg-hero-bg" aria-hidden="true"></div>
+  <div class="pg-hero-ov" aria-hidden="true"></div>
+  <div class="pg-hero-in">
+    <p class="pg-hero-eyebrow">Deepak Studios</p>
+    <span class="pg-hero-rule" aria-hidden="true"></span>
+    <h1 class="pg-hero-h">The Art of Capturing Moments</h1>
+    <p class="pg-hero-sub">Every celebration has a story. We turn your moments into timeless memories.</p>
+    <div><span class="pg-hero-ph">Hero Image &mdash; Coming Soon</span></div>
+    <div><a class="pg-hero-cta" id="pgHeroCta" href="#portfolio">Explore Photography</a></div>
   </div>
-  <p class="rhero-scroll" aria-hidden="true">SCROLL TO EXPLORE <i>&#8595;</i></p>
+  <p class="pg-hero-scroll" aria-hidden="true">Scroll <i>&darr;</i></p>
 </section>
 
-<main id="gallery">
-  <div class="rsec">
-    <p class="rsec-eyebrow">PORTFOLIO</p>
-    <h2 class="rsec-h">OUR PHOTOGRAPHY</h2>
-    <p class="rsec-sup"><?= $photoCount ?> photograph<?= $photoCount === 1 ? '' : 's' ?> across <?= $albumCount ?> wedding albums.</p>
+<!-- ======== PORTFOLIO INTRO ======== -->
+<section class="pg-sec" id="portfolio" aria-label="Portfolio introduction">
+  <div class="pg-wrap">
+    <div class="pg-head">
+      <p class="pg-eyebrow">Our Portfolio</p>
+      <h2 class="pg-h">Every Frame Tells <em>a Love Story</em></h2>
+      <span class="pg-rule" aria-hidden="true"></span>
+      <p class="pg-sub">From heartfelt candid moments to timeless wedding portraits, every photograph preserves a piece of your story.</p>
+    </div>
   </div>
+</section>
 
-  <div class="filters" id="filters" role="tablist" aria-label="Photography category">
-    <?php foreach ($MAIN as $m): ?>
-      <button type="button" data-m="<?= $esc($m) ?>"
-              class="<?= $m === 'all' ? 'on' : '' ?>"><?= $esc($CATLABEL[$m]) ?></button>
-    <?php endforeach; ?>
+<!-- ======== SIGNATURE WEDDING STORIES (placeholders STORY-1..6) ======== -->
+<section class="pg-sec" style="padding-top:0" aria-label="Signature wedding stories">
+  <div class="pg-wrap">
+    <div class="stories-grid">
+      <!-- STORY-1: replace div with <img class="ph ph-169 ph-img" src="..." alt="Bride and Groom"> -->
+      <div class="st st-a"><div class="ph ph-169"><span>Coming Soon</span></div><span class="ph-tag">Bride &amp; Groom</span></div>
+      <!-- STORY-2: replace div with <img class="ph ph-34 ph-img" src="..." alt="Candid Moments"> -->
+      <div class="st st-b"><div class="ph ph-34"><span>Coming Soon</span></div><span class="ph-tag">Candid Moments</span></div>
+      <!-- STORY-3: replace div with <img class="ph ph-11 ph-img" src="..." alt="Wedding Rituals"> -->
+      <div class="st st-c"><div class="ph ph-11"><span>Coming Soon</span></div><span class="ph-tag">Wedding Rituals</span></div>
+      <!-- STORY-4: replace div with <img class="ph ph-11 ph-img" src="..." alt="Wedding Portraits"> -->
+      <div class="st st-d"><div class="ph ph-11"><span>Coming Soon</span></div><span class="ph-tag">Wedding Portraits</span></div>
+      <!-- STORY-5: replace div with <img class="ph ph-11 ph-img" src="..." alt="Family Emotions"> -->
+      <div class="st st-e"><div class="ph ph-11"><span>Coming Soon</span></div><span class="ph-tag">Family Emotions</span></div>
+      <!-- STORY-6: replace div with <img class="ph ph-219 ph-img" src="..." alt="Wedding Details"> -->
+      <div class="st st-f"><div class="ph ph-219"><span>Coming Soon</span></div><span class="ph-tag">Wedding Details</span></div>
+    </div>
   </div>
+</section>
 
-  <div class="onote">
-    <b>Kaise photos add karein (site owner):</b> apne photographs
-    <code>photos/prewedding/</code> ya <code>photos/wedding/&lt;album&gt;/</code> folder me
-    upload karein (BaoTa File Manager ya FTP). Files turant yahan aa jaati hain —
-    koi code change nahi, koi deploy nahi. Supported: <code>jpg, jpeg, png, webp, gif, avif</code>.
+<!-- ======== EXPLORE BY OCCASION (cards OCC-1..4) ======== -->
+<section class="pg-sec" style="background:#0d0d0f;border-top:1px solid var(--line);border-bottom:1px solid var(--line)" aria-label="Explore by occasion">
+  <div class="pg-wrap">
+    <div class="pg-head">
+      <p class="pg-eyebrow">Occasions</p>
+      <h2 class="pg-h">Explore By <em>Occasion</em></h2>
+      <span class="pg-rule" aria-hidden="true"></span>
+    </div>
+    <div class="occ-grid">
+      <!-- OCC-1: Wedding -> wedding.php -->
+      <a class="occ" href="wedding.php">
+        <!-- OCC-1 image: replace div with <img class="ph ph-169 ph-img" src="..." alt="Wedding"> -->
+        <div class="ph ph-169"><span>Coming Soon</span></div>
+        <h3>Wedding</h3>
+      </a>
+      <!-- OCC-2: Pre-Wedding -> prewedding.php -->
+      <a class="occ" href="prewedding.php">
+        <!-- OCC-2 image: replace div with <img class="ph ph-169 ph-img" src="..." alt="Pre-Wedding"> -->
+        <div class="ph ph-169"><span>Coming Soon</span></div>
+        <h3>Pre-Wedding</h3>
+      </a>
+      <!-- OCC-3: Haldi & Mehendi -> NO dedicated page yet (non-navigating until destination is configured) -->
+      <div class="occ">
+        <!-- OCC-3 image: replace div with <img class="ph ph-169 ph-img" src="..." alt="Haldi and Mehendi"> -->
+        <div class="ph ph-169"><span>Coming Soon</span></div>
+        <h3>Haldi &amp; Mehendi</h3>
+      </div>
+      <!-- OCC-4: Birthday & Celebrations -> NO dedicated page yet (non-navigating until destination is configured) -->
+      <div class="occ">
+        <!-- OCC-4 image: replace div with <img class="ph ph-169 ph-img" src="..." alt="Birthday and Celebrations"> -->
+        <div class="ph ph-169"><span>Coming Soon</span></div>
+        <h3>Birthday &amp; Celebrations</h3>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="pgrid" id="grid">
-    <?php foreach ($ITEMS as $it): ?>
-      <?php if ($it['type'] === 'photo'): ?>
-        <button type="button" class="pc"
-data-cat="<?= $esc($it['cat']) ?>"
-data-src="<?= $esc($it['src']) ?>"
-data-t="<?= $esc($it['t']) ?>"
-aria-label="View <?= $esc($it['t']) ?>">
-          <img class="th" loading="lazy" src="<?= $esc($it['src']) ?>" alt="<?= $esc($it['t']) ?>">
-          <span class="shade"></span>
-          <span class="zoom" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
-          <span class="cat"><?= $esc($CATLABEL[$it['cat']]) ?></span>
-          <span class="ttl"><small><?= $esc($it['meta']) ?></small><?= $esc($it['t']) ?></span>
-        </button>
-      <?php else: ?>
-        <a class="pc" href="<?= $esc($it['href']) ?>" data-cat="<?= $esc($it['cat']) ?>">
-          <span class="th" style="background:<?= $esc($it['tint']) ?>"></span>
-          <span class="shade"></span>
-          <span class="letter" aria-hidden="true"><?= $esc(strtoupper(basename($it['href'], '.php'))) ?></span>
-          <span class="cat">Wedding Album</span>
-          <span class="ttl"><small><?= $esc($it['meta']) ?></small><?= $esc($it['t']) ?></span>
-        </a>
-      <?php endif; ?>
-    <?php endforeach; ?>
+<!-- ======== OUR CRAFT & QUALITY ======== -->
+<section class="pg-sec" aria-label="Our craft and quality">
+  <div class="pg-wrap">
+    <div class="pg-head">
+      <p class="pg-eyebrow">Craft</p>
+      <h2 class="pg-h">The Art Behind <em>Every Frame</em></h2>
+      <span class="pg-rule" aria-hidden="true"></span>
+      <p class="pg-sub">Beautiful photography is more than a picture. It is the art of observing emotions, mastering light and preserving the moments that matter most.</p>
+    </div>
+    <div class="craft-grid">
+      <div class="craft-card">
+        <span class="craft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg></span>
+        <h3>Creative Composition</h3>
+        <p>Every frame is composed with intention — balanced, honest and built to last.</p>
+      </div>
+      <div class="craft-card">
+        <span class="craft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>
+        <h3>Professional Lighting</h3>
+        <p>Natural and crafted light, shaped patiently to flatter every face and venue.</p>
+      </div>
+      <div class="craft-card">
+        <span class="craft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg></span>
+        <h3>Candid Storytelling</h3>
+        <p>Unposed emotions and fleeting glances, captured quietly as they happen.</p>
+      </div>
+      <div class="craft-card">
+        <span class="craft-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span>
+        <h3>Premium Photo Finishing</h3>
+        <p>Careful retouching and colour grading that keeps skin real and moments vivid.</p>
+      </div>
+    </div>
   </div>
-</main>
+</section>
 
-<footer><div class="social">
+<!-- ======== WEDDING ALBUMS (covers ALBUM-A..E) ======== -->
+<section class="pg-sec" style="background:#0d0d0f;border-top:1px solid var(--line);border-bottom:1px solid var(--line)" aria-label="Wedding albums">
+  <div class="pg-wrap">
+    <div class="pg-head">
+      <p class="pg-eyebrow">Albums</p>
+      <h2 class="pg-h">Wedding <em>Albums</em></h2>
+      <span class="pg-rule" aria-hidden="true"></span>
+      <p class="pg-sub">Heirloom albums designed to be opened, shared and treasured for generations.</p>
+    </div>
+    <div class="alb-grid">
+      <!-- ALBUM-A: cover -> <img class="ph ph-34 ph-img" src="..."> | destination -> a.php (when ready) -->
+      <div class="alb"><div class="ph ph-34"><span>Coming Soon</span></div><div class="alb-in"><h3>Wedding Album A</h3><p>Album description — edit this text when the album is ready.</p></div></div>
+      <!-- ALBUM-B: cover -> <img class="ph ph-34 ph-img" src="..."> | destination -> b.php (when ready) -->
+      <div class="alb"><div class="ph ph-34"><span>Coming Soon</span></div><div class="alb-in"><h3>Wedding Album B</h3><p>Album description — edit this text when the album is ready.</p></div></div>
+      <!-- ALBUM-C: cover -> <img class="ph ph-34 ph-img" src="..."> | destination -> c.php (when ready) -->
+      <div class="alb"><div class="ph ph-34"><span>Coming Soon</span></div><div class="alb-in"><h3>Wedding Album C</h3><p>Album description — edit this text when the album is ready.</p></div></div>
+      <!-- ALBUM-D: cover -> <img class="ph ph-34 ph-img" src="..."> | destination -> d.php (when ready) -->
+      <div class="alb"><div class="ph ph-34"><span>Coming Soon</span></div><div class="alb-in"><h3>Wedding Album D</h3><p>Album description — edit this text when the album is ready.</p></div></div>
+      <!-- ALBUM-E: cover -> <img class="ph ph-34 ph-img" src="..."> | destination -> e.php (when ready) -->
+      <div class="alb"><div class="ph ph-34"><span>Coming Soon</span></div><div class="alb-in"><h3>Wedding Album E</h3><p>Album description — edit this text when the album is ready.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FINAL BOOKING ======== -->
+<section class="pg-sec book" aria-label="Book your wedding photography">
+  <div class="pg-wrap">
+    <p class="pg-eyebrow">Reserve Your Date</p>
+    <h2>Your Wedding Happens Once.<br><em>Your Photographs Last Forever.</em></h2>
+    <p>Let Deepak Studios capture your celebrations with creativity, care and timeless storytelling.</p>
+    <div class="book-btns">
+      <a class="book-btn book-gold" target="_blank" rel="noopener noreferrer" href="https://wa.me/919031700464?text=Hi%20Deepak%20Studios,%20I%20would%20like%20to%20inquire%20about%20a%20photoshoot...">Enquire on WhatsApp</a>
+      <a class="book-btn book-ghost" href="tel:+919031700464">Call Now</a>
+    </div>
+  </div>
+</section>
+
+<footer><span class="fname">Deepak Studios</span> &nbsp;·&nbsp; &copy; <?= date('Y') ?> All rights reserved.
+<div class="social">
 <a href="https://www.instagram.com/deepakstudiosofficial_/" target="_blank" rel="noopener noreferrer" aria-label="Deepak Studios on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
 <a href="https://www.facebook.com/deepakstudiosfotography" target="_blank" rel="noopener noreferrer" aria-label="Deepak Studios on Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
 <a href="https://www.youtube.com/@deepakstudiosfotography" target="_blank" rel="noopener noreferrer" aria-label="Deepak Studios on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-</div>&copy; <?= date('Y') ?> Deepak Studios. All rights reserved.</footer>
+</div></footer>
 
 <?php ds_contact_fab(); ?>
 
-<!-- ======== LIGHTBOX (same #lightbox / #lb-img contract as the existing galleries) ======== -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer">
-  <button type="button" class="lb-close" id="lb-close" aria-label="Close viewer">&#10005;</button>
-  <div class="lb-shell">
-    <img class="lb-img" id="lb-img" src="" alt="">
-    <p class="lb-cap" id="lb-cap"><small id="lb-cat"></small><span id="lb-t"></span></p>
-  </div>
-</div>
-
-<!-- ======== FILTER RENDER ======== -->
-<script>
-(function () {
-  'use strict';
-  var DATA = <?= json_encode($ITEMS, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
-  var LABELS = <?= json_encode($CATLABEL, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
-  var EMPTY = {
-    mark: 'COMING SOON',
-    head: 'This collection is being curated',
-    body: 'New photographs for this collection are in the edit. Meanwhile, explore the rest of the portfolio.'
-  };
-
-  var grid = document.getElementById('grid');
-  var cats = document.getElementById('filters');
-  if (!grid || !cats) return;
-
-  function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
-  function card(it) {
-    if (it.type === 'album') {
-      return '<a class="pc" href="' + esc(it.href) + '" data-cat="' + esc(it.cat) + '">'
-        + '<span class="th" style="background:' + esc(it.tint) + '"></span>'
-        + '<span class="shade"></span>'
-        + '<span class="letter" aria-hidden="true">' + esc(it.href.replace('.php', '').toUpperCase()) + '</span>'
-        + '<span class="cat">Wedding Album</span>'
-        + '<span class="ttl"><small>' + esc(it.meta) + '</small>' + esc(it.t) + '</span>'
-        + '</a>';
-    }
-    return '<button type="button" class="pc" data-cat="' + esc(it.cat) + '"'
-      + ' data-src="' + esc(it.src) + '" data-t="' + esc(it.t) + '"'
-      + ' aria-label="View ' + esc(it.t) + '">'
-      + '<img class="th" loading="lazy" src="' + esc(it.src) + '" alt="' + esc(it.t) + '">'
-      + '<span class="shade"></span>'
-      + '<span class="zoom" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>'
-      + '<span class="cat">' + esc(LABELS[it.cat] || it.cat) + '</span>'
-      + '<span class="ttl"><small>' + esc(it.meta) + '</small>' + esc(it.t) + '</span>'
-      + '</button>';
-  }
-
-  function render() {
-    var rows = DATA.filter(function (it) { return main === 'all' || it.cat === main; });
-    if (!rows.length) {
-      grid.innerHTML = '<div class="empty" style="grid-column:1/-1">'
-        + '<span class="emark">' + EMPTY.mark + '</span>'
-        + '<strong>' + EMPTY.head + '</strong>'
-        + '<p>' + EMPTY.body + '</p></div>';
-      return;
-    }
-    grid.innerHTML = rows.map(card).join('');
-  }
-
-  var main = 'all';
-  cats.addEventListener('click', function (e) {
-    var b = e.target.closest ? e.target.closest('button') : null;
-    if (!b) return;
-    e.preventDefault();
-    e.stopPropagation();
-    main = b.getAttribute('data-m');
-    Array.prototype.forEach.call(cats.querySelectorAll('button'), function (x) { x.classList.remove('on'); });
-    b.classList.add('on');
-    render();
-  });
-
-  render();
-})();
-</script>
-
-<!-- ======== LIGHTBOX + PREMIUM NAV / HERO CTA ======== -->
+<!-- ======== NAV + HERO CTA ======== -->
 <script>
 (function () {
   'use strict';
   var nav    = document.getElementById('rnav');
   var burger = document.getElementById('rburger');
   var menu   = document.getElementById('rmobmenu');
-  var cta    = document.getElementById('rheroCta');
-  var grid   = document.getElementById('grid');
-  var box    = document.getElementById('lightbox');
-  var lbImg  = document.getElementById('lb-img');
-  var lbT    = document.getElementById('lb-t');
-  var lbCat  = document.getElementById('lb-cat');
-  var lbX    = document.getElementById('lb-close');
-  var lastScroll = 0;
+  var cta    = document.getElementById('pgHeroCta');
 
   if (nav) {
     var onScroll = function () { nav.classList.toggle('solid', (window.pageYOffset || 0) > 24); };
@@ -599,7 +518,7 @@ aria-label="View <?= $esc($it['t']) ?>">
 
   if (cta) {
     cta.addEventListener('click', function (e) {
-      var target = document.getElementById('gallery');
+      var target = document.getElementById('portfolio');
       if (!target) return;
       e.preventDefault();
       e.stopPropagation();
@@ -608,54 +527,6 @@ aria-label="View <?= $esc($it['t']) ?>">
         window.scrollTo({ top: top, behavior: 'smooth' });
       } else {
         window.scrollTo(0, top);
-      }
-    });
-  }
-
-  /* ---- lightbox: same behaviour as the existing galleries (open, Esc, backdrop, X) ---- */
-  if (box && lbImg) {
-    window.openLightbox = function (src) {
-      if (!src) return;
-      lastScroll = (window.pageYOffset || document.documentElement.scrollTop) || 0;
-      lbImg.src = src;
-      lbImg.alt = (lbT.textContent || 'Photograph');
-      box.classList.add('open');
-      document.body.classList.add('vlock');
-      document.documentElement.classList.add('vlock');
-      window.scrollTo(0, 0);
-      if (lbX) lbX.focus();
-    };
-    window.closeLightbox = function () {
-      if (!box.classList.contains('open')) return;
-      box.classList.remove('open');
-      lbImg.src = '';
-      document.body.classList.remove('vlock');
-      document.documentElement.classList.remove('vlock');
-      window.scrollTo(0, lastScroll);
-    };
-
-    if (grid) {
-      grid.addEventListener('click', function (e) {
-        var c = e.target.closest ? e.target.closest('.pc[data-src]') : null;
-        if (!c) return;
-        e.preventDefault();
-        e.stopPropagation();
-        var t = c.getAttribute('data-t') || 'Photograph';
-        if (lbT) lbT.textContent = t;
-        if (lbCat) lbCat.textContent = 'Deepak Studios';
-        window.openLightbox(c.getAttribute('data-src'));
-      });
-    }
-
-    box.addEventListener('click', function (e) {
-      if (e.target === box || e.target.closest('.lb-shell') === null) window.closeLightbox();
-    });
-    if (lbX) lbX.addEventListener('click', function (e) { e.preventDefault(); e.stopPropagation(); window.closeLightbox(); });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && box.classList.contains('open')) {
-        e.preventDefault();
-        window.closeLightbox();
       }
     });
   }
