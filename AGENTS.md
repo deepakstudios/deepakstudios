@@ -247,7 +247,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.25.0
+1.26.0
 ```
 
 ### Semver rules
@@ -266,6 +266,79 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.26.0 - 2026-11-04
+
+- **Photography page rebuilt as a client-wise portfolio (`photography.php` only,
+  plus the client folder placeholder).** The hierarchy is now
+  client story -> that client's events -> that event's photographs. A common
+  event gallery that mixes clients is impossible by construction: every event
+  is nested inside its client folder and every URL carries both slugs.
+- **Auto-scanned client stories.** `photos/photography/clients/<client>/<event>/`
+  is scanned on every request. A new client or event appears by creating a
+  folder and uploading images — no HTML/PHP edit. Folder names must be URL-safe
+  slugs (`A-Z a-z 0-9 - _`, starting with a letter or number); anything else is
+  ignored. Only direct children are scanned, and `$_GET` values are matched
+  against the scanned array, so no request value reaches a filesystem path.
+- **Client cards** show the cover, the approved story title (or the folder name
+  title-cased), the main event category, event count, total photograph count and
+  **VIEW STORY**. Layout is 1 column on phones, 2 at 620px, 3 at 1024px.
+- **Client story view** (`?client=<client>`) has the Home / Photography / Client
+  Story breadcrumb, the client title, a large cover, an optional intro from
+  `$CLIENT_META`, live event/photo counts, and only that client's event cards
+  (cover, event name, photograph count, **VIEW GALLERY**).
+- **Event gallery** (`?client=<client>&event=<event>`) shows only that client's
+  photographs for that event, in a 1/2/3-column masonry that keeps every
+  image's intrinsic width/height — no cropping of photographs. Images are
+  lazy-loaded and every path is per-segment URL-encoded and HTML-escaped.
+- **Covers never cross clients.** `cover.webp` (or any `cover.*` image) is used
+  when present in the client or event folder, otherwise the first photograph of
+  that same client/event is used. `cover.*` is excluded from the photo list so
+  it is never counted twice. Stock, demo and AI images are never introduced.
+- **Filters come from real events.** `$EVENT_CATEGORY` maps event folders to
+  Wedding / Pre-Wedding / Celebration; only categories with clients render and
+  each filter shows the number of matching client stories. A story with both
+  wedding and pre-wedding events appears under both filters. Empty event
+  folders are dropped before counts are computed, so no empty gallery or
+  misleading count is possible.
+- **The four existing Mehendi/Wedding photographs are still unassigned and
+  untouched.** `photos/photography/Mehendi/*` and `photos/photography/Wedding/*`
+  (plus any future top-level event folder) appear in an honest "Awaiting Client
+  Assignment" strip rather than a made-up client story. To attach one, add a row
+  to `$PHOTO_ASSIGNMENTS` (`file => ['client' => ..., 'event' => ...]`); the file
+  is not moved or renamed, disappears from the strip once the mapping resolves,
+  and appears in that client's event. No client was invented and no sample
+  client folder was committed.
+- **Lightbox:** close button, backdrop click and Escape close; previous/next
+  buttons and ArrowLeft/ArrowRight navigate; the caption shows the event
+  category, the photograph title (when one is staged) and `n / total`. It keeps
+  the existing scroll lock and focus restoration. The navigation list is built
+  from the live DOM of the clicked grid, so it always matches the gallery.
+- **Bottom enquiry section** ("YOUR STORY COULD BE NEXT" / "BOOK YOUR
+  PHOTOGRAPHER") reuses the shared contact implementation: the same WhatsApp
+  link, Call Now pill and mobile contact bar from `lib_contact.php`.
+- **Navigation/theme preserved.** The existing premium navbar, hero treatment,
+  dark black/charcoal + champagne-gold palette, typography, footer and contact
+  UI are reused. No other page was modified.
+- **Deployment:** `photos/` is git-ignored. Only
+  `photos/photography/clients/.gitkeep` was added (force-added) so the deployed
+  client root exists; no other photograph was added, moved, renamed or deleted.
+- **Verified:** `php -l` clean; main page renders the empty state plus the four
+  unassigned photographs with 0 console errors; with temporary client/event
+  folders (removed afterwards) the main page produced 3 cards, filters All 3 /
+  Wedding 1 / Pre-Wedding 2 / Celebration 1, a client story showed only its 4
+  events and 5 photographs, and the Wedding gallery showed exactly its own 2
+  photographs. Covers resolved to the folder `cover.webp` and fell back to the
+  same client's first photograph when absent; a test mapping moved the Mehendi
+  photo into that client's Mehendi event (2 photographs) and removed it from the
+  strip. Lightbox captions showed the event name and `n / total`; next/prev,
+  ArrowLeft/ArrowRight, Escape, X and backdrop all worked. Rendered aspect
+  ratios matched the sources exactly (0.714 and 0.667). No horizontal overflow
+  at 390/768/1200px; client cards and event cards were 1/2/3 columns, event
+  photographs 1/2/3 columns; the mobile contact bar was visible at 390px and
+  hidden at 768px. Unknown client/event slugs return 404.
+- **Files changed:** `photography.php`, `Version.txt`, `AGENTS.md`, plus the new
+  empty placeholder `photos/photography/clients/.gitkeep`.
 
 ## 1.25.0 - 2026-11-04
 
