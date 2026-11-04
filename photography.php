@@ -7,19 +7,24 @@
  * are the existing shared implementations (navbar CSS copied from the other
  * premium pages; floating controls come from lib_contact.php).
  *
- * IMAGE PLACEHOLDERS — every photograph on this page is a "COMING SOON"
- * placeholder. To add a real photograph, replace the placeholder <div>
- * with an <img> that keeps the SAME aspect-ratio class, e.g.:
+ * IMAGE PLACEHOLDERS — the hero, story, occasion and album slots are
+ * "COMING SOON" placeholders. To add a real photograph there, replace the
+ * placeholder <div> with an <img> that keeps the SAME aspect-ratio class, e.g.:
  *
  *   <div class="ph ph-43"><span>COMING SOON</span></div>
  *      becomes
  *   <img class="ph ph-43 ph-img" src="YOUR-PHOTO.jpg" alt="...">
+ *
+ * The "Selected Photographs" gallery (#gallery) is different: it is built
+ * automatically from photos/photography/Mehendi/ and photos/photography/Wedding/,
+ * so uploading files there needs no code change.
  *
  * Slots:
  *   HERO visual .....: set --pg-hero-img below (url) or leave empty
  *   STORY 1..6 ......: search STORY-1 .. STORY-6
  *   OCCASION 1..4 ...: search OCC-1 .. OCC-4
  *   ALBUM A..E ......: search ALBUM-A .. ALBUM-E
+ *   GALLERY .........: photos/photography/Mehendi + Wedding (auto-scanned)
  */
 
 declare(strict_types=1);
@@ -42,6 +47,113 @@ $esc = static function (string $v): string {
  * elegant dark-maroon placeholder with the COMING SOON label.
  * ===================================================================== */
 $pgHeroImage = '';
+
+/* =====================================================================
+ * GALLERY FOLDERS - Mehendi + Wedding photographs (auto-scanned)
+ * ------------------------------------------------------------------------
+ * Drop new image files into these folders (BaoTa File Manager / FTP) and
+ * they appear in the "Selected Photographs" gallery with no code change.
+ * Captions are keyed by the lower-case filename; any future upload that is
+ * not listed still appears with the group's fallback label.
+ * ===================================================================== */
+$PHOTO_GROUPS = [
+    'mehendi' => [
+        'dir'      => 'photos/photography/Mehendi',
+        'label'    => 'Mehendi',
+        'fallback' => 'Mehendi Photograph',
+        'titles'   => [
+            'mehendi.webp' => 'Mehendi Ceremony',
+        ],
+    ],
+    'wedding' => [
+        'dir'      => 'photos/photography/Wedding',
+        'label'    => 'Wedding',
+        'fallback' => 'Wedding Photograph',
+        'titles'   => [
+            'bride.webp'  => 'Bridal Portrait',
+            'bride2.webp' => 'Bridal Portrait',
+            'couple.webp' => 'Wedding Couple',
+        ],
+    ],
+];
+
+$IMAGE_EXT = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+
+/** List the image files in one folder, sorted naturally, hidden files skipped. */
+$scanFolder = static function (string $dir) use ($IMAGE_EXT): array {
+    if (!is_dir($dir)) {
+        return [];
+    }
+    $files = @scandir($dir);
+    if ($files === false) {
+        return [];
+    }
+    $out = [];
+    foreach ($files as $file) {
+        if ($file === '.' || $file === '..' || $file[0] === '.') {
+            continue;
+        }
+        if (!is_file($dir . '/' . $file)) {
+            continue;
+        }
+        if (!in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), $IMAGE_EXT, true)) {
+            continue;
+        }
+        $out[] = $file;
+    }
+    sort($out, SORT_NATURAL | SORT_FLAG_CASE);
+    return $out;
+};
+
+/** Intrinsic image dimensions, so a card can keep the true aspect ratio. */
+$imageSize = static function (string $path): array {
+    $info = @getimagesize($path);
+    return $info ? [(int) $info[0], (int) $info[1]] : [0, 0];
+};
+
+/* =====================================================================
+ * GALLERY DATA - one entry per photograph, built from the folders above.
+ * ===================================================================== */
+$ITEMS = [];
+$CATCOUNT = [];
+foreach ($PHOTO_GROUPS as $cat => $group) {
+    $files = $scanFolder(__DIR__ . '/' . $group['dir']);
+    $CATCOUNT[$cat] = count($files);
+    foreach ($files as $file) {
+        [$w, $h] = $imageSize(__DIR__ . '/' . $group['dir'] . '/' . $file);
+        $ITEMS[] = [
+            'cat'  => $cat,
+            'meta' => $group['label'],
+            'src'  => $group['dir'] . '/' . rawurlencode($file),
+            't'    => $group['titles'][strtolower($file)] ?? $group['fallback'],
+            'w'    => $w,
+            'h'    => $h,
+        ];
+    }
+}
+$photoCount = count($ITEMS);
+$CATCOUNT['all'] = $photoCount;
+$CATLABEL = [
+    'all'     => 'All',
+    'mehendi' => 'Mehendi',
+    'wedding' => 'Wedding',
+];
+$MAIN = array_keys($CATLABEL);
+
+/** Live summary line, e.g. "4 photographs — 1 Mehendi · 3 Wedding". */
+$countParts = [];
+foreach ($PHOTO_GROUPS as $cat => $group) {
+    $countParts[] = $CATCOUNT[$cat] . ' ' . $group['label'];
+}
+$countSummary = $photoCount . ' photograph' . ($photoCount === 1 ? '' : 's')
+    . ($countParts ? ' — ' . implode(' · ', $countParts) : '');
+
+/** Per-filter summary text, kept in sync with the scanned folders. */
+$SUMMARIES = ['all' => $countSummary];
+foreach ($PHOTO_GROUPS as $cat => $group) {
+    $n = $CATCOUNT[$cat];
+    $SUMMARIES[$cat] = $n . ' photograph' . ($n === 1 ? '' : 's') . ' in ' . $group['label'];
+}
 
 // Shared "Call Now" + WhatsApp floating contact UI (identical to the home page).
 require_once __DIR__ . '/lib_contact.php';
@@ -239,6 +351,78 @@ a.occ:hover h3{color:var(--gold2)}
         text-transform:uppercase;color:var(--gold2)}
 .alb-in p{margin:0;font-size:.82rem;line-height:1.6;color:var(--mut);font-style:italic}
 
+/* ======== selected photographs gallery ========
+   Scans photos/photography/Mehendi + Wedding. Cards keep each photo's own
+   aspect ratio via intrinsic width/height, so portraits are never cropped. */
+.pg-gallery{border-top:1px solid var(--line)}
+.pg-filters{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;justify-content:center;
+        margin:0 0 2.4rem}
+.pg-filters button{cursor:pointer;color:var(--mut);font-family:var(--serif);
+        font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+        background:transparent;border:0;border-bottom:2px solid transparent;
+        padding:.5rem .15rem;transition:color .25s ease,border-color .25s ease}
+.pg-filters button .fc{color:var(--gold);font-size:.62rem;letter-spacing:.1em;
+        margin-left:.4em;opacity:.8}
+.pg-filters button:hover{color:var(--ink)}
+.pg-filters button.on{color:var(--gold2);border-bottom-color:var(--gold)}
+.pg-filters button.on .fc{opacity:1}
+.pg-grid{columns:1;column-gap:1.15rem}
+@media(min-width:640px){.pg-grid{columns:2}}
+@media(min-width:1024px){.pg-grid{columns:3}}
+.pcard{position:relative;display:block;width:100%;margin:0 0 1.15rem;padding:0;
+        text-align:left;font-family:var(--serif);color:inherit;background:var(--card);
+        border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:zoom-in;
+        break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;
+        box-shadow:0 12px 32px -16px rgba(0,0,0,.85);
+        transition:border-color .35s ease,box-shadow .35s ease,transform .35s ease}
+.pcard:hover{border-color:rgba(201,168,106,.6);
+        box-shadow:0 20px 46px -18px rgba(0,0,0,.9),0 0 22px rgba(201,168,106,.12)}
+.pcard img{display:block;width:100%;height:auto;
+        transition:transform .6s cubic-bezier(.22,.61,.36,1)}
+.pcard:hover img{transform:scale(1.03)}
+.pcard-shade{position:absolute;inset:0;pointer-events:none;
+        background:linear-gradient(180deg,rgba(0,0,0,.1) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,.82) 100%)}
+.pcard-cat{position:absolute;top:.75rem;left:.75rem;font-size:.56rem;letter-spacing:.2em;
+        text-transform:uppercase;color:#f0d896;background:rgba(9,9,10,.62);
+        border:1px solid rgba(201,168,106,.45);border-radius:999px;padding:.3rem .7rem}
+.pcard-ttl{position:absolute;left:.95rem;right:.95rem;bottom:.85rem;color:var(--ink);
+        font-size:.95rem;line-height:1.3;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.pcard-zoom{position:absolute;top:50%;left:50%;width:3rem;height:3rem;border-radius:50%;
+        display:grid;place-items:center;background:rgba(230,201,128,.94);color:#0b0b0c;
+        opacity:0;transform:translate(-50%,-50%) scale(.92);
+        transition:opacity .3s ease,transform .3s ease;
+        box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.pcard:hover .pcard-zoom,.pcard:focus-visible .pcard-zoom{opacity:1;
+        transform:translate(-50%,-50%) scale(1)}
+.pcard-zoom svg{width:1.15rem;height:1.15rem}
+.pcard[hidden]{display:none}
+.pg-empty{column-span:all;text-align:center;color:var(--mut);padding:3.2rem 1.4rem;
+        border:1px dashed var(--line);border-radius:14px;
+        background:linear-gradient(180deg,rgba(201,168,106,.035),transparent)}
+.pg-empty strong{display:block;color:var(--gold2);font-weight:400;font-size:1rem;
+        letter-spacing:.16em;text-transform:uppercase;margin-bottom:.7rem}
+.pg-empty p{margin:0 auto;max-width:32rem;font-size:.86rem;line-height:1.7;font-style:italic}
+
+/* ======== lightbox (existing #lightbox contract: open/close, Esc, backdrop, X) ======== */
+.lightbox{display:none;position:fixed;inset:0;z-index:1600;align-items:center;
+        justify-content:center;padding:1.4rem;cursor:zoom-out;background:rgba(6,6,8,.97);
+        backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.lightbox.open{display:flex}
+.lb-shell{position:relative;max-width:min(94vw,1200px);max-height:90vh;display:flex;
+        flex-direction:column;gap:.85rem;cursor:default}
+.lightbox img.lb-img{display:block;max-width:100%;max-height:82vh;border-radius:12px;
+        border:1px solid rgba(201,168,106,.34);box-shadow:0 50px 120px -30px rgba(0,0,0,.95);
+        background:#0d0d0d}
+.lb-cap{text-align:center;color:var(--ink);font-size:.92rem;line-height:1.4;margin:0}
+.lb-cap small{display:block;color:var(--gold);font-size:.62rem;letter-spacing:.2em;
+        text-transform:uppercase;margin-bottom:.24rem}
+.lb-close{position:fixed;top:.9rem;right:1.3rem;width:2.6rem;height:2.6rem;border-radius:50%;
+        display:grid;place-items:center;font-size:1.2rem;line-height:1;color:var(--mut);
+        background:rgba(12,12,14,.7);border:1px solid var(--line);cursor:pointer;
+        transition:color .2s ease,border-color .2s ease,background .2s ease}
+.lb-close:hover{color:var(--ink);border-color:var(--gold);background:rgba(201,168,106,.12)}
+body.vlock,html.vlock{overflow:hidden}
+
 /* ======== booking ======== */
 .book{background:radial-gradient(60% 60% at 50% 28%,rgba(74,18,22,.5),transparent 70%),#08080a;
         border-top:1px solid var(--line);text-align:center}
@@ -367,6 +551,47 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
   </div>
 </section>
 
+<!-- ======== SELECTED PHOTOGRAPHS (scanned from photos/photography/Mehendi + Wedding) ======== -->
+<section class="pg-sec pg-gallery" id="gallery" aria-label="Selected photographs">
+  <div class="pg-wrap">
+    <div class="pg-head">
+      <p class="pg-eyebrow">Gallery</p>
+      <h2 class="pg-h">Selected <em>Photographs</em></h2>
+      <span class="pg-rule" aria-hidden="true"></span>
+      <p class="pg-sub" id="pgCount" aria-live="polite"><?= $esc($countSummary) ?></p>
+    </div>
+
+    <div class="pg-filters" id="filters" aria-label="Photography category">
+      <?php foreach ($MAIN as $m): ?>
+        <button type="button" data-m="<?= $esc($m) ?>" aria-pressed="<?= $m === 'all' ? 'true' : 'false' ?>"
+                class="<?= $m === 'all' ? 'on' : '' ?>"><?= $esc($CATLABEL[$m]) ?><span class="fc"><?= (int) $CATCOUNT[$m] ?></span></button>
+      <?php endforeach; ?>
+    </div>
+
+    <div class="pg-grid" id="grid">
+      <?php if (!$ITEMS): ?>
+        <div class="pg-empty">
+          <strong>Photographs Coming Soon</strong>
+          <p>New photographs are being prepared. Please check back shortly.</p>
+        </div>
+      <?php endif; ?>
+      <?php foreach ($ITEMS as $it): ?>
+        <button type="button" class="pcard" data-cat="<?= $esc($it['cat']) ?>"
+                data-src="<?= $esc($it['src']) ?>" data-t="<?= $esc($it['t']) ?>"
+                data-meta="<?= $esc($it['meta']) ?>"
+                aria-label="View <?= $esc($it['t']) ?>">
+          <img loading="lazy" decoding="async" src="<?= $esc($it['src']) ?>" alt="<?= $esc($it['t']) ?>"
+               <?php if (!empty($it['w']) && !empty($it['h'])): ?>width="<?= (int) $it['w'] ?>" height="<?= (int) $it['h'] ?>"<?php endif; ?>>
+          <span class="pcard-shade" aria-hidden="true"></span>
+          <span class="pcard-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
+          <span class="pcard-cat"><?= $esc($CATLABEL[$it['cat']]) ?></span>
+          <span class="pcard-ttl"><?= $esc($it['t']) ?></span>
+        </button>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
 <!-- ======== EXPLORE BY OCCASION (cards OCC-1..4) ======== -->
 <section class="pg-sec" style="background:#0d0d0f;border-top:1px solid var(--line);border-bottom:1px solid var(--line)" aria-label="Explore by occasion">
   <div class="pg-wrap">
@@ -482,6 +707,15 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
 <a href="https://www.youtube.com/@deepakstudiosfotography" target="_blank" rel="noopener noreferrer" aria-label="Deepak Studios on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
 </div></footer>
 
+<!-- ======== LIGHTBOX (same #lightbox / #lb-img contract as the other galleries) ======== -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer" aria-hidden="true">
+  <button type="button" class="lb-close" id="lb-close" aria-label="Close viewer">&#10005;</button>
+  <div class="lb-shell">
+    <img class="lb-img" id="lb-img" src="" alt="">
+    <p class="lb-cap" id="lb-cap"><small id="lb-cat"></small><span id="lb-t"></span></p>
+  </div>
+</div>
+
 <?php ds_contact_fab(); ?>
 
 <!-- ======== NAV + HERO CTA ======== -->
@@ -530,6 +764,101 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
       }
     });
   }
+})();
+</script>
+
+<!-- ======== GALLERY FILTERS + LIGHTBOX ======== -->
+<script>
+(function () {
+  'use strict';
+  var grid    = document.getElementById('grid');
+  var filters = document.getElementById('filters');
+  var box     = document.getElementById('lightbox');
+  var lbImg   = document.getElementById('lb-img');
+  var lbT     = document.getElementById('lb-t');
+  var lbCat   = document.getElementById('lb-cat');
+  var lbX     = document.getElementById('lb-close');
+  var count   = document.getElementById('pgCount');
+  var SUMMARIES = <?= json_encode($SUMMARIES, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+  var lastFocus = null;
+
+  if (!grid || !filters || !box || !lbImg) return;
+
+  window.openLightbox = function (src, title, meta) {
+    if (!src) return;
+    lastFocus = document.activeElement;
+    lbImg.src = src;
+    lbImg.alt = title || 'Photograph';
+    if (lbT) lbT.textContent = title || 'Photograph';
+    if (lbCat) lbCat.textContent = meta || 'Deepak Studios';
+    box.classList.add('open');
+    box.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('vlock');
+    document.documentElement.classList.add('vlock');
+    if (lbX) lbX.focus();
+  };
+
+  window.closeLightbox = function () {
+    if (!box.classList.contains('open')) return;
+    box.classList.remove('open');
+    box.setAttribute('aria-hidden', 'true');
+    lbImg.removeAttribute('src');
+    if (lbT) lbT.textContent = '';
+    if (lbCat) lbCat.textContent = '';
+    document.body.classList.remove('vlock');
+    document.documentElement.classList.remove('vlock');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+
+  /* Photo cards open the lightbox (delegated, so it survives filtering). */
+  grid.addEventListener('click', function (e) {
+    var card = e.target.closest ? e.target.closest('.pcard[data-src]') : null;
+    if (!card) return;
+    e.preventDefault();
+    e.stopPropagation();
+    window.openLightbox(
+      card.getAttribute('data-src'),
+      card.getAttribute('data-t'),
+      card.getAttribute('data-meta')
+    );
+  });
+
+  box.addEventListener('click', function (e) {
+    if (e.target === box || (e.target.closest && e.target.closest('.lb-shell') === null)) {
+      window.closeLightbox();
+    }
+  });
+  if (lbX) {
+    lbX.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.closeLightbox();
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && box.classList.contains('open')) {
+      e.preventDefault();
+      window.closeLightbox();
+    }
+  });
+
+  /* Category filters: hide/show cards and update the live count line. */
+  filters.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('button[data-m]') : null;
+    if (!btn) return;
+    e.preventDefault();
+    var main = btn.getAttribute('data-m');
+    Array.prototype.forEach.call(filters.querySelectorAll('button'), function (b) {
+      var on = b === btn;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    var cards = grid.querySelectorAll('.pcard');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].hidden = !(main === 'all' || cards[i].getAttribute('data-cat') === main);
+    }
+    if (count && SUMMARIES[main]) count.textContent = SUMMARIES[main];
+  });
 })();
 </script>
 </body>

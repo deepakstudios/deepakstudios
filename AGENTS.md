@@ -247,7 +247,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.24.1
+1.25.0
 ```
 
 ### Semver rules
@@ -266,6 +266,41 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.25.0 - 2026-11-04
+
+- **Photography page: Mehendi + Wedding photographs added to the royal-luxury
+  page.** `photography.php` scans `photos/photography/Mehendi/` and
+  `photos/photography/Wedding/` the same folder-scan way as the other galleries,
+  so a new upload appears without a code change.
+- **4 photographs:** `Mehendi.webp` (2857x4000), `Bride.webp` (2667x4000),
+  `bride2.webp` (3000x1996) and `Couple.webp` (3200x4000). Captions are keyed by
+  filename: "Mehendi Ceremony"; "Bridal Portrait" for both Bride files;
+  "Wedding Couple". Future uploads fall back to "Mehendi Photograph" /
+  "Wedding Photograph".
+- **New "Selected Photographs" gallery section** added between the Signature
+  Stories and Occasions sections in the same dark-maroon / gold language.
+  Filters: ALL | MEHENDI | WEDDING, with live counts in the section summary and
+  on each filter (4 photographs - 1 Mehendi / 3 Wedding).
+- **Lightbox:** cards open the existing `#lightbox` contract (`openLightbox` /
+  `closeLightbox`, Esc, backdrop, X, scroll lock), showing the caption and the
+  real category under the photograph.
+- **No cropping:** every card carries the intrinsic width/height from
+  `getimagesize()`, so portrait photographs keep their true ratio. The gallery
+  uses a 1/2/3-column masonry (`columns` + `break-inside:avoid`).
+- **Redesign preserved:** the hero, story, occasion, craft, album and booking
+  sections and their placeholder slots were left untouched; only the new
+  gallery section was inserted.
+- **Deployment:** `photos/` is git-ignored, so the four images were force-added
+  (same approach as `photos/Team/`). No `.gitignore` change and no other photo
+  folder was modified.
+- **Verified:** `php -l` clean; 4 cards with the expected captions; filters
+  returned 4 / 1 / 3 cards and updated the count line; all four lightbox views
+  matched the source ratio (Mehendi 0.714, Bride 0.667, bride2 1.503,
+  Couple 0.800) with the right caption; Esc, X and backdrop all closed and
+  unlocked the page; 0 console errors; no horizontal overflow at desktop or a
+  390px mobile viewport (single column, contact bar intact).
+- **Files changed:** `photography.php`, `Version.txt`, `AGENTS.md`.
 
 ## 1.24.1 - 2026-10-04
 
