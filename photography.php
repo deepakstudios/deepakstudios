@@ -8,6 +8,7 @@
  *
  * HIERARCHY
  *   Client story -> event-wise galleries -> event photographs.
+ *   The same assigned photographs are also grouped into Explore By Event.
  *
  * FOLDER STRUCTURE (auto-scanned)
  *   photos/photography/clients/
@@ -19,6 +20,7 @@
  *               02.webp
  *           wedding/
  *               ...
+ *   photos/photography/unassigned/  (staged files, never shown publicly)
  *
  *   Add a client by creating a folder, adding event subfolders and uploading
  *   photographs. No HTML/PHP edit is needed for a new client or event.
@@ -29,12 +31,12 @@
  *   $EVENT_LABELS maps event folder names to readable names; anything not
  *   listed is converted automatically ("mehendi" -> "Mehendi").
  *
- * EXISTING PHOTOGRAPHS
- *   The four Mehendi/Wedding photographs under photos/photography/ are not
- *   assigned to a client yet. They stay in place and appear in the
- *   "Awaiting Client Assignment" section. To attach one to a client story,
- *   add a row to $PHOTO_ASSIGNMENTS (file path => client + event). Nothing is
- *   moved or renamed.
+ * UNASSIGNED PHOTOGRAPHS
+ *   The four legacy Mehendi/Wedding photographs under photos/photography/
+ *   are not assigned to a client yet. They stay in place and are NOT rendered
+ *   publicly. To attach one to a client story, add a row to
+ *   $PHOTO_ASSIGNMENTS (file path => client + event). Nothing is moved or
+ *   renamed.
  */
 
 declare(strict_types=1);
@@ -65,6 +67,7 @@ $pgHeroImage = '';
  * ===================================================================== */
 $IMAGE_EXT  = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
 $CLIENTS_DIR = 'photos/photography/clients';
+$UNASSIGNED_DIR = 'photos/photography/unassigned';
 
 /* Approved client titles + intros. Add one entry per client folder when the
    name and copy are ready; otherwise the folder name is shown readably. */
@@ -103,41 +106,38 @@ $EVENT_LABELS = [
     'celebrations' => 'Celebrations',
 ];
 
-/* Main-page filter definitions. Only categories that hold clients render. */
-$FILTER_LABELS = [
-    'all'         => 'All',
+/* Explore By Event categories. Only categories that contain photographs are
+   rendered, in this order. Any event folder not listed below falls into
+   "Other Celebrations". */
+$EVENT_GALLERY_LABELS = [
     'wedding'     => 'Wedding',
-    'prewedding'  => 'Pre-Wedding',
-    'celebration' => 'Celebration',
+    'haldi'       => 'Haldi',
+    'mehendi'     => 'Mehendi',
+    'engagement'  => 'Engagement',
+    'reception'   => 'Reception',
+    'birthday'    => 'Birthday',
+    'anniversary' => 'Anniversary',
+    'other'       => 'Other Celebrations',
 ];
 
-/* Which filter a client belongs to, based on its event folders. */
-$EVENT_CATEGORY = [
-    'wedding'      => 'wedding',
-    'reception'    => 'wedding',
-    'engagement'   => 'wedding',
-    'haldi'        => 'wedding',
-    'mehendi'      => 'wedding',
-    'sangeet'      => 'wedding',
-    'cocktail'     => 'wedding',
-    'baraat'       => 'wedding',
-    'nikah'        => 'wedding',
-    'phera'        => 'wedding',
-    'sagai'        => 'wedding',
-    'roka'         => 'wedding',
-    'vidai'        => 'wedding',
-    'prewedding'   => 'prewedding',
-    'pre-wedding'  => 'prewedding',
-    'pre_wedding'  => 'prewedding',
-    'couple'       => 'prewedding',
-    'outdoor'      => 'prewedding',
-    'birthday'     => 'celebration',
-    'anniversary'  => 'celebration',
-    'housewarming' => 'celebration',
-    'celebration'  => 'celebration',
-    'celebrations' => 'celebration',
-    'baby'         => 'celebration',
-    'maternity'    => 'celebration',
+/* Event folder -> Explore By Event category. Ceremonies that are part of a
+   wedding day share the Wedding category; everything unknown is grouped under
+   Other Celebrations rather than being hidden. */
+$EVENT_TO_GALLERY = [
+    'wedding'    => 'wedding',
+    'nikah'      => 'wedding',
+    'phera'      => 'wedding',
+    'sagai'      => 'wedding',
+    'roka'       => 'wedding',
+    'baraat'     => 'wedding',
+    'vidai'      => 'wedding',
+    'cocktail'   => 'wedding',
+    'haldi'      => 'haldi',
+    'mehendi'    => 'mehendi',
+    'engagement' => 'engagement',
+    'reception'  => 'reception',
+    'birthday'   => 'birthday',
+    'anniversary' => 'anniversary',
 ];
 
 /* Canonical event order inside a client story. */
@@ -261,40 +261,51 @@ $imgSrc = static function (string $relDir, string $file): string {
 };
 
 /* =====================================================================
- * EXISTING PHOTOGRAPHS - staged until a client is assigned
+ * UNASSIGNED PHOTOGRAPHS - staged for later mapping, never public
  * ------------------------------------------------------------------------
- * Every image folder directly inside photos/photography/ (except the
- * clients/ folder) is treated as an unassigned event group. Nothing is
- * moved, renamed or deleted; the photographs simply stay visible in the
- * "Awaiting Client Assignment" strip until $PHOTO_ASSIGNMENTS maps them.
+ * Existing top-level event folders (photos/photography/Mehendi/,
+ * photos/photography/Wedding/, ...) and photos/photography/unassigned/ are
+ * scanned so they can be attached to a client through $PHOTO_ASSIGNMENTS.
+ * Nothing is moved, renamed or deleted, and these files are deliberately NOT
+ * rendered on the public page until they are assigned.
  * ===================================================================== */
-$UNASSIGNED_TITLES = [
-    'mehendi/mehendi.webp' => 'Mehendi Ceremony',
-    'wedding/bride.webp'   => 'Bridal Portrait',
-    'wedding/bride2.webp'  => 'Bridal Portrait',
-    'wedding/couple.webp'  => 'Wedding Couple',
-];
-
 $UNASSIGNED = [];
-foreach ($listDirs(__DIR__ . '/photos/photography') as $groupSlug) {
-    if ($groupSlug === 'clients') {
-        continue; // assigned client stories are scanned separately
+
+$stageUnassigned = static function (string $relDir, string $file) use (&$UNASSIGNED, $imageSize, $imgSrc): void {
+    $rel = $relDir . '/' . $file;
+    if (isset($UNASSIGNED[$rel])) {
+        return;
     }
+    [$w, $h] = $imageSize(__DIR__ . '/' . $rel);
+    $UNASSIGNED[$rel] = [
+        'src'      => $imgSrc($relDir, $file),
+        'w'        => $w,
+        'h'        => $h,
+        'assigned' => false,
+    ];
+};
 
+foreach ($listDirs(__DIR__ . '/photos/photography') as $groupSlug) {
+    if ($groupSlug === 'clients' || $groupSlug === 'unassigned') {
+        continue;
+    }
     $groupRel = 'photos/photography/' . $groupSlug;
-    $label    = $EVENT_LABELS[$groupSlug] ?? $pretty($groupSlug);
-
     foreach ($scanImages(__DIR__ . '/' . $groupRel) as $file) {
-        $rel = $groupRel . '/' . $file;
-        [$w, $h] = $imageSize(__DIR__ . '/' . $rel);
-        $UNASSIGNED[$rel] = [
-            'src'      => $imgSrc($groupRel, $file),
-            't'        => $UNASSIGNED_TITLES[strtolower($groupSlug . '/' . $file)] ?? $label . ' Photograph',
-            'meta'     => $label,
-            'w'        => $w,
-            'h'        => $h,
-            'assigned' => false,
-        ];
+        $stageUnassigned($groupRel, $file);
+    }
+}
+
+/* photos/photography/unassigned/ can hold files directly or one level of
+   event subfolders; both are supported. */
+if (is_dir(__DIR__ . '/' . $UNASSIGNED_DIR)) {
+    foreach ($scanImages(__DIR__ . '/' . $UNASSIGNED_DIR) as $file) {
+        $stageUnassigned($UNASSIGNED_DIR, $file);
+    }
+    foreach ($listDirs(__DIR__ . '/' . $UNASSIGNED_DIR) as $subSlug) {
+        $subRel = $UNASSIGNED_DIR . '/' . $subSlug;
+        foreach ($scanImages(__DIR__ . '/' . $subRel) as $file) {
+            $stageUnassigned($subRel, $file);
+        }
     }
 }
 
@@ -394,23 +405,6 @@ foreach ($CLIENTS as $clientSlug => &$client) {
     $title   = trim((string) ($meta['title'] ?? ''));
     $intro   = trim((string) ($meta['intro'] ?? ''));
 
-    /* Categories come from the event folders that actually exist, so the
-       filters can never advertise an empty gallery. A story with a wedding
-       and a pre-wedding event appears under both filters. */
-    $present = [];
-    foreach ($client['events'] as $event) {
-        $present[$EVENT_CATEGORY[$event['slug']] ?? 'celebration'] = true;
-    }
-    $clientFilters = [];
-    foreach (['wedding', 'prewedding', 'celebration'] as $candidate) {
-        if (isset($present[$candidate])) {
-            $clientFilters[] = $candidate;
-        }
-    }
-    if (!$clientFilters) {
-        $clientFilters = ['celebration'];
-    }
-
     $firstEvent = reset($client['events']); // events are sorted canonically
     $coverFile  = $findCover(__DIR__ . '/' . $client['dir']);
     if ($coverFile !== null) {
@@ -422,12 +416,40 @@ foreach ($CLIENTS as $clientSlug => &$client) {
         $client['cover_h'] = $firstEvent['cover_h'];
     }
 
+    /* Main event chip: wedding-day moments outrank the surrounding
+       celebrations, then the conventional event order decides. */
+    $categoryPriority = [
+        'wedding' => 10, 'reception' => 20, 'engagement' => 30, 'mehendi' => 40,
+        'haldi' => 50, 'birthday' => 60, 'anniversary' => 70, 'other' => 80,
+    ];
+    $mainEvent = $firstEvent;
+    $bestPriority = 999;
+    $bestOrder = 999;
+    foreach ($client['events'] as $event) {
+        $category = $EVENT_TO_GALLERY[$event['slug']] ?? 'other';
+        $priority = $categoryPriority[$category] ?? 90;
+        $order = $EVENT_ORDER[$event['slug']] ?? 500;
+        if ($priority < $bestPriority || ($priority === $bestPriority && $order < $bestOrder)) {
+            $bestPriority = $priority;
+            $bestOrder = $order;
+            $mainEvent = $event;
+        }
+    }
+
+    $eventLabels = [];
+    foreach ($client['events'] as $event) {
+        $eventLabels[] = $event['label'];
+    }
+    $eventLine = implode(' · ', array_slice($eventLabels, 0, 4));
+    if (count($eventLabels) > 4) {
+        $eventLine .= ' · +' . (count($eventLabels) - 4);
+    }
+
     $client['title']        = $title !== '' ? $title : $pretty($clientSlug);
     $client['intro']        = $intro;
-    $client['filters']      = $clientFilters;
-    $client['filter']       = $clientFilters[0];
-    $client['filter_label'] = $FILTER_LABELS[$clientFilters[0]];
-    $client['main_event']   = $firstEvent['label'];
+    $client['event_labels'] = $eventLabels;
+    $client['event_line']   = $eventLine;
+    $client['main_event']   = $mainEvent['label'];
     $client['event_count']  = count($client['events']);
     $client['photo_count']  = $photoCount;
 }
@@ -437,22 +459,60 @@ uasort($CLIENTS, static function (array $a, array $b): int {
     return strnatcasecmp($a['title'], $b['title']);
 });
 
-$UNASSIGNED_PHOTOS = [];
-foreach ($UNASSIGNED as $photo) {
-    if (!$photo['assigned']) {
-        $UNASSIGNED_PHOTOS[] = $photo;
-    }
-}
-
 $CLIENT_COUNT  = count($CLIENTS);
 $TOTAL_EVENTS  = 0;
 $TOTAL_PHOTOS  = 0;
-$FILTER_COUNTS = ['all' => $CLIENT_COUNT];
+
+/* =====================================================================
+ * EXPLORE BY EVENT - the same assigned photographs, grouped by event type.
+ * Each source file is referenced exactly once; nothing is copied. A photo
+ * that belongs to a client event therefore appears in both the client story
+ * and its event category, using the same original path.
+ * ===================================================================== */
+$EVENT_GALLERIES = [];
+foreach ($EVENT_GALLERY_LABELS as $categoryKey => $categoryLabel) {
+    $EVENT_GALLERIES[$categoryKey] = [
+        'key'    => $categoryKey,
+        'label'  => $categoryLabel,
+        'photos' => [],
+    ];
+}
+
 foreach ($CLIENTS as $client) {
     $TOTAL_EVENTS += $client['event_count'];
     $TOTAL_PHOTOS += $client['photo_count'];
-    foreach ($client['filters'] as $filterKey) {
-        $FILTER_COUNTS[$filterKey] = ($FILTER_COUNTS[$filterKey] ?? 0) + 1;
+
+    foreach ($client['events'] as $event) {
+        $categoryKey = $EVENT_TO_GALLERY[$event['slug']] ?? 'other';
+        if (!isset($EVENT_GALLERIES[$categoryKey])) {
+            $categoryKey = 'other';
+        }
+        foreach ($event['photos'] as $photo) {
+            $EVENT_GALLERIES[$categoryKey]['photos'][] = [
+                'src'   => $photo['src'],
+                'w'     => $photo['w'],
+                'h'     => $photo['h'],
+                't'     => $client['title'] . ' · ' . $event['label'],
+                'alt'   => $event['label'] . ' photograph from ' . $client['title'],
+                'cat'   => $EVENT_GALLERY_LABELS[$categoryKey],
+                'gcat'  => $categoryKey,
+            ];
+        }
+    }
+}
+
+$EVENT_GALLERIES = array_filter(
+    $EVENT_GALLERIES,
+    static function (array $gallery): bool {
+        return count($gallery['photos']) > 0;
+    }
+);
+$EVENT_GALLERY_TOTAL = 0;
+$EVENT_GALLERY_PHOTOS = [];
+foreach ($EVENT_GALLERIES as $gallery) {
+    $EVENT_GALLERY_TOTAL += count($gallery['photos']);
+    foreach ($gallery['photos'] as $galleryPhoto) {
+        $EVENT_GALLERY_PHOTOS[] = $galleryPhoto;
     }
 }
 
@@ -503,30 +563,43 @@ $eventUrl = static function (string $client, string $event): string {
 };
 
 $pageTitle = 'Photography | Deepak Studios';
+$pageDesc  = 'Client-wise wedding photography portfolio by Deepak Studios. Explore each client story, event-wise galleries and photographs.';
+$canonicalUrl = 'photography.php';
+$robots = 'index, follow';
+
 if ($view === 'client' && $activeClient !== null) {
-    $pageTitle = $activeClient['title'] . ' | Photography | Deepak Studios';
+    $pageTitle    = $activeClient['title'] . ' | Photography | Deepak Studios';
+    $pageDesc     = $activeClient['title'] . ' — explore this client story, its events and photographs by Deepak Studios.';
+    $canonicalUrl = $clientUrl($activeClient['slug']);
 } elseif ($view === 'event' && $activeClient !== null && $activeEvent !== null) {
-    $pageTitle = $activeEvent['label'] . ' — ' . $activeClient['title'] . ' | Photography | Deepak Studios';
+    $pageTitle    = $activeEvent['label'] . ' — ' . $activeClient['title'] . ' | Photography | Deepak Studios';
+    $pageDesc     = 'Browse ' . $activeEvent['label'] . ' photographs from ' . $activeClient['title'] . ', captured by Deepak Studios.';
+    $canonicalUrl = $eventUrl($activeClient['slug'], $activeEvent['slug']);
 } elseif ($view === 'notfound') {
     $pageTitle = 'Story Not Found | Photography | Deepak Studios';
+    $pageDesc  = 'The requested photography story or event is not available.';
+    $robots    = 'noindex, nofollow';
 }
 
-$pageDesc = 'Client-wise wedding photography portfolio by Deepak Studios. Explore each client story, event-wise galleries and photographs.';
-
-/* Shared photo-card renderer (used by event galleries and the staged strip). */
+/* Shared photo-card renderer (used by event galleries and Explore By Event). */
 $renderPhotos = static function (array $photos, string $category, bool $showTitle = false) use ($esc): void {
     foreach ($photos as $photo) {
+        $photoCat   = isset($photo['cat']) ? (string) $photo['cat'] : $category;
+        $photoTitle = isset($photo['t']) ? (string) $photo['t'] : '';
+        $photoAlt   = isset($photo['alt']) ? (string) $photo['alt'] : $photoCat;
+        $galleryCat = isset($photo['gcat']) ? (string) $photo['gcat'] : '';
         ?>
         <button type="button" class="photo-item"
                 data-src="<?= $esc($photo['src']) ?>"
-                data-cat="<?= $esc($category) ?>"
-                data-title="<?= $esc($photo['t'] ?? '') ?>"
-                aria-label="View photograph">
-          <img loading="lazy" decoding="async" src="<?= $esc($photo['src']) ?>" alt="<?= $esc($category) ?>"
+                data-cat="<?= $esc($photoCat) ?>"
+                data-title="<?= $esc($photoTitle) ?>"
+                <?php if ($galleryCat !== ''): ?>data-gcat="<?= $esc($galleryCat) ?>"<?php endif; ?>
+                aria-label="View <?= $esc($photoAlt) ?>">
+          <img loading="lazy" decoding="async" src="<?= $esc($photo['src']) ?>" alt="<?= $esc($photoAlt) ?>"
                <?php if (!empty($photo['w']) && !empty($photo['h'])): ?>width="<?= (int) $photo['w'] ?>" height="<?= (int) $photo['h'] ?>"<?php endif; ?>>
           <span class="photo-shade" aria-hidden="true"></span>
           <span class="photo-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></span>
-          <?php if ($showTitle && !empty($photo['t'])): ?><span class="photo-title"><?= $esc($photo['t']) ?></span><?php endif; ?>
+          <?php if ($showTitle && $photoTitle !== ''): ?><span class="photo-title"><?= $esc($photoTitle) ?></span><?php endif; ?>
         </button>
         <?php
     }
@@ -539,6 +612,8 @@ $renderPhotos = static function (array $photos, string $category, bool $showTitl
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $esc($pageTitle) ?></title>
 <meta name="description" content="<?= $esc($pageDesc) ?>">
+<meta name="robots" content="<?= $esc($robots) ?>">
+<link rel="canonical" href="<?= $esc($canonicalUrl) ?>">
 <style>
   :root{
     --bg:#0b0b0c; --panel:#141416; --card:#18181a; --line:#26262a;
@@ -646,6 +721,8 @@ $renderPhotos = static function (array $photos, string $category, bool $showTitl
         text-transform:uppercase;color:var(--ink);line-height:1.25}
 .pg-h em{font-style:normal;color:var(--gold2)}
 .pg-sub{margin:1rem auto 0;max-width:38rem;color:var(--mut);font-size:.95rem;font-style:italic;line-height:1.7}
+.pg-summary{margin:1.05rem auto 0;color:var(--gold);font-size:.66rem;letter-spacing:.2em;
+        text-transform:uppercase;line-height:1.7}
 .pg-rule{display:block;width:62px;height:1px;margin:1.4rem auto 0;
         background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 
@@ -682,6 +759,8 @@ $renderPhotos = static function (array $photos, string $category, bool $showTitl
 .cc-body{display:flex;flex-direction:column;gap:.55rem;padding:1.15rem 1.2rem 1.3rem}
 .cc-title{font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);line-height:1.35}
 .cc-meta{font-size:.78rem;letter-spacing:.08em;color:var(--mut)}
+.cc-events{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(201,168,106,.78);
+        line-height:1.6}
 .cc-cta{font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold2)}
 .cc-cta i{font-style:normal;display:inline-block;margin-left:.35em;transition:transform .3s ease}
 .client-card:hover .cc-cta i{transform:translateX(3px)}
@@ -742,6 +821,7 @@ $renderPhotos = static function (array $photos, string $category, bool $showTitl
         break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid;
         box-shadow:0 12px 32px -18px rgba(0,0,0,.85);
         transition:border-color .35s ease,box-shadow .35s ease}
+.photo-item[hidden]{display:none}
 .photo-item:hover{border-color:rgba(201,168,106,.55);
         box-shadow:0 20px 46px -20px rgba(0,0,0,.9),0 0 20px rgba(201,168,106,.1)}
 .photo-item img{display:block;width:100%;height:auto;
@@ -911,30 +991,25 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
     </div>
 
     <?php if ($CLIENTS): ?>
-      <div class="filters" id="filters" aria-label="Filter client stories">
-        <?php foreach ($FILTER_LABELS as $filterKey => $filterLabel): ?>
-          <?php if ($filterKey !== 'all' && empty($FILTER_COUNTS[$filterKey])) { continue; } ?>
-          <button type="button" data-f="<?= $esc($filterKey) ?>"
-                  aria-pressed="<?= $filterKey === 'all' ? 'true' : 'false' ?>"
-                  class="<?= $filterKey === 'all' ? 'on' : '' ?>"><?= $esc($filterLabel) ?><span class="fc"><?= (int) ($FILTER_COUNTS[$filterKey] ?? 0) ?></span></button>
-        <?php endforeach; ?>
-      </div>
+      <p class="pg-summary"><?= (int) $CLIENT_COUNT ?> client stor<?= $CLIENT_COUNT === 1 ? 'y' : 'ies' ?> &middot; <?= (int) $TOTAL_EVENTS ?> event<?= $TOTAL_EVENTS === 1 ? '' : 's' ?> &middot; <?= (int) $TOTAL_PHOTOS ?> photograph<?= $TOTAL_PHOTOS === 1 ? '' : 's' ?></p>
 
       <div class="client-grid" id="clientGrid">
         <?php foreach ($CLIENTS as $slug => $client): ?>
-          <a class="client-card" href="<?= $esc($clientUrl($slug)) ?>"
-             data-filter="<?= $esc(implode(' ', $client['filters'])) ?>">
+          <a class="client-card" href="<?= $esc($clientUrl($slug)) ?>">
             <span class="cc-media">
-              <img src="<?= $esc($client['cover']) ?>" alt="<?= $esc($client['title']) ?>"
+              <img src="<?= $esc($client['cover']) ?>" alt="<?= $esc($client['title']) ?> cover photograph"
                    loading="lazy" decoding="async"
                    <?php if (!empty($client['cover_w']) && !empty($client['cover_h'])): ?>width="<?= (int) $client['cover_w'] ?>" height="<?= (int) $client['cover_h'] ?>"<?php endif; ?>>
               <span class="cc-shade" aria-hidden="true"></span>
-              <span class="cc-tag"><?= $esc($client['filter_label']) ?></span>
+              <span class="cc-tag"><?= $esc($client['main_event']) ?></span>
             </span>
             <span class="cc-body">
               <span class="cc-title"><?= $esc($client['title']) ?></span>
               <span class="cc-meta"><?= (int) $client['event_count'] ?> event<?= $client['event_count'] === 1 ? '' : 's' ?> &middot; <?= (int) $client['photo_count'] ?> photograph<?= $client['photo_count'] === 1 ? '' : 's' ?></span>
-              <span class="cc-cta">View Story <i>&rarr;</i></span>
+              <?php if ($client['event_line'] !== ''): ?>
+                <span class="cc-events"><?= $esc($client['event_line']) ?></span>
+              <?php endif; ?>
+              <span class="cc-cta">View Full Story <i>&rarr;</i></span>
             </span>
           </a>
         <?php endforeach; ?>
@@ -949,22 +1024,36 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
   </div>
 </section>
 
-<?php if ($UNASSIGNED_PHOTOS): ?>
-<!-- ======== EXISTING PHOTOGRAPHS AWAITING A CLIENT ======== -->
-<section class="pg-sec" style="border-top:1px solid var(--line)" aria-label="Photographs awaiting client assignment">
+<!-- ======== EXPLORE BY EVENT ======== -->
+<section class="pg-sec" id="events" style="border-top:1px solid var(--line)" aria-label="Explore by event">
   <div class="pg-wrap">
     <div class="pg-head">
-      <p class="pg-eyebrow">Archive</p>
-      <h2 class="pg-h">Awaiting <em>Client Assignment</em></h2>
+      <p class="pg-eyebrow">Explore By Event</p>
+      <h2 class="pg-h">Explore By <em>Event</em></h2>
       <span class="pg-rule" aria-hidden="true"></span>
-      <p class="pg-sub">These photographs are preserved here until they are linked to their client story.</p>
+      <p class="pg-sub">Browse photographs across every client story, grouped by the celebration itself.</p>
     </div>
-    <div class="photo-grid">
-      <?php $renderPhotos($UNASSIGNED_PHOTOS, 'Awaiting Client Assignment', true); ?>
-    </div>
+
+    <?php if ($EVENT_GALLERIES): ?>
+      <div class="filters" id="eventFilters" aria-label="Filter photographs by event">
+        <button type="button" data-g="all" aria-pressed="true" aria-controls="eventGallery" class="on">All<span class="fc"><?= (int) $EVENT_GALLERY_TOTAL ?></span></button>
+        <?php foreach ($EVENT_GALLERIES as $galleryKey => $gallery): ?>
+          <button type="button" data-g="<?= $esc($galleryKey) ?>" aria-pressed="false" aria-controls="eventGallery"><?= $esc($gallery['label']) ?><span class="fc"><?= count($gallery['photos']) ?></span></button>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="photo-grid" id="eventGallery">
+        <?php $renderPhotos($EVENT_GALLERY_PHOTOS, 'Event Gallery', true); ?>
+      </div>
+    <?php else: ?>
+      <div class="empty-state">
+        <strong>Event Galleries Coming Soon</strong>
+        <p>Event-wise galleries will appear here as soon as client photographs are published.</p>
+        <a class="es-link" href="#enquire">Book Your Photographer &rarr;</a>
+      </div>
+    <?php endif; ?>
   </div>
 </section>
-<?php endif; ?>
 
 <?php elseif ($view === 'client' && $activeClient !== null): ?>
 
@@ -978,7 +1067,7 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
     </nav>
     <div class="story-grid">
       <div class="story-media">
-        <img src="<?= $esc($activeClient['cover']) ?>" alt="<?= $esc($activeClient['title']) ?>"
+        <img src="<?= $esc($activeClient['cover']) ?>" alt="<?= $esc($activeClient['title']) ?> cover photograph"
              fetchpriority="high" decoding="async"
              <?php if (!empty($activeClient['cover_w']) && !empty($activeClient['cover_h'])): ?>width="<?= (int) $activeClient['cover_w'] ?>" height="<?= (int) $activeClient['cover_h'] ?>"<?php endif; ?>>
       </div>
@@ -1008,7 +1097,7 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
       <?php foreach ($activeClient['events'] as $eventKey => $event): ?>
         <a class="event-card" href="<?= $esc($eventUrl($activeClient['slug'], $eventKey)) ?>">
           <span class="ev-media">
-            <img src="<?= $esc($event['cover']) ?>" alt="<?= $esc($event['label']) ?>"
+            <img src="<?= $esc($event['cover']) ?>" alt="<?= $esc($event['label']) ?> event cover photograph from <?= $esc($activeClient['title']) ?>"
                  loading="lazy" decoding="async"
                  <?php if (!empty($event['cover_w']) && !empty($event['cover_h'])): ?>width="<?= (int) $event['cover_w'] ?>" height="<?= (int) $event['cover_h'] ?>"<?php endif; ?>>
             <span class="ev-shade" aria-hidden="true"></span>
@@ -1045,7 +1134,15 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
 <section class="pg-sec" style="padding-top:1.6rem" aria-label="Event photographs">
   <div class="pg-wrap">
     <div class="photo-grid">
-      <?php $renderPhotos($activeEvent['photos'], $activeEvent['label']); ?>
+      <?php
+        $eventPhotoCards = [];
+        foreach ($activeEvent['photos'] as $eventPhoto) {
+            $eventPhoto['alt'] = $activeEvent['label'] . ' photograph from ' . $activeClient['title'];
+            $eventPhoto['t']   = $activeClient['title'];
+            $eventPhotoCards[] = $eventPhoto;
+        }
+        $renderPhotos($eventPhotoCards, $activeEvent['label']);
+      ?>
     </div>
   </div>
 </section>
@@ -1114,8 +1211,8 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
   var burger = document.getElementById('rburger');
   var menu   = document.getElementById('rmobmenu');
   var cta    = document.getElementById('pgHeroCta');
-  var filters = document.getElementById('filters');
-  var clientGrid = document.getElementById('clientGrid');
+  var eventFilters = document.getElementById('eventFilters');
+  var eventGallery = document.getElementById('eventGallery');
   var box    = document.getElementById('lightbox');
   var lbImg  = document.getElementById('lb-img');
   var lbCat  = document.getElementById('lb-cat');
@@ -1166,23 +1263,27 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
     });
   }
 
-  /* ---- client-story filters ---- */
-  if (filters && clientGrid) {
-    filters.addEventListener('click', function (e) {
-      var btn = e.target.closest ? e.target.closest('button[data-f]') : null;
+  /* ---- Explore By Event filters ---- */
+  if (eventFilters && eventGallery) {
+    eventFilters.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('button[data-g]') : null;
       if (!btn) return;
       e.preventDefault();
-      var key = btn.getAttribute('data-f');
-      Array.prototype.forEach.call(filters.querySelectorAll('button'), function (b) {
+      var key = btn.getAttribute('data-g');
+
+      Array.prototype.forEach.call(eventFilters.querySelectorAll('button'), function (b) {
         var on = b === btn;
         b.classList.toggle('on', on);
         b.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
-      var cards = clientGrid.querySelectorAll('.client-card');
-      for (var i = 0; i < cards.length; i++) {
-        var cardFilters = ' ' + (cards[i].getAttribute('data-filter') || '') + ' ';
-        cards[i].hidden = !(key === 'all' || cardFilters.indexOf(' ' + key + ' ') !== -1);
+
+      var items = eventGallery.querySelectorAll('.photo-item');
+      for (var i = 0; i < items.length; i++) {
+        var category = items[i].getAttribute('data-gcat') || '';
+        items[i].hidden = !(key === 'all' || category === key);
       }
+
+      if (box && box.classList.contains('open')) window.closeLightbox();
     });
   }
 
@@ -1252,7 +1353,7 @@ footer .fname{font-family:"Playfair Display",Georgia,serif;color:var(--gold);fon
     e.preventDefault();
     e.stopPropagation();
     var grid = item.closest('.photo-grid');
-    var items = grid ? Array.prototype.slice.call(grid.querySelectorAll('.photo-item[data-src]')) : [item];
+    var items = grid ? Array.prototype.slice.call(grid.querySelectorAll('.photo-item[data-src]:not([hidden])')) : [item];
     openLightbox(items, items.indexOf(item));
   });
 

@@ -247,7 +247,7 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ### Current Version
 
 ```
-1.26.0
+1.27.0
 ```
 
 ### Semver rules
@@ -266,6 +266,73 @@ Requires **PHP 8.0+** with PDO MySQL (`extension=pdo_mysql`).
 ---
 
 ## Change Log
+
+## 1.27.0 - 2026-11-17
+
+- **Photography page is now a hybrid portfolio: client-wise wedding stories plus
+  event-wise galleries (`photography.php` only).** The client section, the
+  client story view, the per-client event galleries and the shared lightbox from
+  1.26.0 are kept exactly as they were. What is new is a second, orthogonal way
+  to browse the **same** photographs, grouped by celebration type.
+- **Explore By Event replaces the public "Awaiting Client Assignment" archive.**
+  A new section (`#events`) sits below the client stories and offers the
+  categories Wedding, Haldi, Mehendi, Engagement, Reception, Birthday,
+  Anniversary and Other Celebrations. Only categories that actually contain
+  photographs render, so no filter can point at an empty gallery.
+  `$EVENT_GALLERY_LABELS` defines the eight categories and `$EVENT_TO_GALLERY`
+  maps event folders onto them: `wedding, nikah, phera, sagai, roka, baraat,
+  vidai, cocktail → Wedding`; `haldi`, `mehendi`, `engagement`, `reception`,
+  `birthday`, `anniversary` map directly; any other event folder falls into
+  Other Celebrations instead of being hidden.
+- **No photograph is ever duplicated.** An event gallery does not copy files; it
+  references the exact same `src` path that the client story uses
+  (`photos/photography/clients/<client>/<event>/<file>`). One upload therefore
+  powers both views, and deleting a file removes it from both.
+- **Client cards upgraded.** Cover, client/couple name, the list of real event
+  names, a main-event chip, event and photograph counts and a **VIEW FULL
+  STORY** button. The chip is chosen by importance (wedding-day moments first,
+  then reception / engagement / mehendi / haldi / birthday / anniversary /
+  other) rather than by alphabetical luck.
+- **Client filter bar removed from the client grid** (the brief asks for
+  filters on the event gallery, not on the stories), so filters now apply to
+  the Explore By Event photo grid only. The event filter bar shows live photo
+  counts per category plus an `All` total.
+- **Unassigned photographs are never public.** A new
+  `photos/photography/unassigned/` folder is supported (files directly inside it
+  or one level of event subfolders). The legacy top-level `Mehendi/` and
+  `Wedding/` folders and `unassigned/` are scanned internally only so that
+  `$PHOTO_ASSIGNMENTS` can attach an existing file to a client + event; nothing
+  is moved, renamed, deleted or rendered until that mapping resolves. The four
+  existing photographs are untouched and stay invisible on the public page.
+- **Honest empty states.** With no client folders the page shows two elegant
+  Coming Soon panels — one for client stories, one for Explore By Event — and
+  no stock, demo or AI imagery is introduced. (The Explore By Event section is
+  always rendered now, instead of being hidden when no clients exist.)
+- **Lightbox navigation follows the active filter.** The previous/next list is
+  built from `.photo-item[data-src]:not([hidden])`, so filtering to Wedding and
+  then opening a photograph cannot step into hidden Haldi or Mehendi images.
+  Event-wise captions read `Category` + `Client · Event`; client event galleries
+  read `Event` + the client title. Esc, X, backdrop, ArrowLeft/ArrowRight and
+  the scroll lock are unchanged.
+- **SEO/accessibility additions.** Per-view `<title>` and meta description, a
+  relative `<link rel="canonical">`, `noindex, nofollow` on the 404 view, and
+  descriptive alt text for covers, event cards and every photograph
+  (for example "Haldi photograph from Nidhi & Shubham") instead of a generic
+  "View photograph".
+- **Verified:** `php -l` clean; with temporary client folders (removed
+  afterwards) the page rendered 3 client cards, an 11-photograph event gallery
+  and filters All 11 / Wedding 2 / Haldi 1 / Mehendi 1 / Engagement 1 /
+  Reception 1 / Birthday 1 / Anniversary 1 / Other Celebrations 3; each filter
+  exposed only its own photographs and the lightbox list matched the visible
+  set; client story counts matched the folders; the unassigned files and the
+  four legacy photographs never appeared in the public HTML; 0 console errors.
+  With the temporary data removed, the page renders both Coming Soon states,
+  no photo cards and no legacy image path. Responsive checks: client cards
+  1/2/3 columns at 390/768/1200, event photo grid 1/2/3, client event grid 1/3,
+  no horizontal overflow, mobile contact bar visible at 390 and hidden at 768.
+- **Files changed:** `photography.php`, `Version.txt`, `AGENTS.md`, plus the new
+  empty placeholder `photos/photography/unassigned/.gitkeep` (force-added;
+  `photos/` stays git-ignored).
 
 ## 1.26.0 - 2026-11-04
 
